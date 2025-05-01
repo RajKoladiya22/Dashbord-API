@@ -1,0 +1,10 @@
+node_modules
+# Keep environment variables out of version control
+.env
+.env.development
+.env.production
+.env.local
+/node_modules
+/dist
+/logs
+/test

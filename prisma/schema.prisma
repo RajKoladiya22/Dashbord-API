@@ -1,0 +1,322 @@
+// 1. Datasource & Generator
+datasource db {
+  provider = "postgresql"
+  // url      = env("DATABASE_URL")
+  url      = "postgresql://postgres:Raj24315@localhost:5636/cpm_orm"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// 2. Enums
+enum Role {
+  admin
+  team_member
+  partner
+  super_admin
+}
+
+enum OfferType {
+  percentage
+  fixed
+  free_trial
+}
+
+enum SubscriptionStatus {
+  active
+  canceled
+  past_due
+  free_trial
+  suspended
+  pending
+  expired
+  inactive
+  under_review
+  blocked
+}
+
+// 3. Models
+
+model Admin {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  role         Role     @default(admin)
+  firstName    String   @map("first_name")
+  lastName     String   @map("last_name")
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  companyName  String   @map("company_name")
+  address      Json? // JSONB column
+  contactInfo  Json?    @map("contact_info")
+  status       String   
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  teamMembers            TeamMember[]
+  partners               Partner[]
+  customers              Customer[]
+  customFields           AdminCustomField[]
+  products               Product[]
+  subscriptions          Subscription[]
+  loginCreds             LoginCredential[]        @relation("AdminCredentials")
+  CustomerProductHistory CustomerProductHistory[]
+
+  @@map("admins")
+}
+
+model TeamMember {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  adminId      String   @map("admin_id") @db.Uuid
+  role         Role     @default(team_member)
+  firstName    String   @map("first_name")
+  lastName     String   @map("last_name")
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  department   String?
+  position     String?
+  status       String
+  contactInfo  Json?    @map("contact_info")
+  address      Json?
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  admin Admin @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@map("team_members")
+}
+
+model Partner {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  adminId      String   @map("admin_id") @db.Uuid
+  role         Role     @default(partner)
+  companyName  String   @map("company_name")
+  firstName    String   @map("first_name")
+  lastName     String   @map("last_name")
+  contactInfo  Json?    @map("contact_info")
+  address      Json?
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  status       String
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  admin Admin @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@map("partners")
+}
+
+model LoginCredential {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  role          Role
+  email         String   @unique
+  passwordHash  String   @map("password_hash")
+  userProfileId String   @map("user_profile_id") @db.Uuid
+  adminId       String?  @map("admin_id") @db.Uuid
+  status        String
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  admin       Admin?       @relation("AdminCredentials", fields: [adminId], references: [id], onDelete: Cascade)
+  loginAudits LoginAudit[]
+
+  @@map("login_credentials")
+}
+
+model Plan {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  duration  String // Prisma does not support INTERVAL; store as String or map to Int seconds
+  price     Float
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  offers        PlanOffer[]
+  specs         PlanSpec[]
+  descriptions  PlanDescription[]
+  subscriptions Subscription[]
+
+  @@map("plans")
+}
+
+model PlanOffer {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  planId    String    @map("plan_id") @db.Uuid
+  offerType OfferType @map("offer_type")
+  value     Float?
+  startsAt  DateTime? @map("starts_at")
+  endsAt    DateTime? @map("ends_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  plan Plan @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@map("plan_offers")
+}
+
+model PlanSpec {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  planId    String   @map("plan_id") @db.Uuid
+  specName  String   @map("spec_name")
+  specValue String   @map("spec_value")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  plan Plan @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@map("plan_specs")
+}
+
+model PlanDescription {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  planId    String   @map("plan_id") @db.Uuid
+  content   String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  plan Plan @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@map("plan_descriptions")
+}
+
+model Subscription {
+  id          String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  adminId     String             @db.Uuid
+  planId      String             @db.Uuid
+  status      SubscriptionStatus
+  startsAt    DateTime           @map("starts_at")
+  endsAt      DateTime?
+  renewedAt   DateTime?          @map("renewed_at")
+  cancelledAt DateTime?          @map("cancelled_at")
+  createdAt   DateTime           @default(now()) @map("created_at")
+  updatedAt   DateTime           @updatedAt @map("updated_at")
+
+  admin    Admin                 @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  plan     Plan                  @relation(fields: [planId], references: [id], onDelete: Cascade)
+  payments SubscriptionPayment[]
+  events   SubscriptionEvent[]
+
+  @@map("subscriptions")
+}
+
+model SubscriptionPayment {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  subscriptionId  String   @map("subscription_id") @db.Uuid
+  amount          Float
+  currency        String   @db.Char(3)
+  paidAt          DateTime @map("paid_at")
+  status          String
+  paymentMethod   String?  @map("payment_method")
+  gatewayResponse Json?    @map("gateway_response")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  subscription Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  @@map("subscription_payments")
+}
+
+model SubscriptionEvent {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  subscriptionId String   @map("subscription_id") @db.Uuid
+  eventType      String   @map("event_type")
+  eventAt        DateTime @map("event_at")
+  metadata       Json?
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  subscription Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  @@map("subscription_events")
+}
+
+model Product {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  productName     String   @map("product_name")
+  productCategory Json     @map("product_category")
+  productPrice    String   @map("product_price")
+  description     String?
+  productLink     String?  @map("product_link")
+  tags            String[] @db.Text
+  specifications  Json
+  adminId         String   @db.Uuid
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  admin                  Admin                    @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  CustomerProductHistory CustomerProductHistory[]
+
+  @@map("products")
+}
+
+model Customer {
+  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  adminId           String   @db.Uuid
+  companyName       String   @map("company_name")
+  contactPerson     String   @map("contact_person")
+  mobileNumber      String   @unique @map("mobile_number")
+  email             String   @unique
+  serialNo          String   @map("serial_no")
+  prime             Boolean  @default(false)
+  blacklisted       Boolean  @default(false)
+  remark            String?
+  adminCustomFields Json     @map("admin_custom_fields")
+  hasReference      Boolean  @default(false) @map("has_reference")
+  referenceDetail   Json     @map("reference_detail")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  admin   Admin                    @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  history CustomerProductHistory[]
+
+  @@map("customers")
+}
+
+model CustomerProductHistory {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  customerId   String    @map("customer_id") @db.Uuid
+  adminId      String    @map("admin_id") @db.Uuid
+  productId    String    @map("product_id") @db.Uuid
+  purchaseDate DateTime  @map("purchase_date")
+  renewal      Boolean   @default(false)
+  expiryDate   DateTime? @map("expiry_date")
+  renewalDate  DateTime? @map("renewal_date")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  admin    Admin    @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  product  Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("customer_product_history")
+}
+
+model AdminCustomField {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  adminId       String   @map("admin_id") @db.Uuid
+  fieldName     String   @map("field_name")
+  fieldType     String   @map("field_type")
+  isRequired    Boolean  @default(false) @map("is_required")
+  options       String[] @default([]) @db.Text
+  isMultiSelect Boolean  @default(false) @map("is_multi_select")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  admin Admin @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@map("admin_custom_fields")
+}
+
+model LoginAudit {
+  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  loginCredentialId String   @map("login_credential_id") @db.Uuid
+  attemptTime       DateTime @default(now()) @map("attempt_time")
+  success           Boolean
+  ipAddress         String   @map("ip_address")
+  userAgent         String   @map("user_agent")
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  // Relation back to LoginCredential
+  loginCredential LoginCredential @relation(fields: [loginCredentialId], references: [id], onDelete: Cascade)
+
+  @@map("login_audit")
+}
