@@ -21,6 +21,7 @@
     "noFallthroughCasesInSwitch": false,
     "allowJs": true,
     "strict": true,
+    "types": ["node"], 
     "paths": {
       "@root/*": ["./"],
       "@config/*": ["src/config/*"],
@@ -43,6 +44,6 @@
       "@templates/*": ["src/shared/templates/*"]
     }
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/types/**/*.d.ts"],
   "exclude": ["node_modules", "dist"]
 }

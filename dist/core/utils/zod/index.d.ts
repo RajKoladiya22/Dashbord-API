@@ -93,10 +93,10 @@ export declare const createTeamMemberSchema: z.ZodObject<{
         zip?: string | undefined;
     }>>;
 }, "strip", z.ZodTypeAny, {
+    status: string;
     firstName: string;
     lastName: string;
     email: string;
-    status: string;
     adminId: string;
     password: string;
     full_name: string;
@@ -119,6 +119,7 @@ export declare const createTeamMemberSchema: z.ZodObject<{
     adminId: string;
     password: string;
     full_name: string;
+    status?: string | undefined;
     address?: {
         street?: string | undefined;
         city?: string | undefined;
@@ -129,7 +130,6 @@ export declare const createTeamMemberSchema: z.ZodObject<{
         email?: string | undefined;
         phone?: string | undefined;
     } | undefined;
-    status?: string | undefined;
     department?: string | undefined;
     position?: string | undefined;
 }>;

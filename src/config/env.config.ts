@@ -48,17 +48,36 @@ export interface EnvConfig {
   // admin: AdminConfig;
 }
 
+const {
+  NODE_ENV,
+  HOST,
+  PORT,
+  DATABASE_URL,
+  STATIC_TOKEN,
+  SALT_ROUNDS,
+  JWT_SECRET,
+  JWT_EXPIRES_IN,
+} = validatedEnv;
+
 export const envConfiguration = (): EnvConfig => ({
-  nodeEnv: validatedEnv!.NODE_ENV,
-  host: validatedEnv!.HOST,
-  port: validatedEnv!.PORT,
-  databaseUrl: validatedEnv!.DATABASE_URL,
-  apikey: validatedEnv!.STATIC_TOKEN,
-  saltRounds: validatedEnv!.SALT_ROUNDS,
-  jwt: {
-    secret: validatedEnv!.JWT_SECRET,
-    expiresIn: validatedEnv!.JWT_EXPIRES_IN,
-  },
+  // nodeEnv: validatedEnv!.NODE_ENV,
+  // host: validatedEnv!.HOST,
+  // port: validatedEnv!.PORT,
+  // databaseUrl: validatedEnv!.DATABASE_URL,
+  // apikey: validatedEnv!.STATIC_TOKEN,
+  // saltRounds: validatedEnv!.SALT_ROUNDS,
+  // jwt: {
+  //   secret: validatedEnv!.JWT_SECRET,
+  //   expiresIn: validatedEnv!.JWT_EXPIRES_IN,
+  // },
+
+  nodeEnv: NODE_ENV,
+  host: HOST,
+  port: PORT,
+  databaseUrl: DATABASE_URL,
+  apikey: STATIC_TOKEN,
+  saltRounds: SALT_ROUNDS,
+  jwt: { secret: JWT_SECRET, expiresIn: JWT_EXPIRES_IN },
 
   // database: {
   //   host: validatedEnv.DB_HOST,
