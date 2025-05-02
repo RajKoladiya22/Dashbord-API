@@ -8,3 +8,5 @@ node_modules
 /dist
 /logs
 /test
+.vercel
+.env*.local

@@ -1,4 +1,4 @@
-import { validatedEnv } from './validate-env';
+import { validatedEnv } from "./validate-env";
 
 interface DatabaseConfig {
   host: string;
@@ -41,11 +41,11 @@ export interface EnvConfig {
   databaseUrl: string;
   apikey: string;
   saltRounds: string;
-  database: DatabaseConfig;
   jwt: JwtConfig;
-  smtp: SmtpConfig;
-  aws: AwsConfig;
-  admin: AdminConfig;
+  // database: DatabaseConfig;
+  // smtp: SmtpConfig;
+  // aws: AwsConfig;
+  // admin: AdminConfig;
 }
 
 export const envConfiguration = (): EnvConfig => ({
@@ -55,38 +55,37 @@ export const envConfiguration = (): EnvConfig => ({
   databaseUrl: validatedEnv.DATABASE_URL,
   apikey: validatedEnv.STATIC_TOKEN,
   saltRounds: validatedEnv.SALT_ROUNDS,
-
-  database: {
-    host: validatedEnv.DB_HOST,
-    port: validatedEnv.DB_PORT,
-    username: validatedEnv.DB_USERNAME,
-    password: validatedEnv.DB_PASSWORD,
-    databaseName: validatedEnv.DB_NAME,
-  },
-
   jwt: {
     secret: validatedEnv.JWT_SECRET,
     expiresIn: validatedEnv.JWT_EXPIRES_IN,
   },
 
-  smtp: {
-    service: validatedEnv.SMTP_SERVICE,
-    host: validatedEnv.SMTP_HOST,
-    port: validatedEnv.SMTP_PORT,
-    user: validatedEnv.SMTP_USER,
-    password: validatedEnv.SMTP_PASS,
-  },
+  // database: {
+  //   host: validatedEnv.DB_HOST,
+  //   port: validatedEnv.DB_PORT,
+  //   username: validatedEnv.DB_USERNAME,
+  //   password: validatedEnv.DB_PASSWORD,
+  //   databaseName: validatedEnv.DB_NAME,
+  // },
 
-  aws: {
-    bucketName: validatedEnv.AWS_BUCKET_NAME,
-    region: validatedEnv.AWS_REGION,
-    accessKeyId: validatedEnv.AWS_ACCESS_KEY_ID,
-    secretAccessKey: validatedEnv.AWS_SECRET_ACCESS_KEY,
-    endpoint: validatedEnv.AWS_ENDPOINT,
-    cdnEndpoint: validatedEnv.CDN_ENDPOINT,
-  },
+  // smtp: {
+  //   service: validatedEnv.SMTP_SERVICE,
+  //   host: validatedEnv.SMTP_HOST,
+  //   port: validatedEnv.SMTP_PORT,
+  //   user: validatedEnv.SMTP_USER,
+  //   password: validatedEnv.SMTP_PASS,
+  // },
 
-  admin: {
-    email: validatedEnv.ADMIN_MAIL,
-  },
+  // aws: {
+  //   bucketName: validatedEnv.AWS_BUCKET_NAME,
+  //   region: validatedEnv.AWS_REGION,
+  //   accessKeyId: validatedEnv.AWS_ACCESS_KEY_ID,
+  //   secretAccessKey: validatedEnv.AWS_SECRET_ACCESS_KEY,
+  //   endpoint: validatedEnv.AWS_ENDPOINT,
+  //   cdnEndpoint: validatedEnv.CDN_ENDPOINT,
+  // },
+
+  // admin: {
+  //   email: validatedEnv.ADMIN_MAIL,
+  // },
 });
