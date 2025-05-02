@@ -6,7 +6,6 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "types": ["node", "jest"],  
     "target": "ES2019",
     "lib": ["ES2019"],
     "esModuleInterop": true,
