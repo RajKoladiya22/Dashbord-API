@@ -25,6 +25,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/node": "^20.0.0",
+    "@types/jest": "^29.5.14",
     "@prisma/client": "^6.6.0",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^3.0.2",
