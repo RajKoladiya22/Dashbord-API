@@ -49,15 +49,15 @@ export interface EnvConfig {
 }
 
 export const envConfiguration = (): EnvConfig => ({
-  nodeEnv: validatedEnv.NODE_ENV,
-  host: validatedEnv.HOST,
-  port: validatedEnv.PORT,
-  databaseUrl: validatedEnv.DATABASE_URL,
-  apikey: validatedEnv.STATIC_TOKEN,
-  saltRounds: validatedEnv.SALT_ROUNDS,
+  nodeEnv: validatedEnv!.NODE_ENV,
+  host: validatedEnv!.HOST,
+  port: validatedEnv!.PORT,
+  databaseUrl: validatedEnv!.DATABASE_URL,
+  apikey: validatedEnv!.STATIC_TOKEN,
+  saltRounds: validatedEnv!.SALT_ROUNDS,
   jwt: {
-    secret: validatedEnv.JWT_SECRET,
-    expiresIn: validatedEnv.JWT_EXPIRES_IN,
+    secret: validatedEnv!.JWT_SECRET,
+    expiresIn: validatedEnv!.JWT_EXPIRES_IN,
   },
 
   // database: {

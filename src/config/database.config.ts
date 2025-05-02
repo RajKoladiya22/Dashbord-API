@@ -1,39 +1,12 @@
-// import { PrismaClient } from "@prisma/client";
-// import { validatedEnv } from "./validate-env";
-
-// const env = validatedEnv; // Directly assign the validatedEnv object
-
-// export const prisma = new PrismaClient({
-//   log:
-//     env.NODE_ENV === "development"
-//       ? ["query", "info", "warn", "error"]
-//       : ["error"], // show only errors in prod
-//   datasources: {
-//     db: { url: env.DATABASE_URL }, // override from validatedEnv
-//   },
-// });
-
-// prisma
-//   .$connect()
-//   .then(() => console.log("Database connected", env.DATABASE_URL))
-//   .catch((err) => {
-//     console.error("Database connection failed", err);
-//     process.exit(1);
-//   });
-
-// // Optional helper to gracefully disconnect on shutdown:
-// export async function shutdownDb() {
-//   await prisma.$disconnect();
-// }
-
-
 import { PrismaClient } from '@prisma/client';
 import { validatedEnv } from './validate-env';
+import { config } from 'dotenv';
+config()
 
-export const env = validatedEnv;
 
-// console.log("ENV---->", env);
+export const env = process.env;
 
+console.log("ENV---->", env);
 
 // Ensure DATABASE_URL is defined
 if (!env.DATABASE_URL) {
