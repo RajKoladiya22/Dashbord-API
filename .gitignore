@@ -5,7 +5,7 @@ node_modules
 .env.production
 .env.local
 /node_modules
-/dist
+# /dist
 /logs
 /test
 .vercel

@@ -1,0 +1,1 @@
+{"version":3,"file":"requestLogger.js","sourceRoot":"","sources":["../../../../src/core/middleware/logs/requestLogger.ts"],"names":[],"mappings":";;AAGA,sCAGC;AALD,qCAAkC;AAElC,SAAgB,aAAa,CAAC,GAAY,EAAE,GAAa,EAAE,IAAkB;IAC3E,eAAM,CAAC,IAAI,CAAC,GAAG,GAAG,CAAC,MAAM,IAAI,GAAG,CAAC,WAAW,EAAE,CAAC,CAAC;IAChD,IAAI,EAAE,CAAC;AACT,CAAC"}
