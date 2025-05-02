@@ -5,8 +5,8 @@ import { AuthenticatedRequest } from "../../utils/interface";
 import { sendErrorResponse } from "../../utils/httpResponse";
 import { env } from "../../../config/database.config";
 
-const _secret = env.JWT_SECRET as string;
-const _expires = (env.JWT_EXPIRES_IN as string) || "30d";
+const _secret = env.JWT_SECRET! as string;
+const _expires = (env.JWT_EXPIRES_IN! as string) || "30d";
 
 
 // 🔒 Middleware: Authenticate JWT Token

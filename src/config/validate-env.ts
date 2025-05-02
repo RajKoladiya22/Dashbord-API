@@ -17,6 +17,8 @@ if (!parsed.success) {
   process.exit(1);
 }
 
+// console.log("parsed.data--->", parsed.data);
+
 
 // 3) Export the fully-typed, validated env
 export const validatedEnv = parsed.data;
