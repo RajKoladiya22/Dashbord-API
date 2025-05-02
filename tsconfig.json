@@ -6,7 +6,9 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es6",
+    "types": ["node", "jest"],  
+    "target": "ES2019",
+    "lib": ["ES2019"],
     "esModuleInterop": true,
     "sourceMap": true,
     "outDir": "./dist",
@@ -19,6 +21,7 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "allowJs": true,
+    "strict": true,
     "paths": {
       "@root/*": ["./"],
       "@config/*": ["src/config/*"],
@@ -41,6 +44,6 @@
       "@templates/*": ["src/shared/templates/*"]
     }
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }
