@@ -1,4 +1,4 @@
-// src/controllers/partnerAuth.controller.ts
+// src/controllers/auth/partnerAuth.controller.ts
 import { Request, Response, NextFunction } from "express";
 import bcrypt from "bcrypt";
 import { prisma } from "../../config/database.config";
@@ -8,6 +8,8 @@ import {
 } from "../../core/utils/httpResponse";
 import { CreatePartnerInput } from "../../core/utils/zod";
 
+
+// ── Create Partner Handler ────────────────────────────────────────────────────────────
 export const createPartner = async (
   req: Request,
   res: Response,

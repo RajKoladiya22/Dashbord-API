@@ -1,12 +1,16 @@
 //routes/v1/index.ts
 import { Router } from 'express';
-import teamMemberRoutes from './teamMemberRoutes/teamMember.routes';
 import AuthRoutes from './auth/auth.routes'
+import partnerRoutes from './partnerRoutes/partner.routes'
+import teamMemberRoutes from './teamMemberRoutes/teamMember.routes';
+import productRoutes from './product/product.routes'
 
 
 const router = Router();
-router.use('/team-members', teamMemberRoutes);                                
 router.use('/auth', AuthRoutes);                                
+router.use('/partner', partnerRoutes);                                
+router.use('/team-members', teamMemberRoutes);                                
+router.use('/product', productRoutes);                                
 
 
 export default router;

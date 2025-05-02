@@ -52,8 +52,8 @@ export const authenticateUser = (
 
     next();
   } catch (err: any) {
-    console.log("err.name---->", err.name);
-    console.log("err---->", err);
+    // console.log("err.name---->", err.name);
+    // console.log("err---->", err);
 
     if (err.name === "TokenExpiredError") {
       res.clearCookie("rJmkUxzNakU", {
@@ -65,7 +65,7 @@ export const authenticateUser = (
       sendErrorResponse(res, 401, "Token expired");
       return;
     }
-    console.error("JWT verification error:", err);
+    // console.error("JWT verification error:", err);
     // res.status(401).json({ message: "Unauthorized access" });
     sendErrorResponse(res, 401, "Unauthorized access");
     return;

@@ -1,38 +1,41 @@
 import { Request, Response, NextFunction } from "express";
-import { prisma } from "../../config/database.config";
-import bcrypt from "bcryptjs";
-import { logger } from "@core/middleware/logs/logger";
+import { prisma, env } from "../../config/database.config";
+import {
+  sendSuccessResponse,
+  sendErrorResponse,
+} from "../../core/utils/httpResponse";
 
-export const createTeamMember = async (
+export const listTeamMembers = async (
   req: Request,
   res: Response,
   next: NextFunction
-): Promise<void> => {
-  try {
-    const { firstName, lastName, email, password, department, position } =
-      req.body;
-    console.log(req.body);
-    const hash = await bcrypt.hash(password, 10);
-
-    const tm = "Done"
-    // const tm = await prisma.teamMember.create({
-    //   data: {
-    //     firstName,
-    //     lastName,
-    //     email,
-    //     passwordHash: hash,
-    //     adminId: "123",
-    //   },
-    // });
-
-    console.log("tm--->", tm);
-    // res.status(201).json(tm);
-    res.json({
-      message: "Done",
-      data: tm,
-    });
+) => {
+  const adminId = req.user?.id;
+  if (!adminId) {
+    sendErrorResponse(res, 401, "Unauthorized");
     return;
+  }
+
+  try {
+    const teamMembers = await prisma.teamMember.findMany({
+      where: { adminId }, // same filtering pattern :contentReference[oaicite:1]{index=1}
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        department: true,
+        position: true,
+        status: true,
+        createdAt: true,
+      },
+    });
+
+    sendSuccessResponse(res, 200, "Team members fetched", { teamMembers });
   } catch (err) {
+    console.error("listTeamMembers error:", err);
+    sendErrorResponse(res, 500, "Server error");
     next(err);
   }
 };
