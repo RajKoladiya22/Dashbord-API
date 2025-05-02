@@ -4,7 +4,8 @@
   "description": "",
   "main": "dist/server.js",
   "scripts": {
-    "build": "tsc -p tsconfig.json && npm run prisma:generate && npm run migration:deploy ",
+    "vercel-build": "prisma generate && prisma migrate deploy && tsc -p tsconfig.json",
+    "build": "npm run vercel-build ",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint \"src/**/*.ts\" --fix",
     "prisma:generate": "prisma generate",
