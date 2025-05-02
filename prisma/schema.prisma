@@ -1,8 +1,9 @@
 // 1. Datasource & Generator
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  // url      = env("DATABASE_URL")
   // url      = "postgresql://postgres:Raj24315@localhost:5636/cpm_orm"
+  url      = "prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiMmJiZDc0ZWMtMzg0OS00YWI0LWI0Y2MtNWI2ODU0Nzg4MzJiIiwidGVuYW50X2lkIjoiNTUxYWI5M2RhMTFmZjY0NzgzODk4N2Y5ZWE4YjUxODNjZDgxMWFjOTBkOWUzMzVlMTQ1Yjg3OTRhNGUzMWEwYiIsImludGVybmFsX3NlY3JldCI6IjQ5ZTQ2YTA0LWUyMDYtNDNiNy1iZGFjLTNiODNlOWMxZTJlYyJ9.IpSf_wv6gRwbXQS68vz8qwvyPTU7hVXafC7GsIrzTLU"
 }
 
 generator client {
