@@ -16,10 +16,12 @@ export const authenticateUser = (
   next: NextFunction
 ): void => {
   try {
-    const token = req.cookies?.rJmkUxzNakU;
-    // const token = req.cookies
+    // const rj = "xRo%25pAkEjfmJ"
+    const token = req.cookies.rJmkUxzNakU;
+    // const token2 = req.cookies  
   ;
-    // console.log("token--->",token );
+    console.log("token--->",token );
+    // console.log("\ntoken:-2--->",token2 );
 
     if (!token) {
       // res.status(401).json({ message: "Authentication token missing" });
@@ -52,8 +54,8 @@ export const authenticateUser = (
 
     next();
   } catch (err: any) {
-    // console.log("err.name---->", err.name);
-    // console.log("err---->", err);
+    console.log("err.name---->", err.name);
+    console.log("\n\nerr---->", err);
 
     if (err.name === "TokenExpiredError") {
       res.clearCookie("rJmkUxzNakU", {
@@ -107,8 +109,10 @@ export const generateToken = (
 export const setAuthCookie = (res: Response, token: string): void => {
   res.cookie("rJmkUxzNakU", token, {
     httpOnly: true,
-    secure: env.NODE_ENV === "production",
-    sameSite: "strict",
+    // secure: env.NODE_ENV === "production",
+    // sameSite: "strict",
+    secure: true,
+    sameSite: "none",        // ← allow cross‑site
     // maxAge: 3600000, // 1 hour
     maxAge: 86400000, // 1 day = 24 * 60 * 60 * 1000 milliseconds / 30 days = 30 * 24 * 60 * 60 * 1000 milliseconds
   });

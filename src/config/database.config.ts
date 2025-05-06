@@ -6,7 +6,7 @@ config()
 
 export const env = process.env;
 
-console.log("ENV---->", env);
+// console.log("ENV---->", env);
 
 // Ensure DATABASE_URL is defined
 if (!env.DATABASE_URL) {

@@ -9,7 +9,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint \"src/**/*.ts\" --fix",
     "prisma:generate": "prisma generate",
-    "migration:generate": "prisma migrate dev --name init_",
+    "migration:generate": "prisma migrate dev --name init_03_05_2",
     "migration:deploy": "prisma migrate deploy",
     "migration:reset": "prisma migrate reset --force",
     "seed": "ts-node prisma/seed.ts",

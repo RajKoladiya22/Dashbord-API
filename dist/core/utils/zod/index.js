@@ -4,7 +4,7 @@ exports.createProductSchema = exports.createTeamMemberSchema = exports.createPar
 const zod_1 = require("zod");
 exports.signInSchema = zod_1.z.object({
     identifier: zod_1.z.string().email(),
-    password: zod_1.z.string().min(8),
+    password: zod_1.z.string(),
 });
 exports.signUpSchema = zod_1.z.object({
     firstName: zod_1.z.string().min(1),

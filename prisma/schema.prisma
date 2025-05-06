@@ -2,12 +2,12 @@
 datasource db {
   provider = "postgresql"
   // url      = env("DATABASE_URL")
-  // url      = "postgresql://postgres:Raj24315@localhost:5636/cpm_orm"
-  url      = "prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiMmJiZDc0ZWMtMzg0OS00YWI0LWI0Y2MtNWI2ODU0Nzg4MzJiIiwidGVuYW50X2lkIjoiNTUxYWI5M2RhMTFmZjY0NzgzODk4N2Y5ZWE4YjUxODNjZDgxMWFjOTBkOWUzMzVlMTQ1Yjg3OTRhNGUzMWEwYiIsImludGVybmFsX3NlY3JldCI6IjQ5ZTQ2YTA0LWUyMDYtNDNiNy1iZGFjLTNiODNlOWMxZTJlYyJ9.IpSf_wv6gRwbXQS68vz8qwvyPTU7hVXafC7GsIrzTLU"
+  url      = "postgresql://postgres:Raj24315@localhost:5636/cpm_orm"
+  // url      = "prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiMmJiZDc0ZWMtMzg0OS00YWI0LWI0Y2MtNWI2ODU0Nzg4MzJiIiwidGVuYW50X2lkIjoiNTUxYWI5M2RhMTFmZjY0NzgzODk4N2Y5ZWE4YjUxODNjZDgxMWFjOTBkOWUzMzVlMTQ1Yjg3OTRhNGUzMWEwYiIsImludGVybmFsX3NlY3JldCI6IjQ5ZTQ2YTA0LWUyMDYtNDNiNy1iZGFjLTNiODNlOWMxZTJlYyJ9.IpSf_wv6gRwbXQS68vz8qwvyPTU7hVXafC7GsIrzTLU"
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "windows"]
 }
 
@@ -50,7 +50,7 @@ model Admin {
   companyName  String   @map("company_name")
   address      Json? // JSONB column
   contactInfo  Json?    @map("contact_info")
-  status       String   
+  status       String
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
@@ -102,7 +102,8 @@ model Partner {
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
-  admin Admin @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  admin      Admin      @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  Ccustomers Customer[] @relation("PartnerCustomers")
 
   @@map("partners")
 }
@@ -261,13 +262,16 @@ model Customer {
   prime             Boolean  @default(false)
   blacklisted       Boolean  @default(false)
   remark            String?
-  adminCustomFields Json     @map("admin_custom_fields")
+  adminCustomFields Json?
+  address           Json
+  joiningDate       DateTime @map("joining_date")
   hasReference      Boolean  @default(false) @map("has_reference")
-  referenceDetail   Json     @map("reference_detail")
+  partnerId         String?  @map("partner_id") @db.Uuid
   createdAt         DateTime @default(now()) @map("created_at")
   updatedAt         DateTime @updatedAt @map("updated_at")
 
   admin   Admin                    @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  partner Partner?                 @relation("PartnerCustomers", fields: [partnerId], references: [id])
   history CustomerProductHistory[]
 
   @@map("customers")
@@ -282,6 +286,7 @@ model CustomerProductHistory {
   renewal      Boolean   @default(false)
   expiryDate   DateTime? @map("expiry_date")
   renewalDate  DateTime? @map("renewal_date")
+  status       Boolean   @default(true) @map("status")
   createdAt    DateTime  @default(now()) @map("created_at")
   updatedAt    DateTime  @updatedAt @map("updated_at")
 

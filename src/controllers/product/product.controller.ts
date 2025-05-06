@@ -189,7 +189,7 @@ export const updateProduct = async (
   // }
   const { id } = paramResult.data;
   const updates = req.body;
-  console.log("REQ.BODY--->", updates);
+  // console.log("REQ.BODY--->", updates);
   
 
   // 2) Determine admin context

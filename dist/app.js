@@ -12,7 +12,7 @@ const v1_1 = __importDefault(require("./routes/v1"));
 const checkStaticToken_1 = require("./core/middleware/key/checkStaticToken");
 const app = (0, express_1.default)();
 const corsOptions = {
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "https://dashbord-seven-sigma.vercel.app"],
     credentials: true,
 };
 app.use((0, cors_1.default)(corsOptions));

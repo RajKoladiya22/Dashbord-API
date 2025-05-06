@@ -10,10 +10,10 @@ const database_config_1 = require("../../../config/database.config");
 const _secret = database_config_1.env.JWT_SECRET;
 const _expires = database_config_1.env.JWT_EXPIRES_IN || "30d";
 const authenticateUser = (req, res, next) => {
-    var _a;
     try {
-        const token = (_a = req.cookies) === null || _a === void 0 ? void 0 : _a.rJmkUxzNakU;
+        const token = req.cookies.rJmkUxzNakU;
         ;
+        console.log("token--->", token);
         if (!token) {
             (0, httpResponse_1.sendErrorResponse)(res, 401, "Authentication token missing");
             return;
@@ -36,6 +36,8 @@ const authenticateUser = (req, res, next) => {
         next();
     }
     catch (err) {
+        console.log("err.name---->", err.name);
+        console.log("\n\nerr---->", err);
         if (err.name === "TokenExpiredError") {
             res.clearCookie("rJmkUxzNakU", {
                 httpOnly: true,
@@ -74,8 +76,8 @@ exports.generateToken = generateToken;
 const setAuthCookie = (res, token) => {
     res.cookie("rJmkUxzNakU", token, {
         httpOnly: true,
-        secure: database_config_1.env.NODE_ENV === "production",
-        sameSite: "strict",
+        secure: true,
+        sameSite: "none",
         maxAge: 86400000,
     });
 };

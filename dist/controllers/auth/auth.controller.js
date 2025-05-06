@@ -14,11 +14,12 @@ const SALT_ROUNDS = parseInt((_a = database_config_1.env.SALT_ROUNDS) !== null &
 const signIn = async (req, res, next) => {
     const parsed = zod_1.signInSchema.safeParse(req.body);
     if (!parsed.success) {
-        (0, httpResponse_1.sendErrorResponse)(res, 400, "Invalid input");
+        (0, httpResponse_1.sendErrorResponse)(res, 400, "Email and password are required");
         return;
     }
     const { identifier: email, password } = parsed.data;
     try {
+        const now = new Date();
         const cred = await database_config_1.prisma.loginCredential.findUnique({
             where: { email },
             select: {
@@ -29,34 +30,49 @@ const signIn = async (req, res, next) => {
                 status: true,
             },
         });
-        if (!cred || cred.status !== "active" || !cred.adminId) {
+        const dummyHash = "$2b$12$........................................";
+        const match = await bcrypt_1.default.compare(password, (cred === null || cred === void 0 ? void 0 : cred.passwordHash) || dummyHash);
+        if (!cred || !match || cred.status !== "active" || !cred.adminId) {
             (0, httpResponse_1.sendErrorResponse)(res, 401, "Invalid credentials");
             return;
         }
-        const match = await bcrypt_1.default.compare(password, cred.passwordHash);
-        if (!match) {
-            (0, httpResponse_1.sendErrorResponse)(res, 401, "Invalid credentials");
-            return;
-        }
-        const subscription = await database_config_1.prisma.subscription.findFirst({
-            where: {
-                adminId: cred.adminId,
-                status: "active",
-                endsAt: { gt: new Date() },
-            },
-            orderBy: { endsAt: "desc" },
-            select: { id: true },
-        });
+        const [subscription, userProfile] = await Promise.all([
+            database_config_1.prisma.subscription.findFirst({
+                where: {
+                    adminId: cred.adminId,
+                    status: "active",
+                    endsAt: { gt: now },
+                },
+                select: { id: true },
+                orderBy: { endsAt: "desc" },
+            }),
+            (async () => {
+                if (cred.role === "admin") {
+                    return database_config_1.prisma.admin.findUnique({
+                        where: { id: cred.userProfileId },
+                        select: { id: true, firstName: true, lastName: true, role: true },
+                    });
+                }
+                else if (cred.role === "partner") {
+                    return database_config_1.prisma.partner.findUnique({
+                        where: { id: cred.userProfileId },
+                        select: { id: true, firstName: true, lastName: true, role: true },
+                    });
+                }
+                else {
+                    return database_config_1.prisma.teamMember.findUnique({
+                        where: { id: cred.userProfileId },
+                        select: { id: true, firstName: true, lastName: true, role: true },
+                    });
+                }
+            })(),
+        ]);
         if (!subscription) {
             (0, httpResponse_1.sendErrorResponse)(res, 403, "No active subscription");
             return;
         }
-        const admin = await database_config_1.prisma.admin.findUnique({
-            where: { id: cred.adminId },
-            select: { id: true, firstName: true, role: true, lastName: true },
-        });
-        if (!admin) {
-            (0, httpResponse_1.sendErrorResponse)(res, 500, "Admin record missing");
+        if (!userProfile) {
+            (0, httpResponse_1.sendErrorResponse)(res, 500, "User profile missing");
             return;
         }
         const token = (0, jwt_token_1.generateToken)(cred.userProfileId, cred.role, cred.adminId);
@@ -64,14 +80,14 @@ const signIn = async (req, res, next) => {
         (0, httpResponse_1.sendSuccessResponse)(res, 200, "Logged in", {
             token,
             user: {
-                id: admin.id,
+                id: userProfile.id,
                 email,
-                role: admin.role,
-                username: admin.firstName,
-                firstName: admin.firstName,
-                lastName: admin.lastName
+                role: userProfile.role,
+                firstName: userProfile.firstName,
+                lastName: userProfile.lastName,
             },
         });
+        return;
     }
     catch (err) {
         console.error("Login Error:", err);
@@ -86,29 +102,32 @@ const signUp = async (req, res, next) => {
         (0, httpResponse_1.sendErrorResponse)(res, 400, "Invalid input");
         return;
     }
-    const { firstName, lastName, email, password, contactNumber, companyName, address } = parsed.data;
+    const { firstName, lastName, email, password, contactNumber, companyName, address, } = parsed.data;
     try {
         const hashed = await bcrypt_1.default.hash(password, SALT_ROUNDS);
         const result = await database_config_1.prisma.$transaction(async (tx) => {
             const admin = await tx.admin.create({
                 data: {
-                    firstName, lastName, email,
+                    firstName,
+                    lastName,
+                    email,
                     passwordHash: hashed,
                     companyName,
                     contactInfo: { contactNumber },
                     address,
-                    status: "active", role: "admin"
+                    status: "active",
+                    role: "admin",
                 },
-                select: { id: true, role: true, email: true }
+                select: { id: true, role: true, email: true },
             });
             await tx.subscription.create({
                 data: {
                     adminId: admin.id,
-                    planId: "41cf83f7-2d28-430a-82ac-813d0a489aab",
+                    planId: "5987d07c-bbe5-4f93-b87a-bb8907b36244",
                     status: "active",
                     startsAt: new Date(),
-                    endsAt: new Date(Date.now() + 30 * 24 * 3600 * 1000)
-                }
+                    endsAt: new Date(Date.now() + 30 * 24 * 3600 * 1000),
+                },
             });
             return admin;
         });
@@ -116,7 +135,7 @@ const signUp = async (req, res, next) => {
         (0, jwt_token_1.setAuthCookie)(res, token);
         (0, httpResponse_1.sendSuccessResponse)(res, 201, "Account created", {
             token,
-            user: { id: result.id, email: result.email, role: result.role }
+            user: { id: result.id, email: result.email, role: result.role },
         });
     }
     catch (err) {

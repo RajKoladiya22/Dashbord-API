@@ -344,8 +344,10 @@ async function main() {
       email: "dana@custco.com",
       serialNo: "SN123",
       prime: false,
+      address: {},
       adminCustomFields: {},
-      referenceDetail: {},
+      joiningDate: new Date(),
+
     },
   });
 

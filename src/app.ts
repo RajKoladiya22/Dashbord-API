@@ -9,7 +9,7 @@ import { checkStaticToken } from "./core/middleware/key/checkStaticToken";
 const app = express();
 
 const corsOptions = {
-  origin: "http://localhost:5173", // your frontend URL
+  origin: ["http://localhost:5173", "https://dashbord-seven-sigma.vercel.app"], // your frontend URL
   credentials: true, // <— allow cookies
 };
 

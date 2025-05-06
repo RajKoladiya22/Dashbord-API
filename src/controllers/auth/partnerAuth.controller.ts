@@ -21,9 +21,11 @@ export const createPartner = async (
       return;
     }
     const adminID = req.user?.id;
-    const { partner_name, company_name, contact_info, email, password } =
+    const { firstName, companyName, contact_info, email, password } =
       req.body;
-    const [firstName, ...rest] = partner_name.trim().split(" ");
+    // console.log("req.body-->\n", req.body);
+     
+    const [first_Name, ...rest] = firstName.trim().split(" ");
     const lastName = rest.join(" ") || "";
 
     
@@ -39,8 +41,8 @@ export const createPartner = async (
         data: {
           adminId: adminID,
           role: "partner",
-          companyName: company_name,
-          firstName,
+          companyName: companyName,
+          firstName: first_Name,
           lastName,
           contactInfo: contact_info ?? {},
           address: {},

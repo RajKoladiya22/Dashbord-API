@@ -7,7 +7,6 @@ const client_1 = require("@prisma/client");
 const dotenv_1 = require("dotenv");
 (0, dotenv_1.config)();
 exports.env = process.env;
-console.log("ENV---->", exports.env);
 if (!exports.env.DATABASE_URL) {
     console.error('❌ DATABASE_URL is not set');
     process.exit(1);

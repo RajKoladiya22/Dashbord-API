@@ -119,7 +119,6 @@ const updateProduct = async (req, res, next) => {
     }
     const { id } = paramResult.data;
     const updates = req.body;
-    console.log("REQ.BODY--->", updates);
     const user = req.user;
     if (!user) {
         (0, responseHandler_1.sendErrorResponse)(res, 401, "Unauthorized");

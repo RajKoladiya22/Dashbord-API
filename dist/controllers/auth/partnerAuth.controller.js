@@ -15,8 +15,8 @@ const createPartner = async (req, res, next) => {
             return;
         }
         const adminID = (_b = req.user) === null || _b === void 0 ? void 0 : _b.id;
-        const { partner_name, company_name, contact_info, email, password } = req.body;
-        const [firstName, ...rest] = partner_name.trim().split(" ");
+        const { firstName, companyName, contact_info, email, password } = req.body;
+        const [first_Name, ...rest] = firstName.trim().split(" ");
         const lastName = rest.join(" ") || "";
         const partner = await database_config_1.prisma.$transaction(async (tx) => {
             const exists = await tx.partner.findUnique({
@@ -29,8 +29,8 @@ const createPartner = async (req, res, next) => {
                 data: {
                     adminId: adminID,
                     role: "partner",
-                    companyName: company_name,
-                    firstName,
+                    companyName: companyName,
+                    firstName: first_Name,
                     lastName,
                     contactInfo: contact_info !== null && contact_info !== void 0 ? contact_info : {},
                     address: {},
