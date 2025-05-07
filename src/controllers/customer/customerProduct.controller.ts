@@ -1,0 +1,54 @@
+// src/controllers/customer/customerProduct.controller.ts
+
+import { Request, Response, NextFunction } from "express";
+import { prisma } from "../../config/database.config";
+import {
+  sendSuccessResponse,
+  sendErrorResponse,
+} from "../../core/utils/responseHandler";
+
+
+export const getCustomerProductsByCustomerId = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  const { customerId } = req.params;
+  const user = req.user as { id: string; role: string; adminId?: string };
+
+  if (!user) {
+    sendErrorResponse(res, 401, "Unauthorized");
+    return;
+  }
+
+  const adminId = user.role === "admin" ? user.id : user.adminId;
+
+  if (!adminId) {
+    sendErrorResponse(res, 403, "Forbidden: Admin ID not found");
+    return;
+  }
+
+  try {
+    // const history = {}
+    const history = await prisma.customerProductHistory.findMany({
+      where: {
+        customerId,
+        adminId,
+        status: true,
+      },
+      include: {
+        product: true,
+      },
+      orderBy: {
+        purchaseDate: "desc",
+      },
+    });
+
+    sendSuccessResponse(res, 200, "Customer products fetched", { history });
+    return;
+  } catch (error) {
+    // console.error("Error fetching customer products:", error);
+    // sendErrorResponse(res, 500, "Server error");
+    return;
+  }
+};

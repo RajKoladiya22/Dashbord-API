@@ -19,21 +19,21 @@ export declare const signUpSchema: z.ZodObject<{
     companyName: z.ZodString;
     address: z.ZodOptional<z.ZodAny>;
 }, "strip", z.ZodTypeAny, {
+    password: string;
     firstName: string;
     lastName: string;
     email: string;
     companyName: string;
-    password: string;
-    address?: any;
     contactNumber?: string | undefined;
+    address?: any;
 }, {
+    password: string;
     firstName: string;
     lastName: string;
     email: string;
     companyName: string;
-    password: string;
-    address?: any;
     contactNumber?: string | undefined;
+    address?: any;
 }>;
 export type SignUpSchema = z.infer<typeof signUpSchema>;
 export declare const createPartnerSchema: z.ZodObject<{
@@ -43,14 +43,14 @@ export declare const createPartnerSchema: z.ZodObject<{
     email: z.ZodString;
     password: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    email: string;
     password: string;
+    email: string;
     partner_name: string;
     company_name: string;
     contact_info?: Record<string, any> | undefined;
 }, {
-    email: string;
     password: string;
+    email: string;
     partner_name: string;
     company_name: string;
     contact_info?: Record<string, any> | undefined;
@@ -93,12 +93,12 @@ export declare const createTeamMemberSchema: z.ZodObject<{
         zip?: string | undefined;
     }>>;
 }, "strip", z.ZodTypeAny, {
+    password: string;
     status: string;
     firstName: string;
     lastName: string;
     email: string;
     adminId: string;
-    password: string;
     full_name: string;
     address?: {
         street?: string | undefined;
@@ -113,11 +113,11 @@ export declare const createTeamMemberSchema: z.ZodObject<{
     department?: string | undefined;
     position?: string | undefined;
 }, {
+    password: string;
     firstName: string;
     lastName: string;
     email: string;
     adminId: string;
-    password: string;
     full_name: string;
     status?: string | undefined;
     address?: {

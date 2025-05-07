@@ -1,22 +1,24 @@
-// 1. Datasource & Generator
+// url      = env("DATABASE_URL")
+// schema.prisma
+
 datasource db {
   provider = "postgresql"
-  // url      = env("DATABASE_URL")
-  url      = "postgresql://postgres:Raj24315@localhost:5636/cpm_orm"
-  // url      = "prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiMmJiZDc0ZWMtMzg0OS00YWI0LWI0Y2MtNWI2ODU0Nzg4MzJiIiwidGVuYW50X2lkIjoiNTUxYWI5M2RhMTFmZjY0NzgzODk4N2Y5ZWE4YjUxODNjZDgxMWFjOTBkOWUzMzVlMTQ1Yjg3OTRhNGUzMWEwYiIsImludGVybmFsX3NlY3JldCI6IjQ5ZTQ2YTA0LWUyMDYtNDNiNy1iZGFjLTNiODNlOWMxZTJlYyJ9.IpSf_wv6gRwbXQS68vz8qwvyPTU7hVXafC7GsIrzTLU"
+  url      = env("DATABASE_URL")
+  // url      = "postgresql://postgres:Raj24315@localhost:5636/cpm_orm"
 }
 
 generator client {
   provider      = "prisma-client-js"
+  output        = "../src/generated/client"
   binaryTargets = ["native", "windows"]
 }
 
-// 2. Enums
 enum Role {
   admin
   team_member
   partner
   super_admin
+  sub_admin
 }
 
 enum OfferType {
@@ -38,8 +40,29 @@ enum SubscriptionStatus {
   blocked
 }
 
-// 3. Models
+// ——————————————————————————————————————————
+// SuperAdmin
+// ——————————————————————————————————————————
+model SuperAdmin {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  firstName    String   @map("first_name")
+  lastName     String   @map("last_name")
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  contactInfo  Json?    @map("contact_info")
+  address      Json?
+  status       String
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
+  loginCreds LoginCredential[] @relation("SuperAdminCredentials")
+
+  @@map("super_admins")
+}
+
+// ——————————————————————————————————————————
+// Admin
+// ——————————————————————————————————————————
 model Admin {
   id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   role         Role     @default(admin)
@@ -48,24 +71,27 @@ model Admin {
   email        String   @unique
   passwordHash String   @map("password_hash")
   companyName  String   @map("company_name")
-  address      Json? // JSONB column
+  address      Json?
   contactInfo  Json?    @map("contact_info")
   status       String
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
-  teamMembers            TeamMember[]
-  partners               Partner[]
-  customers              Customer[]
-  customFields           AdminCustomField[]
-  products               Product[]
-  subscriptions          Subscription[]
-  loginCreds             LoginCredential[]        @relation("AdminCredentials")
-  CustomerProductHistory CustomerProductHistory[]
+  teamMembers      TeamMember[]
+  partners         Partner[]
+  customers        Customer[]
+  customFields     AdminCustomField[]
+  products         Product[]
+  subscriptions    Subscription[]
+  loginCreds       LoginCredential[]        @relation("AdminCredentials")
+  productHistories CustomerProductHistory[]
 
   @@map("admins")
 }
 
+// ——————————————————————————————————————————
+// TeamMember
+// ——————————————————————————————————————————
 model TeamMember {
   id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   adminId      String   @map("admin_id") @db.Uuid
@@ -84,9 +110,13 @@ model TeamMember {
 
   admin Admin @relation(fields: [adminId], references: [id], onDelete: Cascade)
 
+  @@index([adminId])
   @@map("team_members")
 }
 
+// ——————————————————————————————————————————
+// Partner
+// ——————————————————————————————————————————
 model Partner {
   id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   adminId      String   @map("admin_id") @db.Uuid
@@ -102,12 +132,16 @@ model Partner {
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
-  admin      Admin      @relation(fields: [adminId], references: [id], onDelete: Cascade)
-  Ccustomers Customer[] @relation("PartnerCustomers")
+  admin     Admin      @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  customers Customer[] @relation("PartnerCustomers")
 
+  @@index([adminId])
   @@map("partners")
 }
 
+// ——————————————————————————————————————————
+// LoginCredential
+// ——————————————————————————————————————————
 model LoginCredential {
   id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   role          Role
@@ -118,17 +152,23 @@ model LoginCredential {
   status        String
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
+  superAdminId  String?  @db.Uuid
 
   admin       Admin?       @relation("AdminCredentials", fields: [adminId], references: [id], onDelete: Cascade)
+  superadmin  SuperAdmin?  @relation("SuperAdminCredentials", onDelete: Cascade, fields: [superAdminId], references: [id])
   loginAudits LoginAudit[]
 
+  @@index([adminId])
   @@map("login_credentials")
 }
 
+// ——————————————————————————————————————————
+// Plan & Related
+// ——————————————————————————————————————————
 model Plan {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name      String
-  duration  String // Prisma does not support INTERVAL; store as String or map to Int seconds
+  duration  String
   price     Float
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -153,6 +193,7 @@ model PlanOffer {
 
   plan Plan @relation(fields: [planId], references: [id], onDelete: Cascade)
 
+  @@index([planId])
   @@map("plan_offers")
 }
 
@@ -166,6 +207,7 @@ model PlanSpec {
 
   plan Plan @relation(fields: [planId], references: [id], onDelete: Cascade)
 
+  @@index([planId])
   @@map("plan_specs")
 }
 
@@ -178,16 +220,20 @@ model PlanDescription {
 
   plan Plan @relation(fields: [planId], references: [id], onDelete: Cascade)
 
+  @@index([planId])
   @@map("plan_descriptions")
 }
 
+// ——————————————————————————————————————————
+// Subscription & Payment/Event
+// ——————————————————————————————————————————
 model Subscription {
   id          String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   adminId     String             @db.Uuid
   planId      String             @db.Uuid
   status      SubscriptionStatus
   startsAt    DateTime           @map("starts_at")
-  endsAt      DateTime?
+  endsAt      DateTime?          @map("ends_at")
   renewedAt   DateTime?          @map("renewed_at")
   cancelledAt DateTime?          @map("cancelled_at")
   createdAt   DateTime           @default(now()) @map("created_at")
@@ -198,6 +244,8 @@ model Subscription {
   payments SubscriptionPayment[]
   events   SubscriptionEvent[]
 
+  @@index([adminId])
+  @@index([planId])
   @@map("subscriptions")
 }
 
@@ -215,6 +263,7 @@ model SubscriptionPayment {
 
   subscription Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
 
+  @@index([subscriptionId])
   @@map("subscription_payments")
 }
 
@@ -229,9 +278,13 @@ model SubscriptionEvent {
 
   subscription Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
 
+  @@index([subscriptionId])
   @@map("subscription_events")
 }
 
+// ——————————————————————————————————————————
+// Product & Renewal History
+// ——————————————————————————————————————————
 model Product {
   id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   productName     String   @map("product_name")
@@ -246,11 +299,34 @@ model Product {
   updatedAt       DateTime @updatedAt @map("updated_at")
 
   admin                  Admin                    @relation(fields: [adminId], references: [id], onDelete: Cascade)
-  CustomerProductHistory CustomerProductHistory[]
+  customerProductHistory CustomerProductHistory[]
+  renewalHistory         ProductRenewalHistory[]
 
+  @@index([adminId])
   @@map("products")
 }
 
+model ProductRenewalHistory {
+  id                       String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  customerProductHistoryId String    @map("customer_product_history_id") @db.Uuid
+  productId                String    @map("product_id") @db.Uuid
+  purchaseDate             DateTime  @map("purchase_date")
+  renewalDate              DateTime? @map("renewal_date")
+  expiryDate               DateTime? @map("expiry_date")
+  createdAt                DateTime  @default(now()) @map("created_at")
+  updatedAt                DateTime  @updatedAt @map("updated_at")
+
+  customerProductHistory CustomerProductHistory @relation(fields: [customerProductHistoryId], references: [id], onDelete: Cascade)
+  product                Product                @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([customerProductHistoryId])
+  @@index([productId])
+  @@map("product_renewal_history")
+}
+
+// ——————————————————————————————————————————
+// Customer & History
+// ——————————————————————————————————————————
 model Customer {
   id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   adminId           String   @db.Uuid
@@ -274,6 +350,9 @@ model Customer {
   partner Partner?                 @relation("PartnerCustomers", fields: [partnerId], references: [id])
   history CustomerProductHistory[]
 
+  @@index([adminId])
+  @@index([partnerId])
+  @@index([adminId, partnerId])
   @@map("customers")
 }
 
@@ -290,13 +369,21 @@ model CustomerProductHistory {
   createdAt    DateTime  @default(now()) @map("created_at")
   updatedAt    DateTime  @updatedAt @map("updated_at")
 
-  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  admin    Admin    @relation(fields: [adminId], references: [id], onDelete: Cascade)
-  product  Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  customer Customer                @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  admin    Admin                   @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  product  Product                 @relation(fields: [productId], references: [id], onDelete: Cascade)
+  renewals ProductRenewalHistory[]
 
+  @@index([customerId])
+  @@index([adminId])
+  @@index([productId])
+  @@index([expiryDate])
   @@map("customer_product_history")
 }
 
+// ——————————————————————————————————————————
+// AdminCustomField
+// ——————————————————————————————————————————
 model AdminCustomField {
   id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   adminId       String   @map("admin_id") @db.Uuid
@@ -310,9 +397,13 @@ model AdminCustomField {
 
   admin Admin @relation(fields: [adminId], references: [id], onDelete: Cascade)
 
+  @@index([adminId])
   @@map("admin_custom_fields")
 }
 
+// ——————————————————————————————————————————
+// LoginAudit & OPT
+// ——————————————————————————————————————————
 model LoginAudit {
   id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   loginCredentialId String   @map("login_credential_id") @db.Uuid
@@ -322,8 +413,20 @@ model LoginAudit {
   userAgent         String   @map("user_agent")
   createdAt         DateTime @default(now()) @map("created_at")
 
-  // Relation back to LoginCredential
   loginCredential LoginCredential @relation(fields: [loginCredentialId], references: [id], onDelete: Cascade)
 
+  @@index([loginCredentialId])
   @@map("login_audit")
+}
+
+model PasswordOtp {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String   @db.Uuid // FK to Admin, Partner, etc.
+  otp       String   @db.Char(6) // e.g. 6‑digit code
+  purpose   String   @db.VarChar(32) // e.g. "forgot_password"
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([userId, purpose])
+  @@map("password_otps")
 }

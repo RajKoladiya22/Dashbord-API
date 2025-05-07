@@ -1,4 +1,4 @@
-// src/controllers/customer.controller.ts
+// src/controllers/customer/customer.controller.ts
 
 import { Request, Response, NextFunction } from "express";
 import { prisma } from "../../config/database.config";
@@ -30,18 +30,33 @@ const createCustomerSchema = z.object({
     .array(
       z.object({
         productId: z.string().uuid(),
-        expiryDate: z
-          .string()
-          .optional()
-          // .refine((s) => !s || !isNaN(Date.parse(s)), {
-          //   message: "Must be a valid ISO date string or omitted",
-          // }),
+        expiryDate: z.string().optional(),
+        // .refine((s) => !s || !isNaN(Date.parse(s)), {
+        //   message: "Must be a valid ISO date string or omitted",
+        // }),
         // you can add more fields here if needed
       })
     )
     .optional(),
 });
 type CreateCustomerBody = z.infer<typeof createCustomerSchema>;
+
+const updateCustomerSchema = z.object({
+  companyName: z.string().min(1).optional(),
+  contactPerson: z.string().min(1).optional(),
+  mobileNumber: z.string().min(1).optional(),
+  email: z.string().email().optional(),
+  serialNo: z.string().optional(),
+  prime: z.boolean().optional(),
+  blacklisted: z.boolean().optional(),
+  remark: z.string().optional(),
+  hasReference: z.boolean().optional(),
+  partnerId: z.string().uuid().optional(),
+  adminCustomFields: z.record(z.any()).optional(),
+  address: z.record(z.any()).optional(),
+  joiningDate: z.string().optional(),
+});
+type UpdateCustomerBody = z.infer<typeof updateCustomerSchema>;
 
 export const createCustomer = async (
   req: Request,
@@ -52,7 +67,7 @@ export const createCustomer = async (
   // const parse = createCustomerSchema.safeParse(req.body);
   console.log("req.body----->\n", req.body);
   // console.log("parse----->\n", parse);
-  
+
   // if (!parse.success) {
   //   sendErrorResponse(res, 400, "Invalid input", {
   //     errors: parse.error.errors,
@@ -108,7 +123,6 @@ export const createCustomer = async (
         },
       });
       console.log("customer----->\n", customer);
-
 
       // 2) Create history entries for each product
       const now = new Date();
@@ -206,6 +220,83 @@ export const listCustomers = async (
     console.error("listCustomers error:", err);
     sendErrorResponse(res, 500, "Server error");
     return;
+  }
+};
+
+export const updateCustomer = async (
+  req: Request<{ id: string }, {}, unknown>,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  const customerId = req.params.id;
+  // 1) Validate body
+  const parsed = updateCustomerSchema.safeParse(req.body);
+  if (!parsed.success) {
+    sendErrorResponse(res, 400, "Invalid input", {
+      errors: parsed.error.errors,
+    });
+    return;
+  }
+  const {
+    companyName,
+    contactPerson,
+    mobileNumber,
+    email,
+    serialNo,
+    prime,
+    blacklisted,
+    remark,
+    hasReference,
+    partnerId: incomingPartnerId,
+    adminCustomFields,
+    address,
+    joiningDate,
+  } = parsed.data as UpdateCustomerBody;
+
+  // 2) Determine adminId & partnerId from logged‑in user
+  const user = req.user as { id: string; role: string; adminId?: string };
+  if (!user) {
+    sendErrorResponse(res, 401, "Unauthorized");
+    return;
+  }
+  const adminId = user.role === "admin" ? user.id : user.adminId!;
+  const partnerId = user.role === "partner" ? user.id : incomingPartnerId;
+
+  try {
+    const result = await prisma.$transaction(async (tx) => {
+      // 3) Update the customer
+      const customer = await tx.customer.update({
+        where: { id: customerId, adminId: adminId },
+        data: {
+          // only include provided fields
+          ...(companyName !== undefined && { companyName }),
+          ...(contactPerson !== undefined && { contactPerson }),
+          ...(mobileNumber !== undefined && { mobileNumber }),
+          ...(email !== undefined && { email }),
+          ...(serialNo !== undefined && { serialNo }),
+          ...(prime !== undefined && { prime }),
+          ...(blacklisted !== undefined && { blacklisted }),
+          ...(remark !== undefined && { remark }),
+          ...(hasReference !== undefined && { hasReference }),
+          ...(partnerId !== undefined && { partnerId }),
+          ...(adminCustomFields !== undefined && { adminCustomFields }),
+          ...(address !== undefined && { address }),
+          ...(joiningDate !== undefined && {
+            joiningDate: new Date(joiningDate),
+          }),
+        },
+      });
+
+      return customer;
+    });
+
+    // 6) Return success
+    sendSuccessResponse(res, 200, "Customer updated", {
+      customer: result,
+    });
+  } catch (err) {
+    console.error("updateCustomer error:", err);
+    sendErrorResponse(res, 500, "Server error");
   }
 };
 
