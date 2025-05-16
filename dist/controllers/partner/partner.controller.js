@@ -56,8 +56,6 @@ const updatePartnerStatus = async (req, res, next) => {
         }
         const { id } = req.params;
         const { status } = req.body;
-        console.log("status---->", status);
-        console.log("id---->", id);
         const [partners] = await database_config_1.prisma.$transaction([
             database_config_1.prisma.partner.update({
                 where: { id },

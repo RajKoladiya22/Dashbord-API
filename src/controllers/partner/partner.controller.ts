@@ -77,8 +77,8 @@ export const updatePartnerStatus = async (
     // 2️⃣ Validate inputs
     const { id } = req.params;
     const { status } = req.body;
-    console.log("status---->", status);
-    console.log("id---->", id);
+    //console.log("status---->", status);
+    //console.log("id---->", id);
     
     // if (!status) {
     //   sendErrorResponse(res, 400, "status not found");

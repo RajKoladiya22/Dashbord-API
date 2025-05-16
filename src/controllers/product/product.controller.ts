@@ -86,6 +86,7 @@ export const listProducts = async (
       }),
     ]);
 
+  
     sendSuccessResponse(res, 200, "Products fetched", {
       meta: {
         total,

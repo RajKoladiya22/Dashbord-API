@@ -299,7 +299,7 @@ export const updateCustomerProduct = async (
         renewPeriod: true,
       },
     });
-    console.log("\n\n\nexisting---->", existing, "\n\n\n");
+    //console.log("\n\n\nexisting---->", existing, "\n\n\n");
     if (!existing || existing.adminId !== adminId) {
       sendErrorResponse(
         res,
@@ -324,7 +324,7 @@ export const updateCustomerProduct = async (
       const purchase = new Date(existing.renewalDate);
       let renewalDate: Date;
       let expiryDate: Date;
-      console.log("\n\nexisting.renewPeriod--->", existing.renewPeriod);
+     // console.log("\n\nexisting.renewPeriod--->", existing.renewPeriod);
 
       switch (existing.renewPeriod) {
         case "monthly":

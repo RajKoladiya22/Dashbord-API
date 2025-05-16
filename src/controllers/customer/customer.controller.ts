@@ -533,13 +533,13 @@ export const setCustomerStatus = async (
 
   try {
     // 3. Transaction: update customer.status and all its history.status
-    const result = await prisma.$transaction(async (tx) => {
+    const customers = await prisma.$transaction(async (tx) => {
       // 3a. Update the customer
-      const updatedCustomer = await tx.customer.updateMany({
+      const updatedCustomer = await tx.customer.update({
         where: baseFilter,
         data: { status },
       });
-      if (updatedCustomer.count === 0) {
+      if (!updatedCustomer) {
         throw new Error("Customer not found or not in your scope");
       }
 
@@ -549,20 +549,11 @@ export const setCustomerStatus = async (
         data: { status },
       });
 
-      return {
-        updatedCustomerCount: updatedCustomer.count,
-        updatedHistoryCount: updatedHistory.count,
-      };
+      return updatedCustomer;
     });
 
     // 4. Send back counts of what was updated
-    sendSuccessResponse(res, 200, "Status updated", {
-      data: {
-        customerRecordsUpdated: result.updatedCustomerCount,
-        historyRecordsUpdated: result.updatedHistoryCount,
-        newStatus: status,
-      },
-    });
+    sendSuccessResponse(res, 200, "Status updated", {customers});
   } catch (err: any) {
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
       if (err.code === "P2025")

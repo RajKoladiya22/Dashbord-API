@@ -8,7 +8,6 @@ import { env } from "../../../config/database.config";
 const _secret = env.JWT_SECRET! as string;
 const _expires = (env.JWT_EXPIRES_IN! as string) || "30d";
 
-
 // 🔒 Middleware: Authenticate JWT Token
 export const authenticateUser = (
   req: AuthenticatedRequest,
@@ -16,8 +15,16 @@ export const authenticateUser = (
   next: NextFunction
 ): void => {
   try {
-    const token = req.cookies.rJmkUxzNakU;
+    let token: string | undefined;
+    token = req.cookies?.rJmkUxzNakU;
 
+    // 2. Fallback to cookie
+    if (!token) {
+      const authHeader = req.headers.authorization;
+      if (authHeader && authHeader.startsWith("Bearer ")) {
+        token = authHeader.split(" ")[1];
+      }
+    }
 
     if (!token) {
       sendErrorResponse(res, 401, "Authentication token missing");
@@ -72,7 +79,7 @@ export const authorizeRoles =
   (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
     const role = req.user?.role;
     // console.log("role-->", role);
-    
+
     if (!role || !allowedRoles.includes(role)) {
       sendErrorResponse(res, 403, "Forbidden:You Don't have Permission");
     }
@@ -105,7 +112,7 @@ export const setAuthCookie = (res: Response, token: string): void => {
     // secure: env.NODE_ENV === "production",
     // sameSite: "strict",
     secure: true,
-    sameSite: "none",        // ← allow cross‑site
+    sameSite: "none", // ← allow cross‑site
     // maxAge: 3600000, // 1 hour
     maxAge: 86400000, // 1 day = 24 * 60 * 60 * 1000 milliseconds / 30 days = 30 * 24 * 60 * 60 * 1000 milliseconds
   });

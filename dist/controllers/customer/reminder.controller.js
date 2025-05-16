@@ -239,7 +239,6 @@ const updateCustomerProduct = async (req, res, next) => {
                 renewPeriod: true,
             },
         });
-        console.log("\n\n\nexisting---->", existing, "\n\n\n");
         if (!existing || existing.adminId !== adminId) {
             (0, responseHandler_1.sendErrorResponse)(res, 404, "History entry not found or renewal canceled");
             return;
@@ -253,7 +252,6 @@ const updateCustomerProduct = async (req, res, next) => {
             const purchase = new Date(existing.renewalDate);
             let renewalDate;
             let expiryDate;
-            console.log("\n\nexisting.renewPeriod--->", existing.renewPeriod);
             switch (existing.renewPeriod) {
                 case "monthly":
                     renewalDate = (0, dateHelpers_1.addMonths)(purchase, 1);

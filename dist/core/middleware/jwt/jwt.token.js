@@ -10,8 +10,16 @@ const database_config_1 = require("../../../config/database.config");
 const _secret = database_config_1.env.JWT_SECRET;
 const _expires = database_config_1.env.JWT_EXPIRES_IN || "30d";
 const authenticateUser = (req, res, next) => {
+    var _a;
     try {
-        const token = req.cookies.rJmkUxzNakU;
+        let token;
+        token = (_a = req.cookies) === null || _a === void 0 ? void 0 : _a.rJmkUxzNakU;
+        if (!token) {
+            const authHeader = req.headers.authorization;
+            if (authHeader && authHeader.startsWith("Bearer ")) {
+                token = authHeader.split(" ")[1];
+            }
+        }
         if (!token) {
             (0, httpResponse_1.sendErrorResponse)(res, 401, "Authentication token missing");
             return;
