@@ -13,8 +13,11 @@ router.put("/customfield/:id", jwt_token_1.authenticateUser, (0, jwt_token_1.aut
 router.delete("/customfield/:id", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin"), custommField_controller_1.deleteAdminCustomField);
 router.get("/list", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner", "team_member"), customer_controller_1.listCustomers);
 router.post("/add", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner"), customer_controller_1.createCustomer);
-router.put("/update/:id", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner"), customer_controller_1.updateCustomer);
+router.patch("/update/:id", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner"), customer_controller_1.updateCustomer);
+router.patch("/status/:id", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner", "team_member"), customer_controller_1.setCustomerStatus);
+router.delete("/delete/:id", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner", "team_member"), customer_controller_1.deleteCustomer);
 router.get("/product/:customerId", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner", "team_member"), customerProduct_controller_1.getCustomerProductsByCustomerId);
-router.get("/reminders/", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner", "team_member"), reminder_controller_1.listRenewalReminders);
+router.patch("/product/update/:id", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner", "team_member"), reminder_controller_1.updateCustomerProduct);
+router.get("/reminders", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner", "team_member"), reminder_controller_1.listRenewalReminders);
 exports.default = router;
 //# sourceMappingURL=customer.routes.js.map

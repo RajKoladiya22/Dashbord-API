@@ -2,15 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.listAdminCustomFields = exports.deleteAdminCustomField = exports.updateAdminCustomField = exports.createAdminCustomField = void 0;
 const database_config_1 = require("../../config/database.config");
-const zod_1 = require("zod");
 const responseHandler_1 = require("../../core/utils/responseHandler");
-const createCustomFieldSchema = zod_1.z.object({
-    fieldName: zod_1.z.string().min(1),
-    fieldType: zod_1.z.string().min(1),
-    isRequired: zod_1.z.boolean().optional(),
-    options: zod_1.z.array(zod_1.z.string()).optional(),
-    isMultiSelect: zod_1.z.boolean().optional(),
-});
+const zod_1 = require("../../core/utils/zod");
 const createAdminCustomField = async (req, res, next) => {
     var _a, _b, _c;
     const user = req.user;
@@ -23,7 +16,7 @@ const createAdminCustomField = async (req, res, next) => {
         (0, responseHandler_1.sendErrorResponse)(res, 403, "Cannot determine admin context");
         return;
     }
-    const parsed = createCustomFieldSchema.safeParse(req.body);
+    const parsed = zod_1.createCustomFieldSchema.safeParse(req.body);
     if (!parsed.success) {
         (0, responseHandler_1.sendErrorResponse)(res, 400, "Invalid input", {
             errors: parsed.error.errors,
@@ -53,13 +46,6 @@ const createAdminCustomField = async (req, res, next) => {
     }
 };
 exports.createAdminCustomField = createAdminCustomField;
-const updateCustomFieldSchema = zod_1.z.object({
-    fieldName: zod_1.z.string().min(1).optional(),
-    fieldType: zod_1.z.string().min(1).optional(),
-    isRequired: zod_1.z.boolean().optional(),
-    options: zod_1.z.array(zod_1.z.string()).optional(),
-    isMultiSelect: zod_1.z.boolean().optional(),
-});
 const updateAdminCustomField = async (req, res, next) => {
     const user = req.user;
     if (!user) {
@@ -72,7 +58,7 @@ const updateAdminCustomField = async (req, res, next) => {
         return;
     }
     const { id } = req.params;
-    const parsed = updateCustomFieldSchema.safeParse(req.body);
+    const parsed = zod_1.updateCustomFieldSchema.safeParse(req.body);
     if (!parsed.success) {
         (0, responseHandler_1.sendErrorResponse)(res, 400, "Invalid input", {
             errors: parsed.error.errors,
@@ -81,14 +67,14 @@ const updateAdminCustomField = async (req, res, next) => {
     }
     try {
         const existingField = await database_config_1.prisma.adminCustomField.findUnique({
-            where: { id },
+            where: { id, adminId },
         });
         if (!existingField || existingField.adminId !== adminId) {
             (0, responseHandler_1.sendErrorResponse)(res, 404, "Custom field not found or unauthorized");
             return;
         }
         const adminCustomField = await database_config_1.prisma.adminCustomField.update({
-            where: { id },
+            where: { id, adminId },
             data: parsed.data,
         });
         (0, responseHandler_1.sendSuccessResponse)(res, 200, "Custom field updated", {
@@ -117,14 +103,14 @@ const deleteAdminCustomField = async (req, res, next) => {
     const { id } = req.params;
     try {
         const existingField = await database_config_1.prisma.adminCustomField.findUnique({
-            where: { id },
+            where: { id, adminId },
         });
         if (!existingField || existingField.adminId !== adminId) {
             (0, responseHandler_1.sendErrorResponse)(res, 404, "Custom field not found or unauthorized");
             return;
         }
         const adminCustomField = await database_config_1.prisma.adminCustomField.delete({
-            where: { id },
+            where: { id, adminId },
         });
         (0, responseHandler_1.sendSuccessResponse)(res, 200, "Custom field deleted", {
             adminCustomField,

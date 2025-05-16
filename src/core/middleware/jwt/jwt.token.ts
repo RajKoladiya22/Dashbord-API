@@ -16,15 +16,10 @@ export const authenticateUser = (
   next: NextFunction
 ): void => {
   try {
-    // const rj = "xRo%25pAkEjfmJ"
     const token = req.cookies.rJmkUxzNakU;
-    // const token2 = req.cookies  
-  ;
-    console.log("token--->",token );
-    // console.log("\ntoken:-2--->",token2 );
+
 
     if (!token) {
-      // res.status(401).json({ message: "Authentication token missing" });
       sendErrorResponse(res, 401, "Authentication token missing");
       return;
     }
@@ -41,7 +36,6 @@ export const authenticateUser = (
       !decoded.id ||
       !decoded.role
     ) {
-      // res.status(401).json({ message: "Invalid token payload" });
       sendErrorResponse(res, 401, "Invalid token payload");
       return;
     }
@@ -63,12 +57,10 @@ export const authenticateUser = (
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
       });
-      // res.status(401).json({ message: "Token expired" });
       sendErrorResponse(res, 401, "Token expired");
       return;
     }
     // console.error("JWT verification error:", err);
-    // res.status(401).json({ message: "Unauthorized access" });
     sendErrorResponse(res, 401, "Unauthorized access");
     return;
   }
@@ -79,7 +71,8 @@ export const authorizeRoles =
   (...allowedRoles: string[]) =>
   (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
     const role = req.user?.role;
-
+    // console.log("role-->", role);
+    
     if (!role || !allowedRoles.includes(role)) {
       sendErrorResponse(res, 403, "Forbidden:You Don't have Permission");
     }

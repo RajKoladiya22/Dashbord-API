@@ -1,6 +1,9 @@
 //routes/v1/teamMemberRoutes/teamMember.routes.ts
 import { Router } from "express";
-import { listPartners } from "../../../controllers/partner/partner.controller";
+import {
+  listPartners,
+  updatePartnerStatus,
+} from "../../../controllers/partner/partner.controller";
 import {
   authenticateUser,
   authorizeRoles,
@@ -8,6 +11,12 @@ import {
 
 const router = Router();
 
-router.get('/', authenticateUser,  authorizeRoles("admin"),  listPartners);
+router.get("/", authenticateUser, authorizeRoles("admin"), listPartners);
+router.patch(
+  "/:id/status",
+  authenticateUser,
+  authorizeRoles("admin"),
+  updatePartnerStatus
+);
 
-export default router
+export default router;

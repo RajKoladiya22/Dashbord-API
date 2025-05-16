@@ -5,14 +5,9 @@ import {
   sendSuccessResponse,
   sendErrorResponse,
 } from "../../core/utils/responseHandler";
+import { updateCustomFieldSchema, createCustomFieldSchema } from "../../core/utils/zod";
 
-const createCustomFieldSchema = z.object({
-  fieldName: z.string().min(1),
-  fieldType: z.string().min(1),
-  isRequired: z.boolean().optional(),
-  options: z.array(z.string()).optional(),
-  isMultiSelect: z.boolean().optional(),
-});
+
 
 export const createAdminCustomField = async (
   req: Request,
@@ -61,14 +56,6 @@ export const createAdminCustomField = async (
   }
 };
 
-const updateCustomFieldSchema = z.object({
-  fieldName: z.string().min(1).optional(),
-  fieldType: z.string().min(1).optional(),
-  isRequired: z.boolean().optional(),
-  options: z.array(z.string()).optional(),
-  isMultiSelect: z.boolean().optional(),
-});
-
 export const updateAdminCustomField = async (
   req: Request,
   res: Response,
@@ -94,9 +81,11 @@ export const updateAdminCustomField = async (
     return;
   }
 
+  
+
   try {
     const existingField = await prisma.adminCustomField.findUnique({
-      where: { id },
+      where: { id, adminId },
     });
 
     if (!existingField || existingField.adminId !== adminId) {
@@ -105,7 +94,7 @@ export const updateAdminCustomField = async (
     }
 
     const adminCustomField = await prisma.adminCustomField.update({
-      where: { id },
+      where: { id, adminId },
       data: parsed.data,
     });
 
@@ -140,7 +129,7 @@ export const deleteAdminCustomField = async (
 
   try {
     const existingField = await prisma.adminCustomField.findUnique({
-      where: { id },
+      where: { id, adminId },
     });
 
     if (!existingField || existingField.adminId !== adminId) {
@@ -149,7 +138,7 @@ export const deleteAdminCustomField = async (
     }
 
     const adminCustomField = await prisma.adminCustomField.delete({
-      where: { id },
+      where: { id, adminId },
     });
 
     sendSuccessResponse(res, 200, "Custom field deleted", {

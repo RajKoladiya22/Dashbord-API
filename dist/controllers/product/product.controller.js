@@ -1,10 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteProduct = exports.updateProduct = exports.createProduct = exports.listProducts = void 0;
+exports.changeProductStatus = exports.deleteProduct = exports.updateProduct = exports.createProduct = exports.listProducts = void 0;
 const database_config_1 = require("../../config/database.config");
 const responseHandler_1 = require("../../core/utils/responseHandler");
-const zod_1 = require("zod");
+const zod_1 = require("../../core/utils/zod");
+const zod_2 = require("zod");
 const listProducts = async (req, res, next) => {
+    var _a;
     const user = req.user;
     if (!user) {
         (0, responseHandler_1.sendErrorResponse)(res, 401, "Unauthorized");
@@ -15,12 +17,18 @@ const listProducts = async (req, res, next) => {
         (0, responseHandler_1.sendErrorResponse)(res, 403, "Cannot determine admin context");
         return;
     }
+    const statusParam = (_a = req.query.status) === null || _a === void 0 ? void 0 : _a.toLowerCase();
+    const statusFilter = statusParam === "false" ? false : statusParam === "true" ? true : true;
+    if (statusParam && typeof statusFilter !== "boolean") {
+        (0, responseHandler_1.sendErrorResponse)(res, 400, "`status` must be boolean");
+        return;
+    }
     const q = typeof req.query.q === "string" && req.query.q.trim();
     const page = Math.max(parseInt(`${req.query.page}`, 10) || 1, 1);
     const perPage = Math.min(Math.max(parseInt(`${req.query.perPage}`, 10) || 20, 1), 100);
     const skip = (page - 1) * perPage;
     try {
-        const where = { adminId };
+        const where = { adminId, status: statusFilter };
         if (q) {
             where.productName = { contains: q, mode: "insensitive" };
         }
@@ -39,6 +47,7 @@ const listProducts = async (req, res, next) => {
                     description: true,
                     productLink: true,
                     tags: true,
+                    status: true,
                     specifications: true,
                     createdAt: true,
                     updatedAt: true,
@@ -111,7 +120,7 @@ const createProduct = async (req, res, next) => {
 };
 exports.createProduct = createProduct;
 const updateProduct = async (req, res, next) => {
-    const idSchema = zod_1.z.object({ id: zod_1.z.string().uuid() });
+    const idSchema = zod_2.z.object({ id: zod_2.z.string().uuid() });
     const paramResult = idSchema.safeParse(req.params);
     if (!paramResult.success) {
         (0, responseHandler_1.sendErrorResponse)(res, 400, "Invalid product ID");
@@ -181,7 +190,7 @@ const updateProduct = async (req, res, next) => {
 };
 exports.updateProduct = updateProduct;
 const deleteProduct = async (req, res, next) => {
-    const idSchema = zod_1.z.object({ id: zod_1.z.string().uuid() });
+    const idSchema = zod_2.z.object({ id: zod_2.z.string().uuid() });
     const parse = idSchema.safeParse(req.params);
     if (!parse.success) {
         (0, responseHandler_1.sendErrorResponse)(res, 400, "Invalid product ID");
@@ -225,4 +234,46 @@ const deleteProduct = async (req, res, next) => {
     }
 };
 exports.deleteProduct = deleteProduct;
+const changeProductStatus = async (req, res) => {
+    const { id } = req.params;
+    const user = req.user;
+    if (!user) {
+        (0, responseHandler_1.sendErrorResponse)(res, 401, "Unauthorized");
+        return;
+    }
+    const adminId = user.role === "admin" ? user.id : user.adminId;
+    if (!adminId) {
+        (0, responseHandler_1.sendErrorResponse)(res, 403, "Cannot determine admin context");
+        return;
+    }
+    const parsed = zod_1.statusSchema.safeParse(req.body);
+    if (!parsed.success) {
+        (0, responseHandler_1.sendErrorResponse)(res, 400, "Invalid input", {
+            errors: parsed.error.errors,
+        });
+        return;
+    }
+    try {
+        const existing = await database_config_1.prisma.product.findUnique({
+            where: { id },
+            select: { adminId: true },
+        });
+        if (!existing || existing.adminId !== adminId) {
+            (0, responseHandler_1.sendErrorResponse)(res, 404, "Product not found or unauthorized");
+            return;
+        }
+        const updatedProduct = await database_config_1.prisma.product.update({
+            where: { id },
+            data: { status: parsed.data.status },
+        });
+        (0, responseHandler_1.sendSuccessResponse)(res, 200, "Product status updated", {
+            product: updatedProduct,
+        });
+    }
+    catch (err) {
+        console.error("changeProductStatus error:", err);
+        (0, responseHandler_1.sendErrorResponse)(res, 500, "Server error");
+    }
+};
+exports.changeProductStatus = changeProductStatus;
 //# sourceMappingURL=product.controller.js.map

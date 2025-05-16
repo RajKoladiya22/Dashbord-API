@@ -12,14 +12,22 @@ import {
 } from "../../../core/middleware/jwt/jwt.token";
 import {
   createCustomer,
+  deleteCustomer,
   listCustomers,
+  setCustomerStatus,
   updateCustomer,
 } from "../../../controllers/customer/customer.controller";
 import { getCustomerProductsByCustomerId } from "../../../controllers/customer/customerProduct.controller";
-import { listRenewalReminders } from "../../../controllers/customer/reminder.controller";
+import {
+  listRenewalReminders,
+  updateCustomerProduct,
+} from "../../../controllers/customer/reminder.controller";
+import { bulkCreateCustomers } from "src/controllers/customer/customer.bulk.controller";
+import { upload } from "../../../core/middleware/multer/fileUpload";
 
 const router = Router();
 
+//  ── CUSTOM FIELD ───────────────────────────────────────────────────────────────
 router.get(
   "/customfield",
   authenticateUser,
@@ -45,6 +53,8 @@ router.delete(
   deleteAdminCustomField
 );
 
+//  ── CUSTOMER ───────────────────────────────────────────────────────────────
+
 router.get(
   "/list",
   authenticateUser,
@@ -57,19 +67,58 @@ router.post(
   authorizeRoles("admin", "partner"),
   createCustomer
 );
-router.put(
+router.patch(
   "/update/:id",
   authenticateUser,
   authorizeRoles("admin", "partner"),
   updateCustomer
 );
-
-router.get(  "/product/:customerId",  authenticateUser,  authorizeRoles("admin", "partner", "team_member"), getCustomerProductsByCustomerId
+router.patch(
+  "/status/:id",
+  authenticateUser,
+  authorizeRoles("admin", "partner", "team_member"),
+  setCustomerStatus
+);
+router.delete(
+  "/delete/:id",
+  authenticateUser,
+  authorizeRoles("admin", "partner", "team_member"),
+  deleteCustomer
 );
 
+//  ── CUSTOMER PRODUCT ───────────────────────────────────────────────────────────────
 
-
-router.get(  "/reminders/",  authenticateUser,  authorizeRoles("admin", "partner", "team_member"), listRenewalReminders
+router.get(
+  "/product/:customerId",
+  authenticateUser,
+  authorizeRoles("admin", "partner", "team_member"),
+  getCustomerProductsByCustomerId
 );
+
+router.patch(
+  "/product/update/:id",
+  authenticateUser,
+  authorizeRoles("admin", "partner", "team_member"),
+  updateCustomerProduct
+);
+
+//  ── REMINDER PRODUCT ───────────────────────────────────────────────────────────────
+
+router.get(
+  "/reminders",
+  authenticateUser,
+  authorizeRoles("admin", "partner", "team_member"),
+  listRenewalReminders
+);
+//  ── BULK UPLOAD ───────────────────────────────────────────────────────────────
+
+// router.post(
+//   "/bulk",
+//   authenticateUser,
+//   authorizeRoles("admin", "partner", "team_member"),
+//   upload.single("file"), 
+//   bulkCreateCustomers
+// );
+
 
 export default router;

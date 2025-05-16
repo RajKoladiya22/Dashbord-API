@@ -148,6 +148,17 @@ export const SubscriptionStatus: {
 
 export type SubscriptionStatus = (typeof SubscriptionStatus)[keyof typeof SubscriptionStatus]
 
+
+export const renewPeriod: {
+  monthly: 'monthly',
+  quarterly: 'quarterly',
+  yearly: 'yearly',
+  half_yearly: 'half_yearly',
+  custom: 'custom'
+};
+
+export type renewPeriod = (typeof renewPeriod)[keyof typeof renewPeriod]
+
 }
 
 export type Role = $Enums.Role
@@ -161,6 +172,10 @@ export const OfferType: typeof $Enums.OfferType
 export type SubscriptionStatus = $Enums.SubscriptionStatus
 
 export const SubscriptionStatus: typeof $Enums.SubscriptionStatus
+
+export type renewPeriod = $Enums.renewPeriod
+
+export const renewPeriod: typeof $Enums.renewPeriod
 
 /**
  * ##  Prisma Client ʲˢ
@@ -2962,7 +2977,7 @@ export namespace Prisma {
     lastName: string | null
     email: string | null
     passwordHash: string | null
-    status: string | null
+    status: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2973,7 +2988,7 @@ export namespace Prisma {
     lastName: string | null
     email: string | null
     passwordHash: string | null
-    status: string | null
+    status: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -3109,7 +3124,7 @@ export namespace Prisma {
     passwordHash: string
     contactInfo: JsonValue | null
     address: JsonValue | null
-    status: string
+    status: boolean
     createdAt: Date
     updatedAt: Date
     _count: SuperAdminCountAggregateOutputType | null
@@ -3206,7 +3221,7 @@ export namespace Prisma {
       passwordHash: string
       contactInfo: Prisma.JsonValue | null
       address: Prisma.JsonValue | null
-      status: string
+      status: boolean
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["superAdmin"]>
@@ -3640,7 +3655,7 @@ export namespace Prisma {
     readonly passwordHash: FieldRef<"SuperAdmin", 'String'>
     readonly contactInfo: FieldRef<"SuperAdmin", 'Json'>
     readonly address: FieldRef<"SuperAdmin", 'Json'>
-    readonly status: FieldRef<"SuperAdmin", 'String'>
+    readonly status: FieldRef<"SuperAdmin", 'Boolean'>
     readonly createdAt: FieldRef<"SuperAdmin", 'DateTime'>
     readonly updatedAt: FieldRef<"SuperAdmin", 'DateTime'>
   }
@@ -4091,7 +4106,7 @@ export namespace Prisma {
     email: string | null
     passwordHash: string | null
     companyName: string | null
-    status: string | null
+    status: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -4104,7 +4119,7 @@ export namespace Prisma {
     email: string | null
     passwordHash: string | null
     companyName: string | null
-    status: string | null
+    status: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -4250,7 +4265,7 @@ export namespace Prisma {
     companyName: string
     address: JsonValue | null
     contactInfo: JsonValue | null
-    status: string
+    status: boolean
     createdAt: Date
     updatedAt: Date
     _count: AdminCountAggregateOutputType | null
@@ -4378,7 +4393,7 @@ export namespace Prisma {
       companyName: string
       address: Prisma.JsonValue | null
       contactInfo: Prisma.JsonValue | null
-      status: string
+      status: boolean
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["admin"]>
@@ -4821,7 +4836,7 @@ export namespace Prisma {
     readonly companyName: FieldRef<"Admin", 'String'>
     readonly address: FieldRef<"Admin", 'Json'>
     readonly contactInfo: FieldRef<"Admin", 'Json'>
-    readonly status: FieldRef<"Admin", 'String'>
+    readonly status: FieldRef<"Admin", 'Boolean'>
     readonly createdAt: FieldRef<"Admin", 'DateTime'>
     readonly updatedAt: FieldRef<"Admin", 'DateTime'>
   }
@@ -5442,7 +5457,7 @@ export namespace Prisma {
     passwordHash: string | null
     department: string | null
     position: string | null
-    status: string | null
+    status: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5457,7 +5472,7 @@ export namespace Prisma {
     passwordHash: string | null
     department: string | null
     position: string | null
-    status: string | null
+    status: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5611,7 +5626,7 @@ export namespace Prisma {
     passwordHash: string
     department: string | null
     position: string | null
-    status: string
+    status: boolean
     contactInfo: JsonValue | null
     address: JsonValue | null
     createdAt: Date
@@ -5732,7 +5747,7 @@ export namespace Prisma {
       passwordHash: string
       department: string | null
       position: string | null
-      status: string
+      status: boolean
       contactInfo: Prisma.JsonValue | null
       address: Prisma.JsonValue | null
       createdAt: Date
@@ -6170,7 +6185,7 @@ export namespace Prisma {
     readonly passwordHash: FieldRef<"TeamMember", 'String'>
     readonly department: FieldRef<"TeamMember", 'String'>
     readonly position: FieldRef<"TeamMember", 'String'>
-    readonly status: FieldRef<"TeamMember", 'String'>
+    readonly status: FieldRef<"TeamMember", 'Boolean'>
     readonly contactInfo: FieldRef<"TeamMember", 'Json'>
     readonly address: FieldRef<"TeamMember", 'Json'>
     readonly createdAt: FieldRef<"TeamMember", 'DateTime'>
@@ -6608,7 +6623,7 @@ export namespace Prisma {
     lastName: string | null
     email: string | null
     passwordHash: string | null
-    status: string | null
+    status: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -6622,7 +6637,7 @@ export namespace Prisma {
     lastName: string | null
     email: string | null
     passwordHash: string | null
-    status: string | null
+    status: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -6773,7 +6788,7 @@ export namespace Prisma {
     address: JsonValue | null
     email: string
     passwordHash: string
-    status: string
+    status: boolean
     createdAt: Date
     updatedAt: Date
     _count: PartnerCountAggregateOutputType | null
@@ -6894,7 +6909,7 @@ export namespace Prisma {
       address: Prisma.JsonValue | null
       email: string
       passwordHash: string
-      status: string
+      status: boolean
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["partner"]>
@@ -7332,7 +7347,7 @@ export namespace Prisma {
     readonly address: FieldRef<"Partner", 'Json'>
     readonly email: FieldRef<"Partner", 'String'>
     readonly passwordHash: FieldRef<"Partner", 'String'>
-    readonly status: FieldRef<"Partner", 'String'>
+    readonly status: FieldRef<"Partner", 'Boolean'>
     readonly createdAt: FieldRef<"Partner", 'DateTime'>
     readonly updatedAt: FieldRef<"Partner", 'DateTime'>
   }
@@ -7790,7 +7805,7 @@ export namespace Prisma {
     passwordHash: string | null
     userProfileId: string | null
     adminId: string | null
-    status: string | null
+    status: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
     superAdminId: string | null
@@ -7803,7 +7818,7 @@ export namespace Prisma {
     passwordHash: string | null
     userProfileId: string | null
     adminId: string | null
-    status: string | null
+    status: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
     superAdminId: string | null
@@ -7943,7 +7958,7 @@ export namespace Prisma {
     passwordHash: string
     userProfileId: string
     adminId: string | null
-    status: string
+    status: boolean
     createdAt: Date
     updatedAt: Date
     superAdminId: string | null
@@ -8056,7 +8071,7 @@ export namespace Prisma {
       passwordHash: string
       userProfileId: string
       adminId: string | null
-      status: string
+      status: boolean
       createdAt: Date
       updatedAt: Date
       superAdminId: string | null
@@ -8492,7 +8507,7 @@ export namespace Prisma {
     readonly passwordHash: FieldRef<"LoginCredential", 'String'>
     readonly userProfileId: FieldRef<"LoginCredential", 'String'>
     readonly adminId: FieldRef<"LoginCredential", 'String'>
-    readonly status: FieldRef<"LoginCredential", 'String'>
+    readonly status: FieldRef<"LoginCredential", 'Boolean'>
     readonly createdAt: FieldRef<"LoginCredential", 'DateTime'>
     readonly updatedAt: FieldRef<"LoginCredential", 'DateTime'>
     readonly superAdminId: FieldRef<"LoginCredential", 'String'>
@@ -8997,6 +9012,7 @@ export namespace Prisma {
     name: string | null
     duration: string | null
     price: number | null
+    status: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -9006,6 +9022,7 @@ export namespace Prisma {
     name: string | null
     duration: string | null
     price: number | null
+    status: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -9015,6 +9032,7 @@ export namespace Prisma {
     name: number
     duration: number
     price: number
+    status: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -9034,6 +9052,7 @@ export namespace Prisma {
     name?: true
     duration?: true
     price?: true
+    status?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -9043,6 +9062,7 @@ export namespace Prisma {
     name?: true
     duration?: true
     price?: true
+    status?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -9052,6 +9072,7 @@ export namespace Prisma {
     name?: true
     duration?: true
     price?: true
+    status?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -9148,6 +9169,7 @@ export namespace Prisma {
     name: string
     duration: string
     price: number
+    status: boolean
     createdAt: Date
     updatedAt: Date
     _count: PlanCountAggregateOutputType | null
@@ -9176,6 +9198,7 @@ export namespace Prisma {
     name?: boolean
     duration?: boolean
     price?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     offers?: boolean | Plan$offersArgs<ExtArgs>
@@ -9190,6 +9213,7 @@ export namespace Prisma {
     name?: boolean
     duration?: boolean
     price?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["plan"]>
@@ -9199,6 +9223,7 @@ export namespace Prisma {
     name?: boolean
     duration?: boolean
     price?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["plan"]>
@@ -9208,11 +9233,12 @@ export namespace Prisma {
     name?: boolean
     duration?: boolean
     price?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type PlanOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "duration" | "price" | "createdAt" | "updatedAt", ExtArgs["result"]["plan"]>
+  export type PlanOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "duration" | "price" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["plan"]>
   export type PlanInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     offers?: boolean | Plan$offersArgs<ExtArgs>
     specs?: boolean | Plan$specsArgs<ExtArgs>
@@ -9236,6 +9262,7 @@ export namespace Prisma {
       name: string
       duration: string
       price: number
+      status: boolean
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["plan"]>
@@ -9669,6 +9696,7 @@ export namespace Prisma {
     readonly name: FieldRef<"Plan", 'String'>
     readonly duration: FieldRef<"Plan", 'String'>
     readonly price: FieldRef<"Plan", 'Float'>
+    readonly status: FieldRef<"Plan", 'Boolean'>
     readonly createdAt: FieldRef<"Plan", 'DateTime'>
     readonly updatedAt: FieldRef<"Plan", 'DateTime'>
   }
@@ -16872,6 +16900,7 @@ export namespace Prisma {
     description: string | null
     productLink: string | null
     adminId: string | null
+    status: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -16883,6 +16912,7 @@ export namespace Prisma {
     description: string | null
     productLink: string | null
     adminId: string | null
+    status: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -16897,6 +16927,7 @@ export namespace Prisma {
     tags: number
     specifications: number
     adminId: number
+    status: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -16910,6 +16941,7 @@ export namespace Prisma {
     description?: true
     productLink?: true
     adminId?: true
+    status?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -16921,6 +16953,7 @@ export namespace Prisma {
     description?: true
     productLink?: true
     adminId?: true
+    status?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -16935,6 +16968,7 @@ export namespace Prisma {
     tags?: true
     specifications?: true
     adminId?: true
+    status?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -17022,6 +17056,7 @@ export namespace Prisma {
     tags: string[]
     specifications: JsonValue
     adminId: string
+    status: boolean
     createdAt: Date
     updatedAt: Date
     _count: ProductCountAggregateOutputType | null
@@ -17053,6 +17088,7 @@ export namespace Prisma {
     tags?: boolean
     specifications?: boolean
     adminId?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     admin?: boolean | AdminDefaultArgs<ExtArgs>
@@ -17071,6 +17107,7 @@ export namespace Prisma {
     tags?: boolean
     specifications?: boolean
     adminId?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     admin?: boolean | AdminDefaultArgs<ExtArgs>
@@ -17086,6 +17123,7 @@ export namespace Prisma {
     tags?: boolean
     specifications?: boolean
     adminId?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     admin?: boolean | AdminDefaultArgs<ExtArgs>
@@ -17101,11 +17139,12 @@ export namespace Prisma {
     tags?: boolean
     specifications?: boolean
     adminId?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "productName" | "productCategory" | "productPrice" | "description" | "productLink" | "tags" | "specifications" | "adminId" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "productName" | "productCategory" | "productPrice" | "description" | "productLink" | "tags" | "specifications" | "adminId" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     admin?: boolean | AdminDefaultArgs<ExtArgs>
     customerProductHistory?: boolean | Product$customerProductHistoryArgs<ExtArgs>
@@ -17136,6 +17175,7 @@ export namespace Prisma {
       tags: string[]
       specifications: Prisma.JsonValue
       adminId: string
+      status: boolean
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["product"]>
@@ -17573,6 +17613,7 @@ export namespace Prisma {
     readonly tags: FieldRef<"Product", 'String[]'>
     readonly specifications: FieldRef<"Product", 'Json'>
     readonly adminId: FieldRef<"Product", 'String'>
+    readonly status: FieldRef<"Product", 'Boolean'>
     readonly createdAt: FieldRef<"Product", 'DateTime'>
     readonly updatedAt: FieldRef<"Product", 'DateTime'>
   }
@@ -19166,6 +19207,7 @@ export namespace Prisma {
     joiningDate: Date | null
     hasReference: boolean | null
     partnerId: string | null
+    status: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -19184,6 +19226,7 @@ export namespace Prisma {
     joiningDate: Date | null
     hasReference: boolean | null
     partnerId: string | null
+    status: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -19204,6 +19247,7 @@ export namespace Prisma {
     joiningDate: number
     hasReference: number
     partnerId: number
+    status: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -19224,6 +19268,7 @@ export namespace Prisma {
     joiningDate?: true
     hasReference?: true
     partnerId?: true
+    status?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -19242,6 +19287,7 @@ export namespace Prisma {
     joiningDate?: true
     hasReference?: true
     partnerId?: true
+    status?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -19262,6 +19308,7 @@ export namespace Prisma {
     joiningDate?: true
     hasReference?: true
     partnerId?: true
+    status?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -19355,6 +19402,7 @@ export namespace Prisma {
     joiningDate: Date
     hasReference: boolean
     partnerId: string | null
+    status: boolean
     createdAt: Date
     updatedAt: Date
     _count: CustomerCountAggregateOutputType | null
@@ -19392,6 +19440,7 @@ export namespace Prisma {
     joiningDate?: boolean
     hasReference?: boolean
     partnerId?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     admin?: boolean | AdminDefaultArgs<ExtArgs>
@@ -19416,6 +19465,7 @@ export namespace Prisma {
     joiningDate?: boolean
     hasReference?: boolean
     partnerId?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     admin?: boolean | AdminDefaultArgs<ExtArgs>
@@ -19438,6 +19488,7 @@ export namespace Prisma {
     joiningDate?: boolean
     hasReference?: boolean
     partnerId?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     admin?: boolean | AdminDefaultArgs<ExtArgs>
@@ -19460,11 +19511,12 @@ export namespace Prisma {
     joiningDate?: boolean
     hasReference?: boolean
     partnerId?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "adminId" | "companyName" | "contactPerson" | "mobileNumber" | "email" | "serialNo" | "prime" | "blacklisted" | "remark" | "adminCustomFields" | "address" | "joiningDate" | "hasReference" | "partnerId" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
+  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "adminId" | "companyName" | "contactPerson" | "mobileNumber" | "email" | "serialNo" | "prime" | "blacklisted" | "remark" | "adminCustomFields" | "address" | "joiningDate" | "hasReference" | "partnerId" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
   export type CustomerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     admin?: boolean | AdminDefaultArgs<ExtArgs>
     partner?: boolean | Customer$partnerArgs<ExtArgs>
@@ -19503,6 +19555,7 @@ export namespace Prisma {
       joiningDate: Date
       hasReference: boolean
       partnerId: string | null
+      status: boolean
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["customer"]>
@@ -19946,6 +19999,7 @@ export namespace Prisma {
     readonly joiningDate: FieldRef<"Customer", 'DateTime'>
     readonly hasReference: FieldRef<"Customer", 'Boolean'>
     readonly partnerId: FieldRef<"Customer", 'String'>
+    readonly status: FieldRef<"Customer", 'Boolean'>
     readonly createdAt: FieldRef<"Customer", 'DateTime'>
     readonly updatedAt: FieldRef<"Customer", 'DateTime'>
   }
@@ -20422,6 +20476,7 @@ export namespace Prisma {
     productId: string | null
     purchaseDate: Date | null
     renewal: boolean | null
+    renewPeriod: $Enums.renewPeriod | null
     expiryDate: Date | null
     renewalDate: Date | null
     status: boolean | null
@@ -20436,6 +20491,7 @@ export namespace Prisma {
     productId: string | null
     purchaseDate: Date | null
     renewal: boolean | null
+    renewPeriod: $Enums.renewPeriod | null
     expiryDate: Date | null
     renewalDate: Date | null
     status: boolean | null
@@ -20450,6 +20506,7 @@ export namespace Prisma {
     productId: number
     purchaseDate: number
     renewal: number
+    renewPeriod: number
     expiryDate: number
     renewalDate: number
     status: number
@@ -20466,6 +20523,7 @@ export namespace Prisma {
     productId?: true
     purchaseDate?: true
     renewal?: true
+    renewPeriod?: true
     expiryDate?: true
     renewalDate?: true
     status?: true
@@ -20480,6 +20538,7 @@ export namespace Prisma {
     productId?: true
     purchaseDate?: true
     renewal?: true
+    renewPeriod?: true
     expiryDate?: true
     renewalDate?: true
     status?: true
@@ -20494,6 +20553,7 @@ export namespace Prisma {
     productId?: true
     purchaseDate?: true
     renewal?: true
+    renewPeriod?: true
     expiryDate?: true
     renewalDate?: true
     status?: true
@@ -20581,6 +20641,7 @@ export namespace Prisma {
     productId: string
     purchaseDate: Date
     renewal: boolean
+    renewPeriod: $Enums.renewPeriod
     expiryDate: Date | null
     renewalDate: Date | null
     status: boolean
@@ -20612,6 +20673,7 @@ export namespace Prisma {
     productId?: boolean
     purchaseDate?: boolean
     renewal?: boolean
+    renewPeriod?: boolean
     expiryDate?: boolean
     renewalDate?: boolean
     status?: boolean
@@ -20631,6 +20693,7 @@ export namespace Prisma {
     productId?: boolean
     purchaseDate?: boolean
     renewal?: boolean
+    renewPeriod?: boolean
     expiryDate?: boolean
     renewalDate?: boolean
     status?: boolean
@@ -20648,6 +20711,7 @@ export namespace Prisma {
     productId?: boolean
     purchaseDate?: boolean
     renewal?: boolean
+    renewPeriod?: boolean
     expiryDate?: boolean
     renewalDate?: boolean
     status?: boolean
@@ -20665,6 +20729,7 @@ export namespace Prisma {
     productId?: boolean
     purchaseDate?: boolean
     renewal?: boolean
+    renewPeriod?: boolean
     expiryDate?: boolean
     renewalDate?: boolean
     status?: boolean
@@ -20672,7 +20737,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type CustomerProductHistoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "customerId" | "adminId" | "productId" | "purchaseDate" | "renewal" | "expiryDate" | "renewalDate" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["customerProductHistory"]>
+  export type CustomerProductHistoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "customerId" | "adminId" | "productId" | "purchaseDate" | "renewal" | "renewPeriod" | "expiryDate" | "renewalDate" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["customerProductHistory"]>
   export type CustomerProductHistoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     admin?: boolean | AdminDefaultArgs<ExtArgs>
@@ -20706,6 +20771,7 @@ export namespace Prisma {
       productId: string
       purchaseDate: Date
       renewal: boolean
+      renewPeriod: $Enums.renewPeriod
       expiryDate: Date | null
       renewalDate: Date | null
       status: boolean
@@ -21144,6 +21210,7 @@ export namespace Prisma {
     readonly productId: FieldRef<"CustomerProductHistory", 'String'>
     readonly purchaseDate: FieldRef<"CustomerProductHistory", 'DateTime'>
     readonly renewal: FieldRef<"CustomerProductHistory", 'Boolean'>
+    readonly renewPeriod: FieldRef<"CustomerProductHistory", 'renewPeriod'>
     readonly expiryDate: FieldRef<"CustomerProductHistory", 'DateTime'>
     readonly renewalDate: FieldRef<"CustomerProductHistory", 'DateTime'>
     readonly status: FieldRef<"CustomerProductHistory", 'Boolean'>
@@ -21604,6 +21671,7 @@ export namespace Prisma {
     fieldType: string | null
     isRequired: boolean | null
     isMultiSelect: boolean | null
+    status: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -21615,6 +21683,7 @@ export namespace Prisma {
     fieldType: string | null
     isRequired: boolean | null
     isMultiSelect: boolean | null
+    status: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -21627,6 +21696,7 @@ export namespace Prisma {
     isRequired: number
     options: number
     isMultiSelect: number
+    status: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -21640,6 +21710,7 @@ export namespace Prisma {
     fieldType?: true
     isRequired?: true
     isMultiSelect?: true
+    status?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -21651,6 +21722,7 @@ export namespace Prisma {
     fieldType?: true
     isRequired?: true
     isMultiSelect?: true
+    status?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -21663,6 +21735,7 @@ export namespace Prisma {
     isRequired?: true
     options?: true
     isMultiSelect?: true
+    status?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -21748,6 +21821,7 @@ export namespace Prisma {
     isRequired: boolean
     options: string[]
     isMultiSelect: boolean
+    status: boolean
     createdAt: Date
     updatedAt: Date
     _count: AdminCustomFieldCountAggregateOutputType | null
@@ -21777,6 +21851,7 @@ export namespace Prisma {
     isRequired?: boolean
     options?: boolean
     isMultiSelect?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     admin?: boolean | AdminDefaultArgs<ExtArgs>
@@ -21790,6 +21865,7 @@ export namespace Prisma {
     isRequired?: boolean
     options?: boolean
     isMultiSelect?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     admin?: boolean | AdminDefaultArgs<ExtArgs>
@@ -21803,6 +21879,7 @@ export namespace Prisma {
     isRequired?: boolean
     options?: boolean
     isMultiSelect?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     admin?: boolean | AdminDefaultArgs<ExtArgs>
@@ -21816,11 +21893,12 @@ export namespace Prisma {
     isRequired?: boolean
     options?: boolean
     isMultiSelect?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type AdminCustomFieldOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "adminId" | "fieldName" | "fieldType" | "isRequired" | "options" | "isMultiSelect" | "createdAt" | "updatedAt", ExtArgs["result"]["adminCustomField"]>
+  export type AdminCustomFieldOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "adminId" | "fieldName" | "fieldType" | "isRequired" | "options" | "isMultiSelect" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["adminCustomField"]>
   export type AdminCustomFieldInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     admin?: boolean | AdminDefaultArgs<ExtArgs>
   }
@@ -21844,6 +21922,7 @@ export namespace Prisma {
       isRequired: boolean
       options: string[]
       isMultiSelect: boolean
+      status: boolean
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["adminCustomField"]>
@@ -22277,6 +22356,7 @@ export namespace Prisma {
     readonly isRequired: FieldRef<"AdminCustomField", 'Boolean'>
     readonly options: FieldRef<"AdminCustomField", 'String[]'>
     readonly isMultiSelect: FieldRef<"AdminCustomField", 'Boolean'>
+    readonly status: FieldRef<"AdminCustomField", 'Boolean'>
     readonly createdAt: FieldRef<"AdminCustomField", 'DateTime'>
     readonly updatedAt: FieldRef<"AdminCustomField", 'DateTime'>
   }
@@ -24893,6 +24973,7 @@ export namespace Prisma {
     name: 'name',
     duration: 'duration',
     price: 'price',
+    status: 'status',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -24992,6 +25073,7 @@ export namespace Prisma {
     tags: 'tags',
     specifications: 'specifications',
     adminId: 'adminId',
+    status: 'status',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -25029,6 +25111,7 @@ export namespace Prisma {
     joiningDate: 'joiningDate',
     hasReference: 'hasReference',
     partnerId: 'partnerId',
+    status: 'status',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -25043,6 +25126,7 @@ export namespace Prisma {
     productId: 'productId',
     purchaseDate: 'purchaseDate',
     renewal: 'renewal',
+    renewPeriod: 'renewPeriod',
     expiryDate: 'expiryDate',
     renewalDate: 'renewalDate',
     status: 'status',
@@ -25061,6 +25145,7 @@ export namespace Prisma {
     isRequired: 'isRequired',
     options: 'options',
     isMultiSelect: 'isMultiSelect',
+    status: 'status',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -25175,6 +25260,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -25245,9 +25337,16 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Boolean'
+   * Reference to a field of type 'renewPeriod'
    */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+  export type EnumrenewPeriodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'renewPeriod'>
+    
+
+
+  /**
+   * Reference to a field of type 'renewPeriod[]'
+   */
+  export type ListEnumrenewPeriodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'renewPeriod[]'>
     
 
 
@@ -25279,7 +25378,7 @@ export namespace Prisma {
     passwordHash?: StringFilter<"SuperAdmin"> | string
     contactInfo?: JsonNullableFilter<"SuperAdmin">
     address?: JsonNullableFilter<"SuperAdmin">
-    status?: StringFilter<"SuperAdmin"> | string
+    status?: BoolFilter<"SuperAdmin"> | boolean
     createdAt?: DateTimeFilter<"SuperAdmin"> | Date | string
     updatedAt?: DateTimeFilter<"SuperAdmin"> | Date | string
     loginCreds?: LoginCredentialListRelationFilter
@@ -25310,7 +25409,7 @@ export namespace Prisma {
     passwordHash?: StringFilter<"SuperAdmin"> | string
     contactInfo?: JsonNullableFilter<"SuperAdmin">
     address?: JsonNullableFilter<"SuperAdmin">
-    status?: StringFilter<"SuperAdmin"> | string
+    status?: BoolFilter<"SuperAdmin"> | boolean
     createdAt?: DateTimeFilter<"SuperAdmin"> | Date | string
     updatedAt?: DateTimeFilter<"SuperAdmin"> | Date | string
     loginCreds?: LoginCredentialListRelationFilter
@@ -25343,7 +25442,7 @@ export namespace Prisma {
     passwordHash?: StringWithAggregatesFilter<"SuperAdmin"> | string
     contactInfo?: JsonNullableWithAggregatesFilter<"SuperAdmin">
     address?: JsonNullableWithAggregatesFilter<"SuperAdmin">
-    status?: StringWithAggregatesFilter<"SuperAdmin"> | string
+    status?: BoolWithAggregatesFilter<"SuperAdmin"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"SuperAdmin"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"SuperAdmin"> | Date | string
   }
@@ -25361,7 +25460,7 @@ export namespace Prisma {
     companyName?: StringFilter<"Admin"> | string
     address?: JsonNullableFilter<"Admin">
     contactInfo?: JsonNullableFilter<"Admin">
-    status?: StringFilter<"Admin"> | string
+    status?: BoolFilter<"Admin"> | boolean
     createdAt?: DateTimeFilter<"Admin"> | Date | string
     updatedAt?: DateTimeFilter<"Admin"> | Date | string
     teamMembers?: TeamMemberListRelationFilter
@@ -25410,7 +25509,7 @@ export namespace Prisma {
     companyName?: StringFilter<"Admin"> | string
     address?: JsonNullableFilter<"Admin">
     contactInfo?: JsonNullableFilter<"Admin">
-    status?: StringFilter<"Admin"> | string
+    status?: BoolFilter<"Admin"> | boolean
     createdAt?: DateTimeFilter<"Admin"> | Date | string
     updatedAt?: DateTimeFilter<"Admin"> | Date | string
     teamMembers?: TeamMemberListRelationFilter
@@ -25454,7 +25553,7 @@ export namespace Prisma {
     companyName?: StringWithAggregatesFilter<"Admin"> | string
     address?: JsonNullableWithAggregatesFilter<"Admin">
     contactInfo?: JsonNullableWithAggregatesFilter<"Admin">
-    status?: StringWithAggregatesFilter<"Admin"> | string
+    status?: BoolWithAggregatesFilter<"Admin"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Admin"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Admin"> | Date | string
   }
@@ -25472,7 +25571,7 @@ export namespace Prisma {
     passwordHash?: StringFilter<"TeamMember"> | string
     department?: StringNullableFilter<"TeamMember"> | string | null
     position?: StringNullableFilter<"TeamMember"> | string | null
-    status?: StringFilter<"TeamMember"> | string
+    status?: BoolFilter<"TeamMember"> | boolean
     contactInfo?: JsonNullableFilter<"TeamMember">
     address?: JsonNullableFilter<"TeamMember">
     createdAt?: DateTimeFilter<"TeamMember"> | Date | string
@@ -25511,7 +25610,7 @@ export namespace Prisma {
     passwordHash?: StringFilter<"TeamMember"> | string
     department?: StringNullableFilter<"TeamMember"> | string | null
     position?: StringNullableFilter<"TeamMember"> | string | null
-    status?: StringFilter<"TeamMember"> | string
+    status?: BoolFilter<"TeamMember"> | boolean
     contactInfo?: JsonNullableFilter<"TeamMember">
     address?: JsonNullableFilter<"TeamMember">
     createdAt?: DateTimeFilter<"TeamMember"> | Date | string
@@ -25552,7 +25651,7 @@ export namespace Prisma {
     passwordHash?: StringWithAggregatesFilter<"TeamMember"> | string
     department?: StringNullableWithAggregatesFilter<"TeamMember"> | string | null
     position?: StringNullableWithAggregatesFilter<"TeamMember"> | string | null
-    status?: StringWithAggregatesFilter<"TeamMember"> | string
+    status?: BoolWithAggregatesFilter<"TeamMember"> | boolean
     contactInfo?: JsonNullableWithAggregatesFilter<"TeamMember">
     address?: JsonNullableWithAggregatesFilter<"TeamMember">
     createdAt?: DateTimeWithAggregatesFilter<"TeamMember"> | Date | string
@@ -25573,7 +25672,7 @@ export namespace Prisma {
     address?: JsonNullableFilter<"Partner">
     email?: StringFilter<"Partner"> | string
     passwordHash?: StringFilter<"Partner"> | string
-    status?: StringFilter<"Partner"> | string
+    status?: BoolFilter<"Partner"> | boolean
     createdAt?: DateTimeFilter<"Partner"> | Date | string
     updatedAt?: DateTimeFilter<"Partner"> | Date | string
     admin?: XOR<AdminScalarRelationFilter, AdminWhereInput>
@@ -25612,7 +25711,7 @@ export namespace Prisma {
     contactInfo?: JsonNullableFilter<"Partner">
     address?: JsonNullableFilter<"Partner">
     passwordHash?: StringFilter<"Partner"> | string
-    status?: StringFilter<"Partner"> | string
+    status?: BoolFilter<"Partner"> | boolean
     createdAt?: DateTimeFilter<"Partner"> | Date | string
     updatedAt?: DateTimeFilter<"Partner"> | Date | string
     admin?: XOR<AdminScalarRelationFilter, AdminWhereInput>
@@ -25652,7 +25751,7 @@ export namespace Prisma {
     address?: JsonNullableWithAggregatesFilter<"Partner">
     email?: StringWithAggregatesFilter<"Partner"> | string
     passwordHash?: StringWithAggregatesFilter<"Partner"> | string
-    status?: StringWithAggregatesFilter<"Partner"> | string
+    status?: BoolWithAggregatesFilter<"Partner"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Partner"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Partner"> | Date | string
   }
@@ -25667,7 +25766,7 @@ export namespace Prisma {
     passwordHash?: StringFilter<"LoginCredential"> | string
     userProfileId?: UuidFilter<"LoginCredential"> | string
     adminId?: UuidNullableFilter<"LoginCredential"> | string | null
-    status?: StringFilter<"LoginCredential"> | string
+    status?: BoolFilter<"LoginCredential"> | boolean
     createdAt?: DateTimeFilter<"LoginCredential"> | Date | string
     updatedAt?: DateTimeFilter<"LoginCredential"> | Date | string
     superAdminId?: UuidNullableFilter<"LoginCredential"> | string | null
@@ -25702,7 +25801,7 @@ export namespace Prisma {
     passwordHash?: StringFilter<"LoginCredential"> | string
     userProfileId?: UuidFilter<"LoginCredential"> | string
     adminId?: UuidNullableFilter<"LoginCredential"> | string | null
-    status?: StringFilter<"LoginCredential"> | string
+    status?: BoolFilter<"LoginCredential"> | boolean
     createdAt?: DateTimeFilter<"LoginCredential"> | Date | string
     updatedAt?: DateTimeFilter<"LoginCredential"> | Date | string
     superAdminId?: UuidNullableFilter<"LoginCredential"> | string | null
@@ -25737,7 +25836,7 @@ export namespace Prisma {
     passwordHash?: StringWithAggregatesFilter<"LoginCredential"> | string
     userProfileId?: UuidWithAggregatesFilter<"LoginCredential"> | string
     adminId?: UuidNullableWithAggregatesFilter<"LoginCredential"> | string | null
-    status?: StringWithAggregatesFilter<"LoginCredential"> | string
+    status?: BoolWithAggregatesFilter<"LoginCredential"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"LoginCredential"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"LoginCredential"> | Date | string
     superAdminId?: UuidNullableWithAggregatesFilter<"LoginCredential"> | string | null
@@ -25751,6 +25850,7 @@ export namespace Prisma {
     name?: StringFilter<"Plan"> | string
     duration?: StringFilter<"Plan"> | string
     price?: FloatFilter<"Plan"> | number
+    status?: BoolFilter<"Plan"> | boolean
     createdAt?: DateTimeFilter<"Plan"> | Date | string
     updatedAt?: DateTimeFilter<"Plan"> | Date | string
     offers?: PlanOfferListRelationFilter
@@ -25764,6 +25864,7 @@ export namespace Prisma {
     name?: SortOrder
     duration?: SortOrder
     price?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     offers?: PlanOfferOrderByRelationAggregateInput
@@ -25780,6 +25881,7 @@ export namespace Prisma {
     name?: StringFilter<"Plan"> | string
     duration?: StringFilter<"Plan"> | string
     price?: FloatFilter<"Plan"> | number
+    status?: BoolFilter<"Plan"> | boolean
     createdAt?: DateTimeFilter<"Plan"> | Date | string
     updatedAt?: DateTimeFilter<"Plan"> | Date | string
     offers?: PlanOfferListRelationFilter
@@ -25793,6 +25895,7 @@ export namespace Prisma {
     name?: SortOrder
     duration?: SortOrder
     price?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: PlanCountOrderByAggregateInput
@@ -25810,6 +25913,7 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Plan"> | string
     duration?: StringWithAggregatesFilter<"Plan"> | string
     price?: FloatWithAggregatesFilter<"Plan"> | number
+    status?: BoolWithAggregatesFilter<"Plan"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Plan"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Plan"> | Date | string
   }
@@ -26250,6 +26354,7 @@ export namespace Prisma {
     tags?: StringNullableListFilter<"Product">
     specifications?: JsonFilter<"Product">
     adminId?: UuidFilter<"Product"> | string
+    status?: BoolFilter<"Product"> | boolean
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
     admin?: XOR<AdminScalarRelationFilter, AdminWhereInput>
@@ -26267,6 +26372,7 @@ export namespace Prisma {
     tags?: SortOrder
     specifications?: SortOrder
     adminId?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     admin?: AdminOrderByWithRelationInput
@@ -26287,6 +26393,7 @@ export namespace Prisma {
     tags?: StringNullableListFilter<"Product">
     specifications?: JsonFilter<"Product">
     adminId?: UuidFilter<"Product"> | string
+    status?: BoolFilter<"Product"> | boolean
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
     admin?: XOR<AdminScalarRelationFilter, AdminWhereInput>
@@ -26304,6 +26411,7 @@ export namespace Prisma {
     tags?: SortOrder
     specifications?: SortOrder
     adminId?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ProductCountOrderByAggregateInput
@@ -26324,6 +26432,7 @@ export namespace Prisma {
     tags?: StringNullableListFilter<"Product">
     specifications?: JsonWithAggregatesFilter<"Product">
     adminId?: UuidWithAggregatesFilter<"Product"> | string
+    status?: BoolWithAggregatesFilter<"Product"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
   }
@@ -26420,6 +26529,7 @@ export namespace Prisma {
     joiningDate?: DateTimeFilter<"Customer"> | Date | string
     hasReference?: BoolFilter<"Customer"> | boolean
     partnerId?: UuidNullableFilter<"Customer"> | string | null
+    status?: BoolFilter<"Customer"> | boolean
     createdAt?: DateTimeFilter<"Customer"> | Date | string
     updatedAt?: DateTimeFilter<"Customer"> | Date | string
     admin?: XOR<AdminScalarRelationFilter, AdminWhereInput>
@@ -26443,6 +26553,7 @@ export namespace Prisma {
     joiningDate?: SortOrder
     hasReference?: SortOrder
     partnerId?: SortOrderInput | SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     admin?: AdminOrderByWithRelationInput
@@ -26469,6 +26580,7 @@ export namespace Prisma {
     joiningDate?: DateTimeFilter<"Customer"> | Date | string
     hasReference?: BoolFilter<"Customer"> | boolean
     partnerId?: UuidNullableFilter<"Customer"> | string | null
+    status?: BoolFilter<"Customer"> | boolean
     createdAt?: DateTimeFilter<"Customer"> | Date | string
     updatedAt?: DateTimeFilter<"Customer"> | Date | string
     admin?: XOR<AdminScalarRelationFilter, AdminWhereInput>
@@ -26492,6 +26604,7 @@ export namespace Prisma {
     joiningDate?: SortOrder
     hasReference?: SortOrder
     partnerId?: SortOrderInput | SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: CustomerCountOrderByAggregateInput
@@ -26518,6 +26631,7 @@ export namespace Prisma {
     joiningDate?: DateTimeWithAggregatesFilter<"Customer"> | Date | string
     hasReference?: BoolWithAggregatesFilter<"Customer"> | boolean
     partnerId?: UuidNullableWithAggregatesFilter<"Customer"> | string | null
+    status?: BoolWithAggregatesFilter<"Customer"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Customer"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Customer"> | Date | string
   }
@@ -26532,6 +26646,7 @@ export namespace Prisma {
     productId?: UuidFilter<"CustomerProductHistory"> | string
     purchaseDate?: DateTimeFilter<"CustomerProductHistory"> | Date | string
     renewal?: BoolFilter<"CustomerProductHistory"> | boolean
+    renewPeriod?: EnumrenewPeriodFilter<"CustomerProductHistory"> | $Enums.renewPeriod
     expiryDate?: DateTimeNullableFilter<"CustomerProductHistory"> | Date | string | null
     renewalDate?: DateTimeNullableFilter<"CustomerProductHistory"> | Date | string | null
     status?: BoolFilter<"CustomerProductHistory"> | boolean
@@ -26550,6 +26665,7 @@ export namespace Prisma {
     productId?: SortOrder
     purchaseDate?: SortOrder
     renewal?: SortOrder
+    renewPeriod?: SortOrder
     expiryDate?: SortOrderInput | SortOrder
     renewalDate?: SortOrderInput | SortOrder
     status?: SortOrder
@@ -26571,6 +26687,7 @@ export namespace Prisma {
     productId?: UuidFilter<"CustomerProductHistory"> | string
     purchaseDate?: DateTimeFilter<"CustomerProductHistory"> | Date | string
     renewal?: BoolFilter<"CustomerProductHistory"> | boolean
+    renewPeriod?: EnumrenewPeriodFilter<"CustomerProductHistory"> | $Enums.renewPeriod
     expiryDate?: DateTimeNullableFilter<"CustomerProductHistory"> | Date | string | null
     renewalDate?: DateTimeNullableFilter<"CustomerProductHistory"> | Date | string | null
     status?: BoolFilter<"CustomerProductHistory"> | boolean
@@ -26589,6 +26706,7 @@ export namespace Prisma {
     productId?: SortOrder
     purchaseDate?: SortOrder
     renewal?: SortOrder
+    renewPeriod?: SortOrder
     expiryDate?: SortOrderInput | SortOrder
     renewalDate?: SortOrderInput | SortOrder
     status?: SortOrder
@@ -26609,6 +26727,7 @@ export namespace Prisma {
     productId?: UuidWithAggregatesFilter<"CustomerProductHistory"> | string
     purchaseDate?: DateTimeWithAggregatesFilter<"CustomerProductHistory"> | Date | string
     renewal?: BoolWithAggregatesFilter<"CustomerProductHistory"> | boolean
+    renewPeriod?: EnumrenewPeriodWithAggregatesFilter<"CustomerProductHistory"> | $Enums.renewPeriod
     expiryDate?: DateTimeNullableWithAggregatesFilter<"CustomerProductHistory"> | Date | string | null
     renewalDate?: DateTimeNullableWithAggregatesFilter<"CustomerProductHistory"> | Date | string | null
     status?: BoolWithAggregatesFilter<"CustomerProductHistory"> | boolean
@@ -26627,6 +26746,7 @@ export namespace Prisma {
     isRequired?: BoolFilter<"AdminCustomField"> | boolean
     options?: StringNullableListFilter<"AdminCustomField">
     isMultiSelect?: BoolFilter<"AdminCustomField"> | boolean
+    status?: BoolFilter<"AdminCustomField"> | boolean
     createdAt?: DateTimeFilter<"AdminCustomField"> | Date | string
     updatedAt?: DateTimeFilter<"AdminCustomField"> | Date | string
     admin?: XOR<AdminScalarRelationFilter, AdminWhereInput>
@@ -26640,6 +26760,7 @@ export namespace Prisma {
     isRequired?: SortOrder
     options?: SortOrder
     isMultiSelect?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     admin?: AdminOrderByWithRelationInput
@@ -26656,6 +26777,7 @@ export namespace Prisma {
     isRequired?: BoolFilter<"AdminCustomField"> | boolean
     options?: StringNullableListFilter<"AdminCustomField">
     isMultiSelect?: BoolFilter<"AdminCustomField"> | boolean
+    status?: BoolFilter<"AdminCustomField"> | boolean
     createdAt?: DateTimeFilter<"AdminCustomField"> | Date | string
     updatedAt?: DateTimeFilter<"AdminCustomField"> | Date | string
     admin?: XOR<AdminScalarRelationFilter, AdminWhereInput>
@@ -26669,6 +26791,7 @@ export namespace Prisma {
     isRequired?: SortOrder
     options?: SortOrder
     isMultiSelect?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: AdminCustomFieldCountOrderByAggregateInput
@@ -26687,6 +26810,7 @@ export namespace Prisma {
     isRequired?: BoolWithAggregatesFilter<"AdminCustomField"> | boolean
     options?: StringNullableListFilter<"AdminCustomField">
     isMultiSelect?: BoolWithAggregatesFilter<"AdminCustomField"> | boolean
+    status?: BoolWithAggregatesFilter<"AdminCustomField"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"AdminCustomField"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"AdminCustomField"> | Date | string
   }
@@ -26821,7 +26945,7 @@ export namespace Prisma {
     passwordHash: string
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     loginCreds?: LoginCredentialCreateNestedManyWithoutSuperadminInput
@@ -26835,7 +26959,7 @@ export namespace Prisma {
     passwordHash: string
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     loginCreds?: LoginCredentialUncheckedCreateNestedManyWithoutSuperadminInput
@@ -26849,7 +26973,7 @@ export namespace Prisma {
     passwordHash?: StringFieldUpdateOperationsInput | string
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     loginCreds?: LoginCredentialUpdateManyWithoutSuperadminNestedInput
@@ -26863,7 +26987,7 @@ export namespace Prisma {
     passwordHash?: StringFieldUpdateOperationsInput | string
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     loginCreds?: LoginCredentialUncheckedUpdateManyWithoutSuperadminNestedInput
@@ -26877,7 +27001,7 @@ export namespace Prisma {
     passwordHash: string
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -26890,7 +27014,7 @@ export namespace Prisma {
     passwordHash?: StringFieldUpdateOperationsInput | string
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -26903,7 +27027,7 @@ export namespace Prisma {
     passwordHash?: StringFieldUpdateOperationsInput | string
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -26918,7 +27042,7 @@ export namespace Prisma {
     companyName: string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     teamMembers?: TeamMemberCreateNestedManyWithoutAdminInput
@@ -26941,7 +27065,7 @@ export namespace Prisma {
     companyName: string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutAdminInput
@@ -26964,7 +27088,7 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     teamMembers?: TeamMemberUpdateManyWithoutAdminNestedInput
@@ -26987,7 +27111,7 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     teamMembers?: TeamMemberUncheckedUpdateManyWithoutAdminNestedInput
@@ -27010,7 +27134,7 @@ export namespace Prisma {
     companyName: string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -27025,7 +27149,7 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -27040,7 +27164,7 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -27054,7 +27178,7 @@ export namespace Prisma {
     passwordHash: string
     department?: string | null
     position?: string | null
-    status: string
+    status?: boolean
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
@@ -27072,7 +27196,7 @@ export namespace Prisma {
     passwordHash: string
     department?: string | null
     position?: string | null
-    status: string
+    status?: boolean
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
@@ -27088,7 +27212,7 @@ export namespace Prisma {
     passwordHash?: StringFieldUpdateOperationsInput | string
     department?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -27106,7 +27230,7 @@ export namespace Prisma {
     passwordHash?: StringFieldUpdateOperationsInput | string
     department?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -27123,7 +27247,7 @@ export namespace Prisma {
     passwordHash: string
     department?: string | null
     position?: string | null
-    status: string
+    status?: boolean
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
@@ -27139,7 +27263,7 @@ export namespace Prisma {
     passwordHash?: StringFieldUpdateOperationsInput | string
     department?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -27156,7 +27280,7 @@ export namespace Prisma {
     passwordHash?: StringFieldUpdateOperationsInput | string
     department?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -27173,7 +27297,7 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     email: string
     passwordHash: string
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     admin: AdminCreateNestedOneWithoutPartnersInput
@@ -27191,7 +27315,7 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     email: string
     passwordHash: string
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     customers?: CustomerUncheckedCreateNestedManyWithoutPartnerInput
@@ -27207,7 +27331,7 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     admin?: AdminUpdateOneRequiredWithoutPartnersNestedInput
@@ -27225,7 +27349,7 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customers?: CustomerUncheckedUpdateManyWithoutPartnerNestedInput
@@ -27242,7 +27366,7 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     email: string
     passwordHash: string
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -27257,7 +27381,7 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -27273,7 +27397,7 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -27284,7 +27408,7 @@ export namespace Prisma {
     email: string
     passwordHash: string
     userProfileId: string
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     admin?: AdminCreateNestedOneWithoutLoginCredsInput
@@ -27299,7 +27423,7 @@ export namespace Prisma {
     passwordHash: string
     userProfileId: string
     adminId?: string | null
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     superAdminId?: string | null
@@ -27312,7 +27436,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     userProfileId?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     admin?: AdminUpdateOneWithoutLoginCredsNestedInput
@@ -27327,7 +27451,7 @@ export namespace Prisma {
     passwordHash?: StringFieldUpdateOperationsInput | string
     userProfileId?: StringFieldUpdateOperationsInput | string
     adminId?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     superAdminId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27341,7 +27465,7 @@ export namespace Prisma {
     passwordHash: string
     userProfileId: string
     adminId?: string | null
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     superAdminId?: string | null
@@ -27353,7 +27477,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     userProfileId?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -27365,7 +27489,7 @@ export namespace Prisma {
     passwordHash?: StringFieldUpdateOperationsInput | string
     userProfileId?: StringFieldUpdateOperationsInput | string
     adminId?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     superAdminId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27376,6 +27500,7 @@ export namespace Prisma {
     name: string
     duration: string
     price: number
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     offers?: PlanOfferCreateNestedManyWithoutPlanInput
@@ -27389,6 +27514,7 @@ export namespace Prisma {
     name: string
     duration: string
     price: number
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     offers?: PlanOfferUncheckedCreateNestedManyWithoutPlanInput
@@ -27402,6 +27528,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     duration?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     offers?: PlanOfferUpdateManyWithoutPlanNestedInput
@@ -27415,6 +27542,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     duration?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     offers?: PlanOfferUncheckedUpdateManyWithoutPlanNestedInput
@@ -27428,6 +27556,7 @@ export namespace Prisma {
     name: string
     duration: string
     price: number
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -27437,6 +27566,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     duration?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -27446,6 +27576,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     duration?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -27908,6 +28039,7 @@ export namespace Prisma {
     productLink?: string | null
     tags?: ProductCreatetagsInput | string[]
     specifications: JsonNullValueInput | InputJsonValue
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     admin: AdminCreateNestedOneWithoutProductsInput
@@ -27925,6 +28057,7 @@ export namespace Prisma {
     tags?: ProductCreatetagsInput | string[]
     specifications: JsonNullValueInput | InputJsonValue
     adminId: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     customerProductHistory?: CustomerProductHistoryUncheckedCreateNestedManyWithoutProductInput
@@ -27940,6 +28073,7 @@ export namespace Prisma {
     productLink?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: ProductUpdatetagsInput | string[]
     specifications?: JsonNullValueInput | InputJsonValue
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     admin?: AdminUpdateOneRequiredWithoutProductsNestedInput
@@ -27957,6 +28091,7 @@ export namespace Prisma {
     tags?: ProductUpdatetagsInput | string[]
     specifications?: JsonNullValueInput | InputJsonValue
     adminId?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customerProductHistory?: CustomerProductHistoryUncheckedUpdateManyWithoutProductNestedInput
@@ -27973,6 +28108,7 @@ export namespace Prisma {
     tags?: ProductCreatetagsInput | string[]
     specifications: JsonNullValueInput | InputJsonValue
     adminId: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -27986,6 +28122,7 @@ export namespace Prisma {
     productLink?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: ProductUpdatetagsInput | string[]
     specifications?: JsonNullValueInput | InputJsonValue
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -28000,6 +28137,7 @@ export namespace Prisma {
     tags?: ProductUpdatetagsInput | string[]
     specifications?: JsonNullValueInput | InputJsonValue
     adminId?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -28093,6 +28231,7 @@ export namespace Prisma {
     address: JsonNullValueInput | InputJsonValue
     joiningDate: Date | string
     hasReference?: boolean
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     admin: AdminCreateNestedOneWithoutCustomersInput
@@ -28116,6 +28255,7 @@ export namespace Prisma {
     joiningDate: Date | string
     hasReference?: boolean
     partnerId?: string | null
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     history?: CustomerProductHistoryUncheckedCreateNestedManyWithoutCustomerInput
@@ -28135,6 +28275,7 @@ export namespace Prisma {
     address?: JsonNullValueInput | InputJsonValue
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     admin?: AdminUpdateOneRequiredWithoutCustomersNestedInput
@@ -28158,6 +28299,7 @@ export namespace Prisma {
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     history?: CustomerProductHistoryUncheckedUpdateManyWithoutCustomerNestedInput
@@ -28179,6 +28321,7 @@ export namespace Prisma {
     joiningDate: Date | string
     hasReference?: boolean
     partnerId?: string | null
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -28197,6 +28340,7 @@ export namespace Prisma {
     address?: JsonNullValueInput | InputJsonValue
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -28217,6 +28361,7 @@ export namespace Prisma {
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -28225,6 +28370,7 @@ export namespace Prisma {
     id?: string
     purchaseDate: Date | string
     renewal?: boolean
+    renewPeriod?: $Enums.renewPeriod
     expiryDate?: Date | string | null
     renewalDate?: Date | string | null
     status?: boolean
@@ -28243,6 +28389,7 @@ export namespace Prisma {
     productId: string
     purchaseDate: Date | string
     renewal?: boolean
+    renewPeriod?: $Enums.renewPeriod
     expiryDate?: Date | string | null
     renewalDate?: Date | string | null
     status?: boolean
@@ -28255,6 +28402,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     renewal?: BoolFieldUpdateOperationsInput | boolean
+    renewPeriod?: EnumrenewPeriodFieldUpdateOperationsInput | $Enums.renewPeriod
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     renewalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: BoolFieldUpdateOperationsInput | boolean
@@ -28273,6 +28421,7 @@ export namespace Prisma {
     productId?: StringFieldUpdateOperationsInput | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     renewal?: BoolFieldUpdateOperationsInput | boolean
+    renewPeriod?: EnumrenewPeriodFieldUpdateOperationsInput | $Enums.renewPeriod
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     renewalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: BoolFieldUpdateOperationsInput | boolean
@@ -28288,6 +28437,7 @@ export namespace Prisma {
     productId: string
     purchaseDate: Date | string
     renewal?: boolean
+    renewPeriod?: $Enums.renewPeriod
     expiryDate?: Date | string | null
     renewalDate?: Date | string | null
     status?: boolean
@@ -28299,6 +28449,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     renewal?: BoolFieldUpdateOperationsInput | boolean
+    renewPeriod?: EnumrenewPeriodFieldUpdateOperationsInput | $Enums.renewPeriod
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     renewalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: BoolFieldUpdateOperationsInput | boolean
@@ -28313,6 +28464,7 @@ export namespace Prisma {
     productId?: StringFieldUpdateOperationsInput | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     renewal?: BoolFieldUpdateOperationsInput | boolean
+    renewPeriod?: EnumrenewPeriodFieldUpdateOperationsInput | $Enums.renewPeriod
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     renewalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: BoolFieldUpdateOperationsInput | boolean
@@ -28327,6 +28479,7 @@ export namespace Prisma {
     isRequired?: boolean
     options?: AdminCustomFieldCreateoptionsInput | string[]
     isMultiSelect?: boolean
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     admin: AdminCreateNestedOneWithoutCustomFieldsInput
@@ -28340,6 +28493,7 @@ export namespace Prisma {
     isRequired?: boolean
     options?: AdminCustomFieldCreateoptionsInput | string[]
     isMultiSelect?: boolean
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -28351,6 +28505,7 @@ export namespace Prisma {
     isRequired?: BoolFieldUpdateOperationsInput | boolean
     options?: AdminCustomFieldUpdateoptionsInput | string[]
     isMultiSelect?: BoolFieldUpdateOperationsInput | boolean
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     admin?: AdminUpdateOneRequiredWithoutCustomFieldsNestedInput
@@ -28364,6 +28519,7 @@ export namespace Prisma {
     isRequired?: BoolFieldUpdateOperationsInput | boolean
     options?: AdminCustomFieldUpdateoptionsInput | string[]
     isMultiSelect?: BoolFieldUpdateOperationsInput | boolean
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -28376,6 +28532,7 @@ export namespace Prisma {
     isRequired?: boolean
     options?: AdminCustomFieldCreateoptionsInput | string[]
     isMultiSelect?: boolean
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -28387,6 +28544,7 @@ export namespace Prisma {
     isRequired?: BoolFieldUpdateOperationsInput | boolean
     options?: AdminCustomFieldUpdateoptionsInput | string[]
     isMultiSelect?: BoolFieldUpdateOperationsInput | boolean
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -28399,6 +28557,7 @@ export namespace Prisma {
     isRequired?: BoolFieldUpdateOperationsInput | boolean
     options?: AdminCustomFieldUpdateoptionsInput | string[]
     isMultiSelect?: BoolFieldUpdateOperationsInput | boolean
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -28585,6 +28744,11 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -28703,6 +28867,14 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedJsonNullableFilter<$PrismaModel>
     _max?: NestedJsonNullableFilter<$PrismaModel>
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -29108,6 +29280,7 @@ export namespace Prisma {
     name?: SortOrder
     duration?: SortOrder
     price?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -29121,6 +29294,7 @@ export namespace Prisma {
     name?: SortOrder
     duration?: SortOrder
     price?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -29130,6 +29304,7 @@ export namespace Prisma {
     name?: SortOrder
     duration?: SortOrder
     price?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -29525,6 +29700,7 @@ export namespace Prisma {
     tags?: SortOrder
     specifications?: SortOrder
     adminId?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -29536,6 +29712,7 @@ export namespace Prisma {
     description?: SortOrder
     productLink?: SortOrder
     adminId?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -29547,6 +29724,7 @@ export namespace Prisma {
     description?: SortOrder
     productLink?: SortOrder
     adminId?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -29620,11 +29798,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type PartnerNullableScalarRelationFilter = {
     is?: PartnerWhereInput | null
     isNot?: PartnerWhereInput | null
@@ -29646,6 +29819,7 @@ export namespace Prisma {
     joiningDate?: SortOrder
     hasReference?: SortOrder
     partnerId?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -29664,6 +29838,7 @@ export namespace Prisma {
     joiningDate?: SortOrder
     hasReference?: SortOrder
     partnerId?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -29682,16 +29857,16 @@ export namespace Prisma {
     joiningDate?: SortOrder
     hasReference?: SortOrder
     partnerId?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
+  export type EnumrenewPeriodFilter<$PrismaModel = never> = {
+    equals?: $Enums.renewPeriod | EnumrenewPeriodFieldRefInput<$PrismaModel>
+    in?: $Enums.renewPeriod[] | ListEnumrenewPeriodFieldRefInput<$PrismaModel>
+    notIn?: $Enums.renewPeriod[] | ListEnumrenewPeriodFieldRefInput<$PrismaModel>
+    not?: NestedEnumrenewPeriodFilter<$PrismaModel> | $Enums.renewPeriod
   }
 
   export type CustomerScalarRelationFilter = {
@@ -29706,6 +29881,7 @@ export namespace Prisma {
     productId?: SortOrder
     purchaseDate?: SortOrder
     renewal?: SortOrder
+    renewPeriod?: SortOrder
     expiryDate?: SortOrder
     renewalDate?: SortOrder
     status?: SortOrder
@@ -29720,6 +29896,7 @@ export namespace Prisma {
     productId?: SortOrder
     purchaseDate?: SortOrder
     renewal?: SortOrder
+    renewPeriod?: SortOrder
     expiryDate?: SortOrder
     renewalDate?: SortOrder
     status?: SortOrder
@@ -29734,11 +29911,22 @@ export namespace Prisma {
     productId?: SortOrder
     purchaseDate?: SortOrder
     renewal?: SortOrder
+    renewPeriod?: SortOrder
     expiryDate?: SortOrder
     renewalDate?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type EnumrenewPeriodWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.renewPeriod | EnumrenewPeriodFieldRefInput<$PrismaModel>
+    in?: $Enums.renewPeriod[] | ListEnumrenewPeriodFieldRefInput<$PrismaModel>
+    notIn?: $Enums.renewPeriod[] | ListEnumrenewPeriodFieldRefInput<$PrismaModel>
+    not?: NestedEnumrenewPeriodWithAggregatesFilter<$PrismaModel> | $Enums.renewPeriod
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumrenewPeriodFilter<$PrismaModel>
+    _max?: NestedEnumrenewPeriodFilter<$PrismaModel>
   }
 
   export type AdminCustomFieldCountOrderByAggregateInput = {
@@ -29749,6 +29937,7 @@ export namespace Prisma {
     isRequired?: SortOrder
     options?: SortOrder
     isMultiSelect?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -29760,6 +29949,7 @@ export namespace Prisma {
     fieldType?: SortOrder
     isRequired?: SortOrder
     isMultiSelect?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -29771,6 +29961,7 @@ export namespace Prisma {
     fieldType?: SortOrder
     isRequired?: SortOrder
     isMultiSelect?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -29853,6 +30044,10 @@ export namespace Prisma {
 
   export type StringFieldUpdateOperationsInput = {
     set?: string
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
   }
 
   export type DateTimeFieldUpdateOperationsInput = {
@@ -30914,10 +31109,6 @@ export namespace Prisma {
     connect?: CustomerProductHistoryWhereUniqueInput | CustomerProductHistoryWhereUniqueInput[]
   }
 
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
-  }
-
   export type AdminUpdateOneRequiredWithoutCustomersNestedInput = {
     create?: XOR<AdminCreateWithoutCustomersInput, AdminUncheckedCreateWithoutCustomersInput>
     connectOrCreate?: AdminCreateOrConnectWithoutCustomersInput
@@ -30994,6 +31185,10 @@ export namespace Prisma {
     connectOrCreate?: ProductRenewalHistoryCreateOrConnectWithoutCustomerProductHistoryInput | ProductRenewalHistoryCreateOrConnectWithoutCustomerProductHistoryInput[]
     createMany?: ProductRenewalHistoryCreateManyCustomerProductHistoryInputEnvelope
     connect?: ProductRenewalHistoryWhereUniqueInput | ProductRenewalHistoryWhereUniqueInput[]
+  }
+
+  export type EnumrenewPeriodFieldUpdateOperationsInput = {
+    set?: $Enums.renewPeriod
   }
 
   export type CustomerUpdateOneRequiredWithoutHistoryNestedInput = {
@@ -31110,6 +31305,11 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -31195,6 +31395,14 @@ export namespace Prisma {
     gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -31420,17 +31628,21 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
+  export type NestedEnumrenewPeriodFilter<$PrismaModel = never> = {
+    equals?: $Enums.renewPeriod | EnumrenewPeriodFieldRefInput<$PrismaModel>
+    in?: $Enums.renewPeriod[] | ListEnumrenewPeriodFieldRefInput<$PrismaModel>
+    notIn?: $Enums.renewPeriod[] | ListEnumrenewPeriodFieldRefInput<$PrismaModel>
+    not?: NestedEnumrenewPeriodFilter<$PrismaModel> | $Enums.renewPeriod
   }
 
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+  export type NestedEnumrenewPeriodWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.renewPeriod | EnumrenewPeriodFieldRefInput<$PrismaModel>
+    in?: $Enums.renewPeriod[] | ListEnumrenewPeriodFieldRefInput<$PrismaModel>
+    notIn?: $Enums.renewPeriod[] | ListEnumrenewPeriodFieldRefInput<$PrismaModel>
+    not?: NestedEnumrenewPeriodWithAggregatesFilter<$PrismaModel> | $Enums.renewPeriod
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
+    _min?: NestedEnumrenewPeriodFilter<$PrismaModel>
+    _max?: NestedEnumrenewPeriodFilter<$PrismaModel>
   }
 
   export type LoginCredentialCreateWithoutSuperadminInput = {
@@ -31439,7 +31651,7 @@ export namespace Prisma {
     email: string
     passwordHash: string
     userProfileId: string
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     admin?: AdminCreateNestedOneWithoutLoginCredsInput
@@ -31453,7 +31665,7 @@ export namespace Prisma {
     passwordHash: string
     userProfileId: string
     adminId?: string | null
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     loginAudits?: LoginAuditUncheckedCreateNestedManyWithoutLoginCredentialInput
@@ -31495,7 +31707,7 @@ export namespace Prisma {
     passwordHash?: StringFilter<"LoginCredential"> | string
     userProfileId?: UuidFilter<"LoginCredential"> | string
     adminId?: UuidNullableFilter<"LoginCredential"> | string | null
-    status?: StringFilter<"LoginCredential"> | string
+    status?: BoolFilter<"LoginCredential"> | boolean
     createdAt?: DateTimeFilter<"LoginCredential"> | Date | string
     updatedAt?: DateTimeFilter<"LoginCredential"> | Date | string
     superAdminId?: UuidNullableFilter<"LoginCredential"> | string | null
@@ -31510,7 +31722,7 @@ export namespace Prisma {
     passwordHash: string
     department?: string | null
     position?: string | null
-    status: string
+    status?: boolean
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
@@ -31526,7 +31738,7 @@ export namespace Prisma {
     passwordHash: string
     department?: string | null
     position?: string | null
-    status: string
+    status?: boolean
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
@@ -31553,7 +31765,7 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     email: string
     passwordHash: string
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     customers?: CustomerCreateNestedManyWithoutPartnerInput
@@ -31569,7 +31781,7 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     email: string
     passwordHash: string
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     customers?: CustomerUncheckedCreateNestedManyWithoutPartnerInput
@@ -31599,6 +31811,7 @@ export namespace Prisma {
     address: JsonNullValueInput | InputJsonValue
     joiningDate: Date | string
     hasReference?: boolean
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     partner?: PartnerCreateNestedOneWithoutCustomersInput
@@ -31620,6 +31833,7 @@ export namespace Prisma {
     joiningDate: Date | string
     hasReference?: boolean
     partnerId?: string | null
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     history?: CustomerProductHistoryUncheckedCreateNestedManyWithoutCustomerInput
@@ -31642,6 +31856,7 @@ export namespace Prisma {
     isRequired?: boolean
     options?: AdminCustomFieldCreateoptionsInput | string[]
     isMultiSelect?: boolean
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -31653,6 +31868,7 @@ export namespace Prisma {
     isRequired?: boolean
     options?: AdminCustomFieldCreateoptionsInput | string[]
     isMultiSelect?: boolean
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -31676,6 +31892,7 @@ export namespace Prisma {
     productLink?: string | null
     tags?: ProductCreatetagsInput | string[]
     specifications: JsonNullValueInput | InputJsonValue
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     customerProductHistory?: CustomerProductHistoryCreateNestedManyWithoutProductInput
@@ -31691,6 +31908,7 @@ export namespace Prisma {
     productLink?: string | null
     tags?: ProductCreatetagsInput | string[]
     specifications: JsonNullValueInput | InputJsonValue
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     customerProductHistory?: CustomerProductHistoryUncheckedCreateNestedManyWithoutProductInput
@@ -31751,7 +31969,7 @@ export namespace Prisma {
     email: string
     passwordHash: string
     userProfileId: string
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     superadmin?: SuperAdminCreateNestedOneWithoutLoginCredsInput
@@ -31764,7 +31982,7 @@ export namespace Prisma {
     email: string
     passwordHash: string
     userProfileId: string
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     superAdminId?: string | null
@@ -31785,6 +32003,7 @@ export namespace Prisma {
     id?: string
     purchaseDate: Date | string
     renewal?: boolean
+    renewPeriod?: $Enums.renewPeriod
     expiryDate?: Date | string | null
     renewalDate?: Date | string | null
     status?: boolean
@@ -31801,6 +32020,7 @@ export namespace Prisma {
     productId: string
     purchaseDate: Date | string
     renewal?: boolean
+    renewPeriod?: $Enums.renewPeriod
     expiryDate?: Date | string | null
     renewalDate?: Date | string | null
     status?: boolean
@@ -31848,7 +32068,7 @@ export namespace Prisma {
     passwordHash?: StringFilter<"TeamMember"> | string
     department?: StringNullableFilter<"TeamMember"> | string | null
     position?: StringNullableFilter<"TeamMember"> | string | null
-    status?: StringFilter<"TeamMember"> | string
+    status?: BoolFilter<"TeamMember"> | boolean
     contactInfo?: JsonNullableFilter<"TeamMember">
     address?: JsonNullableFilter<"TeamMember">
     createdAt?: DateTimeFilter<"TeamMember"> | Date | string
@@ -31885,7 +32105,7 @@ export namespace Prisma {
     address?: JsonNullableFilter<"Partner">
     email?: StringFilter<"Partner"> | string
     passwordHash?: StringFilter<"Partner"> | string
-    status?: StringFilter<"Partner"> | string
+    status?: BoolFilter<"Partner"> | boolean
     createdAt?: DateTimeFilter<"Partner"> | Date | string
     updatedAt?: DateTimeFilter<"Partner"> | Date | string
   }
@@ -31925,6 +32145,7 @@ export namespace Prisma {
     joiningDate?: DateTimeFilter<"Customer"> | Date | string
     hasReference?: BoolFilter<"Customer"> | boolean
     partnerId?: UuidNullableFilter<"Customer"> | string | null
+    status?: BoolFilter<"Customer"> | boolean
     createdAt?: DateTimeFilter<"Customer"> | Date | string
     updatedAt?: DateTimeFilter<"Customer"> | Date | string
   }
@@ -31956,6 +32177,7 @@ export namespace Prisma {
     isRequired?: BoolFilter<"AdminCustomField"> | boolean
     options?: StringNullableListFilter<"AdminCustomField">
     isMultiSelect?: BoolFilter<"AdminCustomField"> | boolean
+    status?: BoolFilter<"AdminCustomField"> | boolean
     createdAt?: DateTimeFilter<"AdminCustomField"> | Date | string
     updatedAt?: DateTimeFilter<"AdminCustomField"> | Date | string
   }
@@ -31989,6 +32211,7 @@ export namespace Prisma {
     tags?: StringNullableListFilter<"Product">
     specifications?: JsonFilter<"Product">
     adminId?: UuidFilter<"Product"> | string
+    status?: BoolFilter<"Product"> | boolean
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
   }
@@ -32067,6 +32290,7 @@ export namespace Prisma {
     productId?: UuidFilter<"CustomerProductHistory"> | string
     purchaseDate?: DateTimeFilter<"CustomerProductHistory"> | Date | string
     renewal?: BoolFilter<"CustomerProductHistory"> | boolean
+    renewPeriod?: EnumrenewPeriodFilter<"CustomerProductHistory"> | $Enums.renewPeriod
     expiryDate?: DateTimeNullableFilter<"CustomerProductHistory"> | Date | string | null
     renewalDate?: DateTimeNullableFilter<"CustomerProductHistory"> | Date | string | null
     status?: BoolFilter<"CustomerProductHistory"> | boolean
@@ -32084,7 +32308,7 @@ export namespace Prisma {
     companyName: string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     partners?: PartnerCreateNestedManyWithoutAdminInput
@@ -32106,7 +32330,7 @@ export namespace Prisma {
     companyName: string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     partners?: PartnerUncheckedCreateNestedManyWithoutAdminInput
@@ -32144,7 +32368,7 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partners?: PartnerUpdateManyWithoutAdminNestedInput
@@ -32166,7 +32390,7 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partners?: PartnerUncheckedUpdateManyWithoutAdminNestedInput
@@ -32188,7 +32412,7 @@ export namespace Prisma {
     companyName: string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     teamMembers?: TeamMemberCreateNestedManyWithoutAdminInput
@@ -32210,7 +32434,7 @@ export namespace Prisma {
     companyName: string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutAdminInput
@@ -32241,6 +32465,7 @@ export namespace Prisma {
     address: JsonNullValueInput | InputJsonValue
     joiningDate: Date | string
     hasReference?: boolean
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     admin: AdminCreateNestedOneWithoutCustomersInput
@@ -32262,6 +32487,7 @@ export namespace Prisma {
     address: JsonNullValueInput | InputJsonValue
     joiningDate: Date | string
     hasReference?: boolean
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     history?: CustomerProductHistoryUncheckedCreateNestedManyWithoutCustomerInput
@@ -32298,7 +32524,7 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     teamMembers?: TeamMemberUpdateManyWithoutAdminNestedInput
@@ -32320,7 +32546,7 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     teamMembers?: TeamMemberUncheckedUpdateManyWithoutAdminNestedInput
@@ -32358,7 +32584,7 @@ export namespace Prisma {
     companyName: string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     teamMembers?: TeamMemberCreateNestedManyWithoutAdminInput
@@ -32380,7 +32606,7 @@ export namespace Prisma {
     companyName: string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutAdminInput
@@ -32405,7 +32631,7 @@ export namespace Prisma {
     passwordHash: string
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -32418,7 +32644,7 @@ export namespace Prisma {
     passwordHash: string
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -32477,7 +32703,7 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     teamMembers?: TeamMemberUpdateManyWithoutAdminNestedInput
@@ -32499,7 +32725,7 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     teamMembers?: TeamMemberUncheckedUpdateManyWithoutAdminNestedInput
@@ -32530,7 +32756,7 @@ export namespace Prisma {
     passwordHash?: StringFieldUpdateOperationsInput | string
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -32543,7 +32769,7 @@ export namespace Prisma {
     passwordHash?: StringFieldUpdateOperationsInput | string
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -32801,6 +33027,7 @@ export namespace Prisma {
     name: string
     duration: string
     price: number
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     specs?: PlanSpecCreateNestedManyWithoutPlanInput
@@ -32813,6 +33040,7 @@ export namespace Prisma {
     name: string
     duration: string
     price: number
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     specs?: PlanSpecUncheckedCreateNestedManyWithoutPlanInput
@@ -32841,6 +33069,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     duration?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     specs?: PlanSpecUpdateManyWithoutPlanNestedInput
@@ -32853,6 +33082,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     duration?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     specs?: PlanSpecUncheckedUpdateManyWithoutPlanNestedInput
@@ -32865,6 +33095,7 @@ export namespace Prisma {
     name: string
     duration: string
     price: number
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     offers?: PlanOfferCreateNestedManyWithoutPlanInput
@@ -32877,6 +33108,7 @@ export namespace Prisma {
     name: string
     duration: string
     price: number
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     offers?: PlanOfferUncheckedCreateNestedManyWithoutPlanInput
@@ -32905,6 +33137,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     duration?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     offers?: PlanOfferUpdateManyWithoutPlanNestedInput
@@ -32917,6 +33150,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     duration?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     offers?: PlanOfferUncheckedUpdateManyWithoutPlanNestedInput
@@ -32929,6 +33163,7 @@ export namespace Prisma {
     name: string
     duration: string
     price: number
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     offers?: PlanOfferCreateNestedManyWithoutPlanInput
@@ -32941,6 +33176,7 @@ export namespace Prisma {
     name: string
     duration: string
     price: number
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     offers?: PlanOfferUncheckedCreateNestedManyWithoutPlanInput
@@ -32969,6 +33205,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     duration?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     offers?: PlanOfferUpdateManyWithoutPlanNestedInput
@@ -32981,6 +33218,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     duration?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     offers?: PlanOfferUncheckedUpdateManyWithoutPlanNestedInput
@@ -32998,7 +33236,7 @@ export namespace Prisma {
     companyName: string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     teamMembers?: TeamMemberCreateNestedManyWithoutAdminInput
@@ -33020,7 +33258,7 @@ export namespace Prisma {
     companyName: string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutAdminInput
@@ -33042,6 +33280,7 @@ export namespace Prisma {
     name: string
     duration: string
     price: number
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     offers?: PlanOfferCreateNestedManyWithoutPlanInput
@@ -33054,6 +33293,7 @@ export namespace Prisma {
     name: string
     duration: string
     price: number
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     offers?: PlanOfferUncheckedCreateNestedManyWithoutPlanInput
@@ -33149,7 +33389,7 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     teamMembers?: TeamMemberUpdateManyWithoutAdminNestedInput
@@ -33171,7 +33411,7 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     teamMembers?: TeamMemberUncheckedUpdateManyWithoutAdminNestedInput
@@ -33199,6 +33439,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     duration?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     offers?: PlanOfferUpdateManyWithoutPlanNestedInput
@@ -33211,6 +33452,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     duration?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     offers?: PlanOfferUncheckedUpdateManyWithoutPlanNestedInput
@@ -33433,7 +33675,7 @@ export namespace Prisma {
     companyName: string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     teamMembers?: TeamMemberCreateNestedManyWithoutAdminInput
@@ -33455,7 +33697,7 @@ export namespace Prisma {
     companyName: string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutAdminInput
@@ -33476,6 +33718,7 @@ export namespace Prisma {
     id?: string
     purchaseDate: Date | string
     renewal?: boolean
+    renewPeriod?: $Enums.renewPeriod
     expiryDate?: Date | string | null
     renewalDate?: Date | string | null
     status?: boolean
@@ -33492,6 +33735,7 @@ export namespace Prisma {
     adminId: string
     purchaseDate: Date | string
     renewal?: boolean
+    renewPeriod?: $Enums.renewPeriod
     expiryDate?: Date | string | null
     renewalDate?: Date | string | null
     status?: boolean
@@ -33561,7 +33805,7 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     teamMembers?: TeamMemberUpdateManyWithoutAdminNestedInput
@@ -33583,7 +33827,7 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     teamMembers?: TeamMemberUncheckedUpdateManyWithoutAdminNestedInput
@@ -33645,6 +33889,7 @@ export namespace Prisma {
     id?: string
     purchaseDate: Date | string
     renewal?: boolean
+    renewPeriod?: $Enums.renewPeriod
     expiryDate?: Date | string | null
     renewalDate?: Date | string | null
     status?: boolean
@@ -33662,6 +33907,7 @@ export namespace Prisma {
     productId: string
     purchaseDate: Date | string
     renewal?: boolean
+    renewPeriod?: $Enums.renewPeriod
     expiryDate?: Date | string | null
     renewalDate?: Date | string | null
     status?: boolean
@@ -33683,6 +33929,7 @@ export namespace Prisma {
     productLink?: string | null
     tags?: ProductCreatetagsInput | string[]
     specifications: JsonNullValueInput | InputJsonValue
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     admin: AdminCreateNestedOneWithoutProductsInput
@@ -33699,6 +33946,7 @@ export namespace Prisma {
     tags?: ProductCreatetagsInput | string[]
     specifications: JsonNullValueInput | InputJsonValue
     adminId: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     customerProductHistory?: CustomerProductHistoryUncheckedCreateNestedManyWithoutProductInput
@@ -33724,6 +33972,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     renewal?: BoolFieldUpdateOperationsInput | boolean
+    renewPeriod?: EnumrenewPeriodFieldUpdateOperationsInput | $Enums.renewPeriod
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     renewalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: BoolFieldUpdateOperationsInput | boolean
@@ -33741,6 +33990,7 @@ export namespace Prisma {
     productId?: StringFieldUpdateOperationsInput | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     renewal?: BoolFieldUpdateOperationsInput | boolean
+    renewPeriod?: EnumrenewPeriodFieldUpdateOperationsInput | $Enums.renewPeriod
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     renewalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: BoolFieldUpdateOperationsInput | boolean
@@ -33768,6 +34018,7 @@ export namespace Prisma {
     productLink?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: ProductUpdatetagsInput | string[]
     specifications?: JsonNullValueInput | InputJsonValue
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     admin?: AdminUpdateOneRequiredWithoutProductsNestedInput
@@ -33784,6 +34035,7 @@ export namespace Prisma {
     tags?: ProductUpdatetagsInput | string[]
     specifications?: JsonNullValueInput | InputJsonValue
     adminId?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customerProductHistory?: CustomerProductHistoryUncheckedUpdateManyWithoutProductNestedInput
@@ -33799,7 +34051,7 @@ export namespace Prisma {
     companyName: string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     teamMembers?: TeamMemberCreateNestedManyWithoutAdminInput
@@ -33821,7 +34073,7 @@ export namespace Prisma {
     companyName: string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutAdminInput
@@ -33848,7 +34100,7 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     email: string
     passwordHash: string
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     admin: AdminCreateNestedOneWithoutPartnersInput
@@ -33865,7 +34117,7 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     email: string
     passwordHash: string
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -33879,6 +34131,7 @@ export namespace Prisma {
     id?: string
     purchaseDate: Date | string
     renewal?: boolean
+    renewPeriod?: $Enums.renewPeriod
     expiryDate?: Date | string | null
     renewalDate?: Date | string | null
     status?: boolean
@@ -33895,6 +34148,7 @@ export namespace Prisma {
     productId: string
     purchaseDate: Date | string
     renewal?: boolean
+    renewPeriod?: $Enums.renewPeriod
     expiryDate?: Date | string | null
     renewalDate?: Date | string | null
     status?: boolean
@@ -33934,7 +34188,7 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     teamMembers?: TeamMemberUpdateManyWithoutAdminNestedInput
@@ -33956,7 +34210,7 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     teamMembers?: TeamMemberUncheckedUpdateManyWithoutAdminNestedInput
@@ -33989,7 +34243,7 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     admin?: AdminUpdateOneRequiredWithoutPartnersNestedInput
@@ -34006,7 +34260,7 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -34041,6 +34295,7 @@ export namespace Prisma {
     address: JsonNullValueInput | InputJsonValue
     joiningDate: Date | string
     hasReference?: boolean
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     admin: AdminCreateNestedOneWithoutCustomersInput
@@ -34063,6 +34318,7 @@ export namespace Prisma {
     joiningDate: Date | string
     hasReference?: boolean
     partnerId?: string | null
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -34082,7 +34338,7 @@ export namespace Prisma {
     companyName: string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     teamMembers?: TeamMemberCreateNestedManyWithoutAdminInput
@@ -34104,7 +34360,7 @@ export namespace Prisma {
     companyName: string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutAdminInput
@@ -34130,6 +34386,7 @@ export namespace Prisma {
     productLink?: string | null
     tags?: ProductCreatetagsInput | string[]
     specifications: JsonNullValueInput | InputJsonValue
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     admin: AdminCreateNestedOneWithoutProductsInput
@@ -34146,6 +34403,7 @@ export namespace Prisma {
     tags?: ProductCreatetagsInput | string[]
     specifications: JsonNullValueInput | InputJsonValue
     adminId: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     renewalHistory?: ProductRenewalHistoryUncheckedCreateNestedManyWithoutProductInput
@@ -34211,6 +34469,7 @@ export namespace Prisma {
     address?: JsonNullValueInput | InputJsonValue
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     admin?: AdminUpdateOneRequiredWithoutCustomersNestedInput
@@ -34233,6 +34492,7 @@ export namespace Prisma {
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -34258,7 +34518,7 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     teamMembers?: TeamMemberUpdateManyWithoutAdminNestedInput
@@ -34280,7 +34540,7 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     teamMembers?: TeamMemberUncheckedUpdateManyWithoutAdminNestedInput
@@ -34312,6 +34572,7 @@ export namespace Prisma {
     productLink?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: ProductUpdatetagsInput | string[]
     specifications?: JsonNullValueInput | InputJsonValue
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     admin?: AdminUpdateOneRequiredWithoutProductsNestedInput
@@ -34328,6 +34589,7 @@ export namespace Prisma {
     tags?: ProductUpdatetagsInput | string[]
     specifications?: JsonNullValueInput | InputJsonValue
     adminId?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     renewalHistory?: ProductRenewalHistoryUncheckedUpdateManyWithoutProductNestedInput
@@ -34359,7 +34621,7 @@ export namespace Prisma {
     companyName: string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     teamMembers?: TeamMemberCreateNestedManyWithoutAdminInput
@@ -34381,7 +34643,7 @@ export namespace Prisma {
     companyName: string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutAdminInput
@@ -34419,7 +34681,7 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     teamMembers?: TeamMemberUpdateManyWithoutAdminNestedInput
@@ -34441,7 +34703,7 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     address?: NullableJsonNullValueInput | InputJsonValue
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     teamMembers?: TeamMemberUncheckedUpdateManyWithoutAdminNestedInput
@@ -34459,7 +34721,7 @@ export namespace Prisma {
     email: string
     passwordHash: string
     userProfileId: string
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     admin?: AdminCreateNestedOneWithoutLoginCredsInput
@@ -34473,7 +34735,7 @@ export namespace Prisma {
     passwordHash: string
     userProfileId: string
     adminId?: string | null
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     superAdminId?: string | null
@@ -34501,7 +34763,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     userProfileId?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     admin?: AdminUpdateOneWithoutLoginCredsNestedInput
@@ -34515,7 +34777,7 @@ export namespace Prisma {
     passwordHash?: StringFieldUpdateOperationsInput | string
     userProfileId?: StringFieldUpdateOperationsInput | string
     adminId?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     superAdminId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34528,7 +34790,7 @@ export namespace Prisma {
     passwordHash: string
     userProfileId: string
     adminId?: string | null
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -34539,7 +34801,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     userProfileId?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     admin?: AdminUpdateOneWithoutLoginCredsNestedInput
@@ -34553,7 +34815,7 @@ export namespace Prisma {
     passwordHash?: StringFieldUpdateOperationsInput | string
     userProfileId?: StringFieldUpdateOperationsInput | string
     adminId?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     loginAudits?: LoginAuditUncheckedUpdateManyWithoutLoginCredentialNestedInput
@@ -34566,7 +34828,7 @@ export namespace Prisma {
     passwordHash?: StringFieldUpdateOperationsInput | string
     userProfileId?: StringFieldUpdateOperationsInput | string
     adminId?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -34580,7 +34842,7 @@ export namespace Prisma {
     passwordHash: string
     department?: string | null
     position?: string | null
-    status: string
+    status?: boolean
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
@@ -34597,7 +34859,7 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     email: string
     passwordHash: string
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -34617,6 +34879,7 @@ export namespace Prisma {
     joiningDate: Date | string
     hasReference?: boolean
     partnerId?: string | null
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -34628,6 +34891,7 @@ export namespace Prisma {
     isRequired?: boolean
     options?: AdminCustomFieldCreateoptionsInput | string[]
     isMultiSelect?: boolean
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -34641,6 +34905,7 @@ export namespace Prisma {
     productLink?: string | null
     tags?: ProductCreatetagsInput | string[]
     specifications: JsonNullValueInput | InputJsonValue
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -34663,7 +34928,7 @@ export namespace Prisma {
     email: string
     passwordHash: string
     userProfileId: string
-    status: string
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     superAdminId?: string | null
@@ -34675,6 +34940,7 @@ export namespace Prisma {
     productId: string
     purchaseDate: Date | string
     renewal?: boolean
+    renewPeriod?: $Enums.renewPeriod
     expiryDate?: Date | string | null
     renewalDate?: Date | string | null
     status?: boolean
@@ -34691,7 +34957,7 @@ export namespace Prisma {
     passwordHash?: StringFieldUpdateOperationsInput | string
     department?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34707,7 +34973,7 @@ export namespace Prisma {
     passwordHash?: StringFieldUpdateOperationsInput | string
     department?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34723,7 +34989,7 @@ export namespace Prisma {
     passwordHash?: StringFieldUpdateOperationsInput | string
     department?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     contactInfo?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34740,7 +35006,7 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customers?: CustomerUpdateManyWithoutPartnerNestedInput
@@ -34756,7 +35022,7 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customers?: CustomerUncheckedUpdateManyWithoutPartnerNestedInput
@@ -34772,7 +35038,7 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -34791,6 +35057,7 @@ export namespace Prisma {
     address?: JsonNullValueInput | InputJsonValue
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partner?: PartnerUpdateOneWithoutCustomersNestedInput
@@ -34812,6 +35079,7 @@ export namespace Prisma {
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     history?: CustomerProductHistoryUncheckedUpdateManyWithoutCustomerNestedInput
@@ -34832,6 +35100,7 @@ export namespace Prisma {
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -34843,6 +35112,7 @@ export namespace Prisma {
     isRequired?: BoolFieldUpdateOperationsInput | boolean
     options?: AdminCustomFieldUpdateoptionsInput | string[]
     isMultiSelect?: BoolFieldUpdateOperationsInput | boolean
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -34854,6 +35124,7 @@ export namespace Prisma {
     isRequired?: BoolFieldUpdateOperationsInput | boolean
     options?: AdminCustomFieldUpdateoptionsInput | string[]
     isMultiSelect?: BoolFieldUpdateOperationsInput | boolean
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -34865,6 +35136,7 @@ export namespace Prisma {
     isRequired?: BoolFieldUpdateOperationsInput | boolean
     options?: AdminCustomFieldUpdateoptionsInput | string[]
     isMultiSelect?: BoolFieldUpdateOperationsInput | boolean
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -34878,6 +35150,7 @@ export namespace Prisma {
     productLink?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: ProductUpdatetagsInput | string[]
     specifications?: JsonNullValueInput | InputJsonValue
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customerProductHistory?: CustomerProductHistoryUpdateManyWithoutProductNestedInput
@@ -34893,6 +35166,7 @@ export namespace Prisma {
     productLink?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: ProductUpdatetagsInput | string[]
     specifications?: JsonNullValueInput | InputJsonValue
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customerProductHistory?: CustomerProductHistoryUncheckedUpdateManyWithoutProductNestedInput
@@ -34908,6 +35182,7 @@ export namespace Prisma {
     productLink?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: ProductUpdatetagsInput | string[]
     specifications?: JsonNullValueInput | InputJsonValue
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -34958,7 +35233,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     userProfileId?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     superadmin?: SuperAdminUpdateOneWithoutLoginCredsNestedInput
@@ -34971,7 +35246,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     userProfileId?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     superAdminId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34984,7 +35259,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     userProfileId?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     superAdminId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34994,6 +35269,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     renewal?: BoolFieldUpdateOperationsInput | boolean
+    renewPeriod?: EnumrenewPeriodFieldUpdateOperationsInput | $Enums.renewPeriod
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     renewalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: BoolFieldUpdateOperationsInput | boolean
@@ -35010,6 +35286,7 @@ export namespace Prisma {
     productId?: StringFieldUpdateOperationsInput | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     renewal?: BoolFieldUpdateOperationsInput | boolean
+    renewPeriod?: EnumrenewPeriodFieldUpdateOperationsInput | $Enums.renewPeriod
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     renewalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: BoolFieldUpdateOperationsInput | boolean
@@ -35024,6 +35301,7 @@ export namespace Prisma {
     productId?: StringFieldUpdateOperationsInput | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     renewal?: BoolFieldUpdateOperationsInput | boolean
+    renewPeriod?: EnumrenewPeriodFieldUpdateOperationsInput | $Enums.renewPeriod
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     renewalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: BoolFieldUpdateOperationsInput | boolean
@@ -35046,6 +35324,7 @@ export namespace Prisma {
     address: JsonNullValueInput | InputJsonValue
     joiningDate: Date | string
     hasReference?: boolean
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -35064,6 +35343,7 @@ export namespace Prisma {
     address?: JsonNullValueInput | InputJsonValue
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     admin?: AdminUpdateOneRequiredWithoutCustomersNestedInput
@@ -35085,6 +35365,7 @@ export namespace Prisma {
     address?: JsonNullValueInput | InputJsonValue
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     history?: CustomerProductHistoryUncheckedUpdateManyWithoutCustomerNestedInput
@@ -35105,6 +35386,7 @@ export namespace Prisma {
     address?: JsonNullValueInput | InputJsonValue
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -35387,6 +35669,7 @@ export namespace Prisma {
     adminId: string
     purchaseDate: Date | string
     renewal?: boolean
+    renewPeriod?: $Enums.renewPeriod
     expiryDate?: Date | string | null
     renewalDate?: Date | string | null
     status?: boolean
@@ -35408,6 +35691,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     renewal?: BoolFieldUpdateOperationsInput | boolean
+    renewPeriod?: EnumrenewPeriodFieldUpdateOperationsInput | $Enums.renewPeriod
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     renewalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: BoolFieldUpdateOperationsInput | boolean
@@ -35424,6 +35708,7 @@ export namespace Prisma {
     adminId?: StringFieldUpdateOperationsInput | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     renewal?: BoolFieldUpdateOperationsInput | boolean
+    renewPeriod?: EnumrenewPeriodFieldUpdateOperationsInput | $Enums.renewPeriod
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     renewalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: BoolFieldUpdateOperationsInput | boolean
@@ -35438,6 +35723,7 @@ export namespace Prisma {
     adminId?: StringFieldUpdateOperationsInput | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     renewal?: BoolFieldUpdateOperationsInput | boolean
+    renewPeriod?: EnumrenewPeriodFieldUpdateOperationsInput | $Enums.renewPeriod
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     renewalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: BoolFieldUpdateOperationsInput | boolean
@@ -35481,6 +35767,7 @@ export namespace Prisma {
     productId: string
     purchaseDate: Date | string
     renewal?: boolean
+    renewPeriod?: $Enums.renewPeriod
     expiryDate?: Date | string | null
     renewalDate?: Date | string | null
     status?: boolean
@@ -35492,6 +35779,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     renewal?: BoolFieldUpdateOperationsInput | boolean
+    renewPeriod?: EnumrenewPeriodFieldUpdateOperationsInput | $Enums.renewPeriod
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     renewalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: BoolFieldUpdateOperationsInput | boolean
@@ -35508,6 +35796,7 @@ export namespace Prisma {
     productId?: StringFieldUpdateOperationsInput | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     renewal?: BoolFieldUpdateOperationsInput | boolean
+    renewPeriod?: EnumrenewPeriodFieldUpdateOperationsInput | $Enums.renewPeriod
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     renewalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: BoolFieldUpdateOperationsInput | boolean
@@ -35522,6 +35811,7 @@ export namespace Prisma {
     productId?: StringFieldUpdateOperationsInput | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     renewal?: BoolFieldUpdateOperationsInput | boolean
+    renewPeriod?: EnumrenewPeriodFieldUpdateOperationsInput | $Enums.renewPeriod
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     renewalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: BoolFieldUpdateOperationsInput | boolean

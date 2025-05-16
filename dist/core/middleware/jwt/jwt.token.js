@@ -12,8 +12,6 @@ const _expires = database_config_1.env.JWT_EXPIRES_IN || "30d";
 const authenticateUser = (req, res, next) => {
     try {
         const token = req.cookies.rJmkUxzNakU;
-        ;
-        console.log("token--->", token);
         if (!token) {
             (0, httpResponse_1.sendErrorResponse)(res, 401, "Authentication token missing");
             return;

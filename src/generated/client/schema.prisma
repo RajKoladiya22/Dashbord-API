@@ -40,6 +40,14 @@ enum SubscriptionStatus {
   blocked
 }
 
+enum renewPeriod {
+  monthly
+  quarterly
+  yearly
+  half_yearly
+  custom
+}
+
 // ——————————————————————————————————————————
 // SuperAdmin
 // ——————————————————————————————————————————
@@ -51,7 +59,7 @@ model SuperAdmin {
   passwordHash String   @map("password_hash")
   contactInfo  Json?    @map("contact_info")
   address      Json?
-  status       String
+  status       Boolean  @default(true)
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
@@ -73,7 +81,7 @@ model Admin {
   companyName  String   @map("company_name")
   address      Json?
   contactInfo  Json?    @map("contact_info")
-  status       String
+  status       Boolean  @default(true)
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
@@ -102,7 +110,7 @@ model TeamMember {
   passwordHash String   @map("password_hash")
   department   String?
   position     String?
-  status       String
+  status       Boolean  @default(true)
   contactInfo  Json?    @map("contact_info")
   address      Json?
   createdAt    DateTime @default(now()) @map("created_at")
@@ -128,7 +136,7 @@ model Partner {
   address      Json?
   email        String   @unique
   passwordHash String   @map("password_hash")
-  status       String
+  status       Boolean  @default(true)
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
@@ -149,7 +157,7 @@ model LoginCredential {
   passwordHash  String   @map("password_hash")
   userProfileId String   @map("user_profile_id") @db.Uuid
   adminId       String?  @map("admin_id") @db.Uuid
-  status        String
+  status        Boolean  @default(true)
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
   superAdminId  String?  @db.Uuid
@@ -170,6 +178,7 @@ model Plan {
   name      String
   duration  String
   price     Float
+  status    Boolean  @default(true) @map("status")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -295,6 +304,7 @@ model Product {
   tags            String[] @db.Text
   specifications  Json
   adminId         String   @db.Uuid
+  status          Boolean  @default(true)
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @updatedAt @map("updated_at")
 
@@ -343,6 +353,7 @@ model Customer {
   joiningDate       DateTime @map("joining_date")
   hasReference      Boolean  @default(false) @map("has_reference")
   partnerId         String?  @map("partner_id") @db.Uuid
+  status            Boolean  @default(true) @map("status")
   createdAt         DateTime @default(now()) @map("created_at")
   updatedAt         DateTime @updatedAt @map("updated_at")
 
@@ -353,21 +364,29 @@ model Customer {
   @@index([adminId])
   @@index([partnerId])
   @@index([adminId, partnerId])
+  @@index([adminId], name: "idx_customers_admin")
+  @@index([partnerId], name: "idx_customers_partner")
+  @@index([status], name: "idx_customers_status")
+  @@index([companyName], name: "idx_customers_companyName")
+  @@index([contactPerson], name: "idx_customers_contactPerson")
+  @@index([mobileNumber], name: "idx_customers_mobileNumber")
+  @@index([serialNo], name: "idx_customers_serialNo")
   @@map("customers")
 }
 
 model CustomerProductHistory {
-  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  customerId   String    @map("customer_id") @db.Uuid
-  adminId      String    @map("admin_id") @db.Uuid
-  productId    String    @map("product_id") @db.Uuid
-  purchaseDate DateTime  @map("purchase_date")
-  renewal      Boolean   @default(false)
-  expiryDate   DateTime? @map("expiry_date")
-  renewalDate  DateTime? @map("renewal_date")
-  status       Boolean   @default(true) @map("status")
-  createdAt    DateTime  @default(now()) @map("created_at")
-  updatedAt    DateTime  @updatedAt @map("updated_at")
+  id           String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  customerId   String      @map("customer_id") @db.Uuid
+  adminId      String      @map("admin_id") @db.Uuid
+  productId    String      @map("product_id") @db.Uuid
+  purchaseDate DateTime    @map("purchase_date")
+  renewal      Boolean     @default(false)
+  renewPeriod  renewPeriod @default(custom)
+  expiryDate   DateTime?   @map("expiry_date")
+  renewalDate  DateTime?   @map("renewal_date")
+  status       Boolean     @default(true) @map("status")
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
 
   customer Customer                @relation(fields: [customerId], references: [id], onDelete: Cascade)
   admin    Admin                   @relation(fields: [adminId], references: [id], onDelete: Cascade)
@@ -392,6 +411,7 @@ model AdminCustomField {
   isRequired    Boolean  @default(false) @map("is_required")
   options       String[] @default([]) @db.Text
   isMultiSelect Boolean  @default(false) @map("is_multi_select")
+  status        Boolean  @default(true)
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
 
@@ -430,3 +450,7 @@ model PasswordOtp {
   @@index([userId, purpose])
   @@map("password_otps")
 }
+
+// ——————————————————————————————————————————
+// Index
+// ——————————————————————————————————————————

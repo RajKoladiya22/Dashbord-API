@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
 export declare const env: NodeJS.ProcessEnv;
 declare global {
     var __globalPrisma: PrismaClient | undefined;

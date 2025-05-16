@@ -8,18 +8,24 @@ const validate_env_1 = require("./config/validate-env");
 const app_1 = __importDefault(require("./app"));
 const database_config_1 = require("./config/database.config");
 const logger_1 = require("./core/middleware/logs/logger");
+const httpResponse_1 = require("./core/utils/httpResponse");
 (0, env_config_1.envConfiguration)();
 const env = validate_env_1.validatedEnv;
+app_1.default.use("/", (req, res) => {
+    (0, httpResponse_1.sendSuccessResponse)(res, 200, "Base route is working", {
+        timestamp: new Date(),
+    });
+});
 const server = app_1.default.listen(env.PORT, () => {
     logger_1.logger.info(`🚀 Server listening on http://localhost:${env.PORT} - [${env.NODE_ENV}]`);
 });
-process.on('SIGINT', async () => {
-    logger_1.logger.info('SIGINT received: closing HTTP server');
+process.on("SIGINT", async () => {
+    logger_1.logger.info("SIGINT received: closing HTTP server");
     server.close(async () => {
         await (0, database_config_1.shutdownDb)();
-        logger_1.logger.info('Database disconnected, exiting.');
+        logger_1.logger.info("Database disconnected, exiting.");
         process.exit(0);
     });
 });
-process.on('SIGTERM', () => process.exit(0));
+process.on("SIGTERM", () => process.exit(0));
 //# sourceMappingURL=server.js.map

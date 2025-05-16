@@ -8,5 +8,6 @@ router.get('/', jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("a
 router.post('/', jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin"), product_controller_1.createProduct);
 router.put('/:id', jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin"), product_controller_1.updateProduct);
 router.delete('/:id', jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin"), product_controller_1.deleteProduct);
+router.patch('/status/:id', jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin"), product_controller_1.changeProductStatus);
 exports.default = router;
 //# sourceMappingURL=product.routes.js.map

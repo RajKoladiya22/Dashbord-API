@@ -102,6 +102,7 @@ CREATE TABLE "plans" (
     "name" TEXT NOT NULL,
     "duration" TEXT NOT NULL,
     "price" DOUBLE PRECISION NOT NULL,
+    "status" BOOLEAN NOT NULL DEFAULT true,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -201,6 +202,7 @@ CREATE TABLE "products" (
     "tags" TEXT[],
     "specifications" JSONB NOT NULL,
     "adminId" UUID NOT NULL,
+    "status" BOOLEAN NOT NULL DEFAULT true,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -238,6 +240,7 @@ CREATE TABLE "customers" (
     "joining_date" TIMESTAMP(3) NOT NULL,
     "has_reference" BOOLEAN NOT NULL DEFAULT false,
     "partner_id" UUID,
+    "status" BOOLEAN NOT NULL DEFAULT true,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -270,6 +273,7 @@ CREATE TABLE "admin_custom_fields" (
     "is_required" BOOLEAN NOT NULL DEFAULT false,
     "options" TEXT[] DEFAULT ARRAY[]::TEXT[],
     "is_multi_select" BOOLEAN NOT NULL DEFAULT false,
+    "status" BOOLEAN NOT NULL DEFAULT true,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -369,6 +373,27 @@ CREATE INDEX "customers_partner_id_idx" ON "customers"("partner_id");
 
 -- CreateIndex
 CREATE INDEX "customers_adminId_partner_id_idx" ON "customers"("adminId", "partner_id");
+
+-- CreateIndex
+CREATE INDEX "idx_customers_admin" ON "customers"("adminId");
+
+-- CreateIndex
+CREATE INDEX "idx_customers_partner" ON "customers"("partner_id");
+
+-- CreateIndex
+CREATE INDEX "idx_customers_status" ON "customers"("status");
+
+-- CreateIndex
+CREATE INDEX "idx_customers_companyName" ON "customers"("company_name");
+
+-- CreateIndex
+CREATE INDEX "idx_customers_contactPerson" ON "customers"("contact_person");
+
+-- CreateIndex
+CREATE INDEX "idx_customers_mobileNumber" ON "customers"("mobile_number");
+
+-- CreateIndex
+CREATE INDEX "idx_customers_serialNo" ON "customers"("serial_no");
 
 -- CreateIndex
 CREATE INDEX "customer_product_history_customer_id_idx" ON "customer_product_history"("customer_id");

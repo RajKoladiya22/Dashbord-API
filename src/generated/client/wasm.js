@@ -199,6 +199,7 @@ exports.Prisma.PlanScalarFieldEnum = {
   name: 'name',
   duration: 'duration',
   price: 'price',
+  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -277,6 +278,7 @@ exports.Prisma.ProductScalarFieldEnum = {
   tags: 'tags',
   specifications: 'specifications',
   adminId: 'adminId',
+  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -308,6 +310,7 @@ exports.Prisma.CustomerScalarFieldEnum = {
   joiningDate: 'joiningDate',
   hasReference: 'hasReference',
   partnerId: 'partnerId',
+  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -319,6 +322,7 @@ exports.Prisma.CustomerProductHistoryScalarFieldEnum = {
   productId: 'productId',
   purchaseDate: 'purchaseDate',
   renewal: 'renewal',
+  renewPeriod: 'renewPeriod',
   expiryDate: 'expiryDate',
   renewalDate: 'renewalDate',
   status: 'status',
@@ -334,6 +338,7 @@ exports.Prisma.AdminCustomFieldScalarFieldEnum = {
   isRequired: 'isRequired',
   options: 'options',
   isMultiSelect: 'isMultiSelect',
+  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -411,6 +416,14 @@ exports.SubscriptionStatus = exports.$Enums.SubscriptionStatus = {
   inactive: 'inactive',
   under_review: 'under_review',
   blocked: 'blocked'
+};
+
+exports.renewPeriod = exports.$Enums.renewPeriod = {
+  monthly: 'monthly',
+  quarterly: 'quarterly',
+  yearly: 'yearly',
+  half_yearly: 'half_yearly',
+  custom: 'custom'
 };
 
 exports.Prisma.ModelName = {

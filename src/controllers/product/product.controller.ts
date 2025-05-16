@@ -1,4 +1,4 @@
-// src/controllers/product.controller.ts
+// src/controllers/product/product.controller.ts
 
 import { Request, Response, NextFunction } from "express";
 import { prisma } from "../../config/database.config";
@@ -6,7 +6,7 @@ import {
   sendSuccessResponse,
   sendErrorResponse,
 } from "../../core/utils/responseHandler";
-import { createProductSchema } from "../../core/utils/zod";
+import { createProductSchema, statusSchema } from "../../core/utils/zod";
 import { z } from "zod";
 
 /**
@@ -36,6 +36,16 @@ export const listProducts = async (
     return;
   }
 
+  const statusParam = (req.query.status as string | undefined)?.toLowerCase();
+  const statusFilter =
+    statusParam === "false" ? false : statusParam === "true" ? true : true;
+
+  if (statusParam && typeof statusFilter !== "boolean") {
+    sendErrorResponse(res, 400, "`status` must be boolean"); // 400 Bad Request
+    return;
+  }
+  // console.log("status--->", statusFilter);
+
   // Optional search & pagination
   const q = typeof req.query.q === "string" && req.query.q.trim();
   const page = Math.max(parseInt(`${req.query.page}`, 10) || 1, 1);
@@ -47,7 +57,7 @@ export const listProducts = async (
 
   try {
     // Build filter
-    const where: any = { adminId };
+    const where: any = { adminId, status: statusFilter };
     if (q) {
       where.productName = { contains: q, mode: "insensitive" };
     }
@@ -68,6 +78,7 @@ export const listProducts = async (
           description: true,
           productLink: true,
           tags: true,
+          status: true,
           specifications: true,
           createdAt: true,
           updatedAt: true,
@@ -190,7 +201,6 @@ export const updateProduct = async (
   const { id } = paramResult.data;
   const updates = req.body;
   // console.log("REQ.BODY--->", updates);
-  
 
   // 2) Determine admin context
   const user = req.user;
@@ -313,5 +323,56 @@ export const deleteProduct = async (
       return;
     }
     next(err);
+  }
+};
+
+export const changeProductStatus = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { id } = req.params;
+  const user = req.user;
+
+  if (!user) {
+    sendErrorResponse(res, 401, "Unauthorized");
+    return;
+  }
+
+  const adminId = user.role === "admin" ? user.id : user.adminId;
+  if (!adminId) {
+    sendErrorResponse(res, 403, "Cannot determine admin context");
+    return;
+  }
+
+  const parsed = statusSchema.safeParse(req.body);
+  if (!parsed.success) {
+    sendErrorResponse(res, 400, "Invalid input", {
+      errors: parsed.error.errors,
+    });
+    return;
+  }
+
+  try {
+    const existing = await prisma.product.findUnique({
+      where: { id },
+      select: { adminId: true },
+    });
+
+    if (!existing || existing.adminId !== adminId) {
+      sendErrorResponse(res, 404, "Product not found or unauthorized");
+      return;
+    }
+
+    const updatedProduct = await prisma.product.update({
+      where: { id },
+      data: { status: parsed.data.status },
+    });
+
+    sendSuccessResponse(res, 200, "Product status updated", {
+      product: updatedProduct,
+    });
+  } catch (err) {
+    console.error("changeProductStatus error:", err);
+    sendErrorResponse(res, 500, "Server error");
   }
 };

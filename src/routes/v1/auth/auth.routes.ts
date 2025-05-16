@@ -1,21 +1,64 @@
 //routes/v1/teamMemberRoutes/teamMember.routes.ts
 import { Router } from "express";
-import { signUpSuperAdmin, signIn, signUpAdmin } from "../../../controllers/auth/auth.controller";
+import {
+  signUpSuperAdmin,
+  signIn,
+  signUpAdmin,
+} from "../../../controllers/auth/auth.controller";
 import { createPartner } from "../../../controllers/auth/partnerAuth.controller";
 import {
   authenticateUser,
   authorizeRoles,
 } from "../../../core/middleware/jwt/jwt.token";
 import { createTeamMember } from "../../../controllers/auth/teamAuth.controller";
+import {
+  updateProfile,
+  getProfile,
+} from "../../../controllers/auth/profile.controller";
+import { forgotPassword } from "../../../controllers/auth/forgotPassword.controller";
+import { resetPassword } from "../../../controllers/auth/resetPassword.controller";
 
 const router = Router();
 
 router.post("/super-admin/signup", signUpSuperAdmin);
 
-router.post("/signin", signIn);
 router.post("/signup", signUpAdmin);
 
-router.post("/partner",  authenticateUser,  authorizeRoles("admin"),  createPartner);
-router.post("/team",  authenticateUser,  authorizeRoles("admin"),  createTeamMember);
+router.post("/signin", signIn);
+
+router.patch(
+  "/profile",
+  authenticateUser,
+  authorizeRoles("super_admin", "admin", "partner", "team_member"),
+  updateProfile
+);
+router.get(
+  "/profile",
+  authenticateUser,
+  authorizeRoles("super_admin", "admin", "partner", "team_member"),
+  getProfile
+);
+router.post("/forgot-password", forgotPassword);
+router.post(
+  "/reset-password",
+  authenticateUser,
+  authorizeRoles("super_admin", "admin", "partner", "team_member"),
+  resetPassword
+);
+
+//  ── PARTNER & TEAM ───────────────────────────────────────────────────────────────
+
+router.post(
+  "/partner",
+  authenticateUser,
+  authorizeRoles("admin"),
+  createPartner
+);
+router.post(
+  "/team",
+  authenticateUser,
+  authorizeRoles("admin"),
+  createTeamMember
+);
 
 export default router;

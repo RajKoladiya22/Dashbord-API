@@ -5,23 +5,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.signIn = exports.signUpSuperAdmin = exports.signUpAdmin = void 0;
-const zod_1 = require("zod");
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const date_fns_1 = require("date-fns");
 const database_config_1 = require("../../config/database.config");
 const httpResponse_1 = require("../../core/utils/httpResponse");
 const jwt_token_1 = require("../../core/middleware/jwt/jwt.token");
-const zod_2 = require("../../core/utils/zod");
+const zod_1 = require("../../core/utils/zod");
 const SALT_ROUNDS = parseInt((_a = database_config_1.env.SALT_ROUNDS) !== null && _a !== void 0 ? _a : "12", 10);
-const signUpSuperAdminSchema = zod_1.z.object({
-    firstName: zod_1.z.string().min(1),
-    lastName: zod_1.z.string().min(1),
-    email: zod_1.z.string().email(),
-    password: zod_1.z.string().min(8),
-    contactNumber: zod_1.z.string().optional(),
-    address: zod_1.z.record(zod_1.z.any()).optional(),
-});
 const signUpAdmin = async (req, res, next) => {
-    const parsed = zod_2.signUpSchema.safeParse(req.body);
+    const parsed = zod_1.signUpSchema.safeParse(req.body);
     if (!parsed.success) {
         (0, httpResponse_1.sendErrorResponse)(res, 400, "Invalid input", {
             errors: parsed.error.errors,
@@ -41,10 +33,15 @@ const signUpAdmin = async (req, res, next) => {
                     companyName,
                     contactInfo: { contactNumber },
                     address,
-                    status: "active",
                     role: "admin",
                 },
-                select: { id: true, role: true, email: true },
+                select: {
+                    id: true,
+                    role: true,
+                    email: true,
+                    firstName: true,
+                    lastName: true,
+                },
             });
             await tx.loginCredential.create({
                 data: {
@@ -53,7 +50,6 @@ const signUpAdmin = async (req, res, next) => {
                     passwordHash,
                     userProfileId: a.id,
                     adminId: a.id,
-                    status: "active",
                 },
             });
             const plan = await tx.plan.findFirst({
@@ -62,7 +58,7 @@ const signUpAdmin = async (req, res, next) => {
             if (!plan)
                 throw new Error("Default plan not found");
             const startsAt = new Date();
-            const endsAt = new Date(startsAt.getTime() + 30 * 24 * 3600 * 1000);
+            const endsAt = (0, date_fns_1.addDays)(startsAt, 30);
             await tx.subscription.create({
                 data: {
                     adminId: a.id,
@@ -78,7 +74,13 @@ const signUpAdmin = async (req, res, next) => {
         (0, jwt_token_1.setAuthCookie)(res, token);
         (0, httpResponse_1.sendSuccessResponse)(res, 201, "Admin account created", {
             token,
-            user: { id: admin.id, email: admin.email, role: admin.role },
+            user: {
+                id: admin.id,
+                email: admin.email,
+                role: admin.role,
+                firstName: admin.firstName,
+                lastName: admin.lastName,
+            },
         });
         return;
     }
@@ -94,7 +96,7 @@ const signUpAdmin = async (req, res, next) => {
 };
 exports.signUpAdmin = signUpAdmin;
 const signUpSuperAdmin = async (req, res, next) => {
-    const parsed = signUpSuperAdminSchema.safeParse(req.body);
+    const parsed = zod_1.signUpSuperAdminSchema.safeParse(req.body);
     if (!parsed.success) {
         (0, httpResponse_1.sendErrorResponse)(res, 400, "Invalid input", {
             errors: parsed.error.errors,
@@ -113,7 +115,6 @@ const signUpSuperAdmin = async (req, res, next) => {
                     passwordHash,
                     contactInfo: contactNumber ? { contactNumber } : undefined,
                     address,
-                    status: "active",
                 },
                 select: { id: true, email: true },
             });
@@ -123,7 +124,7 @@ const signUpSuperAdmin = async (req, res, next) => {
                     email: sa.email,
                     passwordHash,
                     userProfileId: sa.id,
-                    status: "active",
+                    superAdminId: sa.id,
                 },
             });
             return sa;
@@ -148,7 +149,7 @@ const signUpSuperAdmin = async (req, res, next) => {
 };
 exports.signUpSuperAdmin = signUpSuperAdmin;
 const signIn = async (req, res, next) => {
-    const parsed = zod_2.signInSchema.safeParse(req.body);
+    const parsed = zod_1.signInSchema.safeParse(req.body);
     if (!parsed.success) {
         (0, httpResponse_1.sendErrorResponse)(res, 400, "Email and password are required");
         return;
@@ -166,8 +167,13 @@ const signIn = async (req, res, next) => {
             },
         });
         const dummyHash = "$2b$12$........................................";
+        if (!cred) {
+            await bcrypt_1.default.compare(password, dummyHash);
+            (0, httpResponse_1.sendErrorResponse)(res, 401, "Invalid credentials");
+            return;
+        }
         const match = await bcrypt_1.default.compare(password, (cred === null || cred === void 0 ? void 0 : cred.passwordHash) || dummyHash);
-        if (!cred || !match || cred.status !== "active" || !cred.userProfileId) {
+        if (!cred || !match || cred.status !== true || !cred.userProfileId) {
             (0, httpResponse_1.sendErrorResponse)(res, 401, "Invalid credentials");
             return;
         }

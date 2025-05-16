@@ -2,78 +2,20 @@
 
 import { Request, Response, NextFunction } from "express";
 import { prisma } from "../../config/database.config";
-import { z } from "zod";
+import { parseISO } from "date-fns";
 import {
   sendSuccessResponse,
   sendErrorResponse,
 } from "../../core/utils/responseHandler";
-
-// 1) Zod schema for input validation
-const createCustomerSchema = z.object({
-  companyName: z.string().min(1),
-  contactPerson: z.string().min(1),
-  mobileNumber: z.string().min(1),
-  email: z.string().email(),
-  serialNo: z.string().optional(),
-  prime: z.boolean().optional(),
-  blacklisted: z.boolean().optional(),
-  remark: z.string().optional(),
-  hasReference: z.boolean().optional(),
-  partnerId: z.string().uuid().optional(),
-  adminCustomFields: z.record(z.any()).optional(),
-  address: z.record(z.any()),
-  joiningDate: z.string(),
-  // refine((s) => !isNaN(Date.parse(s)), {
-  //   message: "Must be a valid ISO date string",
-  // }),
-  products: z
-    .array(
-      z.object({
-        productId: z.string().uuid(),
-        expiryDate: z.string().optional(),
-        // .refine((s) => !s || !isNaN(Date.parse(s)), {
-        //   message: "Must be a valid ISO date string or omitted",
-        // }),
-        // you can add more fields here if needed
-      })
-    )
-    .optional(),
-});
-type CreateCustomerBody = z.infer<typeof createCustomerSchema>;
-
-const updateCustomerSchema = z.object({
-  companyName: z.string().min(1).optional(),
-  contactPerson: z.string().min(1).optional(),
-  mobileNumber: z.string().min(1).optional(),
-  email: z.string().email().optional(),
-  serialNo: z.string().optional(),
-  prime: z.boolean().optional(),
-  blacklisted: z.boolean().optional(),
-  remark: z.string().optional(),
-  hasReference: z.boolean().optional(),
-  partnerId: z.string().uuid().optional(),
-  adminCustomFields: z.record(z.any()).optional(),
-  address: z.record(z.any()).optional(),
-  joiningDate: z.string().optional(),
-});
-type UpdateCustomerBody = z.infer<typeof updateCustomerSchema>;
+import { UpdateCustomerBody, updateCustomerSchema } from "../../core/utils/zod";
+import { Prisma } from "@prisma/client";
+import { addMonths, addYears } from "../../core/utils/helper/dateHelpers";
 
 export const createCustomer = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
-  // Validate request body
-  // const parse = createCustomerSchema.safeParse(req.body);
-  console.log("req.body----->\n", req.body);
-  // console.log("parse----->\n", parse);
-
-  // if (!parse.success) {
-  //   sendErrorResponse(res, 400, "Invalid input", {
-  //     errors: parse.error.errors,
-  //   });
-  //   return;
-  // }
   const {
     companyName,
     contactPerson,
@@ -99,8 +41,7 @@ export const createCustomer = async (
   }
   const adminId = user.role === "admin" ? user.id : user.adminId!;
   const partnerId = user.role === "partner" ? user.id : incomingPartnerId;
-  const rawCustomFields = adminCustomFields;
-  // const stringified = rawCustomFields.map((obj) => JSON.stringify(obj));
+
   try {
     const result = await prisma.$transaction(async (tx) => {
       // 1) Create the customer
@@ -119,28 +60,69 @@ export const createCustomer = async (
           hasReference,
           adminCustomFields,
           address,
-          joiningDate: new Date(joiningDate),
+          joiningDate: parseISO(joiningDate),
         },
       });
-      console.log("customer----->\n", customer);
+      // console.log("customer----->\n", customer);
 
       // 2) Create history entries for each product
+      let history: Array<any> = [];
       const now = new Date();
-      const historyCreates = products.map((p) =>
-        tx.customerProductHistory.create({
-          data: {
-            customerId: customer.id,
-            adminId,
-            productId: p.productDetailId,
-            purchaseDate: p.purchaseDate,
-            status: true,
-            renewal: p.renewal ? p.renewal : false,
-            expiryDate: p.expiryDate ? new Date(p.expiryDate) : undefined,
-            renewalDate: p.renewalDate ? new Date(p.renewalDate) : undefined,
-          },
-        })
-      );
-      const history = await Promise.all(historyCreates);
+      if (products) {
+        const historyCreates = products.map((p) => {
+          const purchase = new Date(p.purchaseDate);
+          let renewalDate: Date | undefined;
+          let expiryDate: Date | undefined;
+
+          switch (p.renewPeriod) {
+            case "monthly":
+              renewalDate = addMonths(purchase, 1);
+              expiryDate = new Date(renewalDate);
+              expiryDate.setDate(expiryDate.getDate() - 1);
+              break;
+
+            case "quarterly":
+              renewalDate = addMonths(purchase, 3);
+              expiryDate = new Date(renewalDate);
+              expiryDate.setDate(expiryDate.getDate() - 1);
+              break;
+
+            case "half_yearly":
+              renewalDate = addMonths(purchase, 6);
+              expiryDate = new Date(renewalDate);
+              expiryDate.setDate(expiryDate.getDate() - 1);
+              break;
+
+            case "yearly":
+              renewalDate = addYears(purchase, 1);
+              expiryDate = new Date(renewalDate);
+              expiryDate.setDate(expiryDate.getDate() - 1);
+              break;
+
+            case "custom":
+            default:
+              // For custom, trust the incoming values (if any)
+              renewalDate = p.renewalDate ? new Date(p.renewalDate) : undefined;
+              expiryDate = p.expiryDate ? new Date(p.expiryDate) : undefined;
+              break;
+          }
+
+          return tx.customerProductHistory.create({
+            data: {
+              customerId: customer.id,
+              adminId,
+              productId: p.productDetailId,
+              purchaseDate: purchase,
+              status: true,
+              renewPeriod: p.renewPeriod,
+              renewal: p.renewal ?? false,
+              renewalDate,
+              expiryDate,
+            },
+          });
+        });
+        history = await Promise.all(historyCreates);
+      }
 
       return { customer, history };
     });
@@ -151,8 +133,25 @@ export const createCustomer = async (
       history: result.history,
     });
     return;
-  } catch (err) {
+  } catch (err: any) {
+    // Unique violation on mobile/email
+    if (
+      err instanceof Prisma.PrismaClientKnownRequestError &&
+      err.code === "P2002"
+    ) {
+      sendErrorResponse(res, 409, "Mobile number or email already in use");
+      return;
+    }
+    // Foreign key violation on partnerId
+    if (
+      err instanceof Prisma.PrismaClientKnownRequestError &&
+      err.code === "P2003"
+    ) {
+      sendErrorResponse(res, 400, "Invalid partnerId");
+      return;
+    }
     console.error("createCustomer error:", err);
+    if (!res.headersSent) next(err);
     sendErrorResponse(res, 500, "Server error");
     return;
   }
@@ -169,211 +168,495 @@ export const listCustomers = async (
     return;
   }
 
-  // Build base filter
-  const baseFilter: any = {};
+  // Pagination
+  const page = Math.max(parseInt(req.query.page as string, 10) || 1, 1);
+  const limit = Math.min(
+    Math.max(parseInt(req.query.limit as string, 10) || 10, 1),
+    100
+  );
+  const skip = (page - 1) * limit;
 
+  // Search
+  const q = (req.query.q as string)?.trim();
+  const searchFilter = q
+    ? {
+        OR: [
+          { companyName: { contains: q, mode: "insensitive" } },
+          { contactPerson: { contains: q, mode: "insensitive" } },
+          { mobileNumber: { contains: q, mode: "insensitive" } },
+          { serialNo: { contains: q, mode: "insensitive" } },
+        ],
+      }
+    : {};
+
+  // Sorting
+  const allowedSortFields = [
+    "companyName",
+    "contactPerson",
+    "mobileNumber",
+    "serialNo",
+  ];
+  const sortBy = (req.query.sortBy as string) || "companyName";
+  const sortOrder =
+    (req.query.sortOrder as string)?.toLowerCase() === "desc" ? "desc" : "asc";
+
+  if (!allowedSortFields.includes(sortBy)) {
+    sendErrorResponse(
+      res,
+      400,
+      `Invalid sortBy. Must be one of: ${allowedSortFields.join(", ")}`
+    );
+    return;
+  }
+
+  // New: optional status filter
+  let statusFilter = { status: true };
+  if (req.query.status === "false") {
+    statusFilter.status = false;
+  }
+
+  // Base filter by role
+  const baseFilter: any = { ...searchFilter, ...statusFilter };
   switch (user.role) {
     case "admin":
     case "super_admin":
-      // Admins see their own customers
       baseFilter.adminId = user.id;
       break;
-
     case "partner":
-      // Partners only see customers they own
       baseFilter.adminId = user.adminId!;
       baseFilter.partnerId = user.id;
       break;
-
     case "team_member":
-      // Team members see all customers under their admin
+    case "sub_admin":
       baseFilter.adminId = user.adminId!;
       break;
-
     default:
       sendErrorResponse(res, 403, "Forbidden");
       return;
   }
 
   try {
-    const customers = await prisma.customer.findMany({
-      where: baseFilter,
-      orderBy: { createdAt: "desc" },
-      include: {
-        partner: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-            companyName: true,
+    const [total, customers] = await Promise.all([
+      prisma.customer.count({ where: baseFilter }),
+      prisma.customer.findMany({
+        where: baseFilter,
+        skip,
+        take: limit,
+        orderBy: { [sortBy]: sortOrder },
+        include: {
+          partner: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              companyName: true,
+              contactInfo: true,
+              email: true,
+              address: true,
+              status: true,
+            },
+          },
+          history: {
+            // take: 1,
+            include: {
+              product: {
+                select: {
+                  id: true,
+                  productName: true,
+                  productPrice: true,
+                  status: true,
+                },
+              },
+              renewals: {
+                select: {
+                  id: true,
+                  purchaseDate: true,
+                  renewalDate: true,
+                  expiryDate: true,
+                },
+                orderBy: { purchaseDate: "desc" },
+              },
+            },
           },
         },
-        history: {
-          include: { product: true },
-        },
+      }),
+    ]);
+
+    const sanitized = customers.map((cust) => ({
+      id: cust.id,
+      companyName: cust.companyName,
+      contactPerson: cust.contactPerson,
+      mobileNumber: cust.mobileNumber,
+      email: cust.email,
+      serialNo: cust.serialNo,
+      prime: cust.prime,
+      blacklisted: cust.blacklisted,
+      remark: cust.remark,
+      address: cust.address,
+      adminCustomFields: cust.adminCustomFields,
+      joiningDate: cust.joiningDate,
+      hasReference: cust.hasReference,
+      status: cust.status,
+      partner: cust.partner,
+      createdAt: cust.createdAt,
+      product: cust.history.map((h) => ({
+        productDetails: h.product,
+        id: h.id,
+        renewPeriod: h.renewPeriod,
+        purchaseDate: h.purchaseDate,
+        expiryDate: h.expiryDate,
+        renewalDate: h.renewalDate,
+        renewal: h.renewal,
+        status: h.status,
+        history: h.renewals ?? null,
+      })),
+    }));
+
+    // 6) Return paginated response
+    sendSuccessResponse(res, 200, "Customers fetched", {
+      customers: sanitized,
+      meta: {
+        total,
+        page,
+        limit,
+        pages: Math.ceil(total / limit),
       },
     });
-
-    sendSuccessResponse(res, 200, "Customers fetched", { customers });
-    return;
   } catch (err) {
     console.error("listCustomers error:", err);
     sendErrorResponse(res, 500, "Server error");
-    return;
   }
 };
 
 export const updateCustomer = async (
-  req: Request<{ id: string }, {}, unknown>,
+  req: Request<{ id: string }, {}, UpdateCustomerBody>,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
   const customerId = req.params.id;
-  // 1) Validate body
+
+  // 2) Validate request body
   const parsed = updateCustomerSchema.safeParse(req.body);
+  // console.log("customerId---->", customerId);
+  // console.log("parsed---->", parsed);
+  
   if (!parsed.success) {
+    console.error("Validation failed with errors: ", parsed.error.errors);
     sendErrorResponse(res, 400, "Invalid input", {
       errors: parsed.error.errors,
     });
     return;
   }
-  const {
-    companyName,
-    contactPerson,
-    mobileNumber,
-    email,
-    serialNo,
-    prime,
-    blacklisted,
-    remark,
-    hasReference,
-    partnerId: incomingPartnerId,
-    adminCustomFields,
-    address,
-    joiningDate,
-  } = parsed.data as UpdateCustomerBody;
+  const { products, ...customerData } = parsed.data;
 
-  // 2) Determine adminId & partnerId from logged‑in user
+  // 3) Determine adminId from the authenticated user
   const user = req.user as { id: string; role: string; adminId?: string };
   if (!user) {
     sendErrorResponse(res, 401, "Unauthorized");
     return;
   }
   const adminId = user.role === "admin" ? user.id : user.adminId!;
-  const partnerId = user.role === "partner" ? user.id : incomingPartnerId;
 
   try {
     const result = await prisma.$transaction(async (tx) => {
-      // 3) Update the customer
-      const customer = await tx.customer.update({
-        where: { id: customerId, adminId: adminId },
+      // 4) Update only the customer record
+      const updatedCustomer = await tx.customer.update({
+        where: {
+          id: customerId,
+          adminId,
+        },
         data: {
-          // only include provided fields
-          ...(companyName !== undefined && { companyName }),
-          ...(contactPerson !== undefined && { contactPerson }),
-          ...(mobileNumber !== undefined && { mobileNumber }),
-          ...(email !== undefined && { email }),
-          ...(serialNo !== undefined && { serialNo }),
-          ...(prime !== undefined && { prime }),
-          ...(blacklisted !== undefined && { blacklisted }),
-          ...(remark !== undefined && { remark }),
-          ...(hasReference !== undefined && { hasReference }),
-          ...(partnerId !== undefined && { partnerId }),
-          ...(adminCustomFields !== undefined && { adminCustomFields }),
-          ...(address !== undefined && { address }),
-          ...(joiningDate !== undefined && {
-            joiningDate: new Date(joiningDate),
+          ...(customerData.companyName !== undefined && {
+            companyName: customerData.companyName,
+          }),
+          ...(customerData.contactPerson !== undefined && {
+            contactPerson: customerData.contactPerson,
+          }),
+          ...(customerData.mobileNumber !== undefined && {
+            mobileNumber: customerData.mobileNumber,
+          }),
+          ...(customerData.email !== undefined && {
+            email: customerData.email,
+          }),
+          ...(customerData.serialNo !== undefined && {
+            serialNo: customerData.serialNo,
+          }),
+          ...(customerData.prime !== undefined && {
+            prime: customerData.prime,
+          }),
+          ...(customerData.blacklisted !== undefined && {
+            blacklisted: customerData.blacklisted,
+          }),
+          ...(customerData.remark !== undefined && {
+            remark: customerData.remark,
+          }),
+          ...(customerData.hasReference !== undefined && {
+            hasReference: customerData.hasReference,
+          }),
+          ...(customerData.partnerId !== undefined && {
+            partnerId: customerData.partnerId,
+          }),
+          ...(customerData.adminCustomFields !== undefined && {
+            adminCustomFields: customerData.adminCustomFields,
+          }),
+          ...(customerData.address !== undefined && {
+            address: customerData.address,
+          }),
+          ...(customerData.joiningDate !== undefined && {
+            joiningDate: new Date(customerData.joiningDate),
           }),
         },
       });
+      // if (updatedCustomer.count === 0) throw new Error("Not found or unauthorized");
 
-      return customer;
+      // 5) If any new products provided, append them to CustomerProductHistory
+      let createdHistory: Array<any> = [];
+      if (Array.isArray(products) && products.length > 0) {
+        createdHistory = products.map((p) => {
+          const purchase = new Date(p.purchaseDate);
+          let renewalDate: Date | undefined;
+          let expiryDate: Date | undefined;
+
+          switch (p.renewPeriod) {
+            case "monthly":
+              renewalDate = addMonths(purchase, 1);
+              expiryDate = new Date(renewalDate);
+              expiryDate.setDate(expiryDate.getDate() - 1);
+              break;
+
+            case "quarterly":
+              renewalDate = addMonths(purchase, 3);
+              expiryDate = new Date(renewalDate);
+              expiryDate.setDate(expiryDate.getDate() - 1);
+              break;
+
+            case "half_yearly":
+              renewalDate = addMonths(purchase, 6);
+              expiryDate = new Date(renewalDate);
+              expiryDate.setDate(expiryDate.getDate() - 1);
+              break;
+
+            case "yearly":
+              renewalDate = addYears(purchase, 1);
+              expiryDate = new Date(renewalDate);
+              expiryDate.setDate(expiryDate.getDate() - 1);
+              break;
+
+            case "custom":
+            default:
+              // For custom, trust the incoming values (if any)
+              renewalDate = p.renewalDate ? new Date(p.renewalDate) : undefined;
+              expiryDate = p.expiryDate ? new Date(p.expiryDate) : undefined;
+              break;
+          }
+
+          return tx.customerProductHistory.create({
+            data: {
+              customerId: customerId,
+              adminId,
+              productId: p.productId,
+              purchaseDate: purchase,
+              status: true,
+              renewPeriod: p.renewPeriod,
+              renewal: p.renewal ?? false,
+              renewalDate,
+              expiryDate,
+            },
+          });
+        });
+      }
+
+      return { updatedCustomer, createdHistory };
     });
 
-    // 6) Return success
+    const sanitized = {
+      ...result.updatedCustomer,
+      ...result.createdHistory
+    }
+
+
+    // console.log("result.updatedCustomer----->", sanitized)
+
+
+
+    // 6) Respond with both updated customer and any new history entries
     sendSuccessResponse(res, 200, "Customer updated", {
-      customer: result,
+      // customers: sanitized,
+      customer: sanitized,
+      // history: result.createdHistory,
+    });
+  } catch (err: any) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      if (err.code === "P2002") sendErrorResponse(res, 409, "Duplicate field");
+      if (err.code === "P2016") sendErrorResponse(res, 404, "Record not found");
+    }
+    console.error(err);
+    if (!res.headersSent) next(err);
+    else sendErrorResponse(res, 500, "Server error");
+  }
+};
+
+export const setCustomerStatus = async (
+  req: Request<{ id: string }, {}, { status: boolean }>,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  const customerId = req.params.id;
+  const { status } = req.body;
+
+  // 1. Auth check (only admin, super_admin, sub_admin, partner, team_member can toggle within their scope)
+  const user = req.user;
+  if (!user) {
+    sendErrorResponse(res, 401, "Unauthorized");
+    return;
+  }
+
+  // 2. Determine scoping filter
+  const baseFilter: any = { id: customerId };
+  switch (user.role) {
+    case "admin":
+    case "super_admin":
+      baseFilter.adminId = user.id;
+      break;
+    case "partner":
+      baseFilter.adminId = user.adminId!;
+      baseFilter.partnerId = user.id;
+      break;
+    case "team_member":
+    case "sub_admin":
+      baseFilter.adminId = user.adminId!;
+      break;
+    default:
+      sendErrorResponse(res, 403, "Forbidden");
+      return;
+  }
+
+  try {
+    // 3. Transaction: update customer.status and all its history.status
+    const result = await prisma.$transaction(async (tx) => {
+      // 3a. Update the customer
+      const updatedCustomer = await tx.customer.updateMany({
+        where: baseFilter,
+        data: { status },
+      });
+      if (updatedCustomer.count === 0) {
+        throw new Error("Customer not found or not in your scope");
+      }
+
+      // 3b. Update all related CustomerProductHistory rows
+      const updatedHistory = await tx.customerProductHistory.updateMany({
+        where: { customerId },
+        data: { status },
+      });
+
+      return {
+        updatedCustomerCount: updatedCustomer.count,
+        updatedHistoryCount: updatedHistory.count,
+      };
+    });
+
+    // 4. Send back counts of what was updated
+    sendSuccessResponse(res, 200, "Status updated", {
+      data: {
+        customerRecordsUpdated: result.updatedCustomerCount,
+        historyRecordsUpdated: result.updatedHistoryCount,
+        newStatus: status,
+      },
+    });
+  } catch (err: any) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      if (err.code === "P2025")
+        sendErrorResponse(res, 404, "Customer not found");
+      if (err.code === "P2003")
+        sendErrorResponse(res, 400, "Invalid scope or foreign key");
+    }
+    console.error("setCustomerStatus error:", err);
+    if (!res.headersSent) next(err);
+    else sendErrorResponse(res, 500, "Server error");
+  }
+};
+
+export const deleteCustomer = async (
+  req: Request<{ id: string }>,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  const customerId = req.params.id;
+  const user = req.user;
+  if (!user) {
+    sendErrorResponse(res, 401, "Unauthorized");
+    return;
+  }
+
+  // Build scope filter so users can only delete within their permissions
+  const baseFilter: any = { id: customerId };
+  switch (user.role) {
+    case "admin":
+    case "super_admin":
+      baseFilter.adminId = user.id;
+      break;
+    case "partner":
+      baseFilter.adminId = user.adminId!;
+      baseFilter.partnerId = user.id;
+      break;
+    case "team_member":
+    case "sub_admin":
+      baseFilter.adminId = user.adminId!;
+      break;
+    default:
+      sendErrorResponse(res, 403, "Forbidden");
+      return;
+  }
+
+  try {
+    const result = await prisma.$transaction(async (tx) => {
+      // 1) Find all history entries for this customer
+      const histories = await tx.customerProductHistory.findMany({
+        where: { customerId },
+      });
+      const historyIds = histories.map((h) => h.id);
+
+      // 2) Delete all renewal records that reference those history entries
+      const delRenewals = await tx.productRenewalHistory.deleteMany({
+        where: { customerProductHistoryId: { in: historyIds } },
+      });
+
+      // 3) Delete the customerProductHistory entries
+      const delHistory = await tx.customerProductHistory.deleteMany({
+        where: { customerId },
+      });
+
+      // 4) Finally delete the customer itself
+      const delCustomer = await tx.customer.deleteMany({
+        where: baseFilter,
+      });
+
+      return {
+        renewalRecordsDeleted: delRenewals.count,
+        historyRecordsDeleted: delHistory.count,
+        customersDeleted: delCustomer.count,
+      };
+    });
+
+    if (result.customersDeleted === 0) {
+      sendErrorResponse(res, 404, "Customer not found or not in your scope");
+      return;
+    }
+
+    sendSuccessResponse(res, 200, "Customer deleted", {
+      customer: {
+        id : customerId,
+        renewalRecordsDeleted: result.renewalRecordsDeleted,
+        historyRecordsDeleted: result.historyRecordsDeleted,
+        customersDeleted: result.customersDeleted,
+      },
     });
   } catch (err) {
-    console.error("updateCustomer error:", err);
+    console.error("deleteCustomer error:", err);
     sendErrorResponse(res, 500, "Server error");
   }
 };
 
-//
-
-// const updateCustomerSchema = createCustomerSchema.partial();
-
-// const idParamSchema = z.object({ id: z.string().uuid() });
-
-/**
- * POST /customers
- */
-// export const createCustomerr = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   // 1) Validate body
-//   const body = createCustomerSchema.safeParse(req.body);
-//   if (!body.success) {
-//     return sendErrorResponse(res, 400, "Invalid input", {
-//       errors: body.error.errors,
-//     });
-//   }
-
-//   // 2) Determine adminId & partnerId
-//   const user = req.user;
-//   if (!user) return sendErrorResponse(res, 401, "Unauthorized");
-//   const adminId = user.role === "admin" ? user.id : user.adminId!;
-//   const partnerId = user.role === "partner" ? user.id : undefined;
-
-//   try {
-//     // 3) Transaction to create customer
-//     const customer = await prisma.$transaction(async (tx) => {
-//       return tx.customer.create({
-//         data: {
-//           adminId,
-//           partnerId,
-//           companyName: body.data.companyName,
-//           contactPerson: body.data.contactPerson,
-//           mobileNumber: body.data.mobileNumber,
-//           email: body.data.email,
-//           serialNo: body.data.serialNo,
-//           prime: body.data.prime ?? false,
-//           blacklisted: body.data.blacklisted ?? false,
-//           remark: body.data.remark,
-//           adminCustomFields: body.data.adminCustomFields ?? {},
-//           hasReference: body.data.hasReference ?? false,
-//         },
-//         select: {
-//           id: true,
-//           companyName: true,
-//           contactPerson: true,
-//           mobileNumber: true,
-//           email: true,
-//           serialNo: true,
-//           prime: true,
-//           blacklisted: true,
-//           remark: true,
-//           adminCustomFields: true,
-//           hasReference: true,
-//           partnerId: true,
-//           createdAt: true,
-//         },
-//       });
-//     });
-
-//     return sendSuccessResponse(res, 201, "Customer created", { customer });
-//   } catch (err) {
-//     console.error("createCustomer error:", err);
-//     return sendErrorResponse(res, 500, "Server error");
-//   }
-// };
-
-/**
- * GET /customers
- */
 // export const listCustomers = async (
 //   req: Request,
 //   res: Response,
@@ -384,179 +667,57 @@ export const updateCustomer = async (
 //     sendErrorResponse(res, 401, "Unauthorized");
 //     return;
 //   }
-//   const adminId = user.role === "admin" ? user.id : user.adminId!;
-//   const partnerFilter = user.role === "partner" ? { partnerId: user.id } : {};
 
-//   // search & paging
-//   const q = typeof req.query.q === "string" && req.query.q.trim();
-//   const page = Math.max(parseInt(`${req.query.page}`, 10) || 1, 1);
-//   const perPage = Math.min(
-//     Math.max(parseInt(`${req.query.perPage}`, 10) || 20, 1),
-//     100
-//   );
-//   const skip = (page - 1) * perPage;
+//   // Build base filter
+//   const baseFilter: any = {};
+
+//   switch (user.role) {
+//     case "admin":
+//     case "super_admin":
+//       // Admins see their own customers
+//       baseFilter.adminId = user.id;
+//       break;
+
+//     case "partner":
+//       // Partners only see customers they own
+//       baseFilter.adminId = user.adminId!;
+//       baseFilter.partnerId = user.id;
+//       break;
+
+//     case "team_member":
+//       // Team members see all customers under their admin
+//       baseFilter.adminId = user.adminId!;
+//       break;
+
+//     default:
+//       sendErrorResponse(res, 403, "Forbidden");
+//       return;
+//   }
 
 //   try {
-//     // count + fetch
-//     const [total, customers] = await prisma.$transaction([
-//       prisma.customer.count({
-//         where: {
-//           adminId,
-//           ...partnerFilter,
-//           OR: q
-//             ? [
-//                 { companyName: { contains: q, mode: "insensitive" } },
-//                 { contactPerson: { contains: q, mode: "insensitive" } },
-//               ]
-//             : undefined,
-//         },
-//       }),
-//       prisma.customer.findMany({
-//         where: {
-//           adminId,
-//           ...partnerFilter,
-//           OR: q
-//             ? [
-//                 { companyName: { contains: q, mode: "insensitive" } },
-//                 { contactPerson: { contains: q, mode: "insensitive" } },
-//               ]
-//             : undefined,
-//         },
-//         orderBy: { createdAt: "desc" },
-//         skip,
-//         take: perPage,
-//         include: {
-//           partner: {
-//             select: {
-//               id: true,
-//               firstName: true,
-//               lastName: true,
-//               companyName: true,
-//             },
+//     const customers = await prisma.customer.findMany({
+//       where: baseFilter,
+//       orderBy: { createdAt: "desc" },
+//       include: {
+//         partner: {
+//           select: {
+//             id: true,
+//             firstName: true,
+//             lastName: true,
+//             companyName: true,
 //           },
-//           history: { include: { product: true } },
 //         },
-//       }),
-//     ]);
-
-//     sendSuccessResponse(res, 200, "Customers fetched", {
-//       meta: {
-//         total,
-//         page,
-//         perPage,
-//         totalPages: Math.ceil(total / perPage),
+//         history: {
+//           include: { product: true },
+//         },
 //       },
-//       customers,
 //     });
+
+//     sendSuccessResponse(res, 200, "Customers fetched", { customers });
 //     return;
 //   } catch (err) {
 //     console.error("listCustomers error:", err);
 //     sendErrorResponse(res, 500, "Server error");
 //     return;
-//   }
-// };
-
-/**
- * PUT /customers/:id
- */
-// export const updateCustomer = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   // validate params & body
-//   const params = idParamSchema.safeParse(req.params);
-//   if (!params.success) return sendErrorResponse(res, 400, "Invalid ID");
-//   const body = updateCustomerSchema.safeParse(req.body);
-//   if (!body.success) {
-//     return sendErrorResponse(res, 400, "Invalid input", {
-//       errors: body.error.errors,
-//     });
-//   }
-
-//   const user = req.user!;
-//   const adminId = user.role === "admin" ? user.id : user.adminId!;
-//   const partnerId = user.role === "partner" ? user.id : undefined;
-
-//   try {
-//     const customer = await prisma.$transaction(async (tx) => {
-//       // verify ownership
-//       const existing = await tx.customer.findUnique({
-//         where: { id: params.data.id },
-//         select: { adminId: true, partnerId: true },
-//       });
-//       if (
-//         !existing ||
-//         existing.adminId !== adminId ||
-//         (user.role === "partner" && existing.partnerId !== partnerId)
-//       ) {
-//         throw new Error("Not found or unauthorized");
-//       }
-
-//       return tx.customer.update({
-//         where: { id: params.data.id },
-//         data: { ...body.data },
-//         include: {
-//           partner: {
-//             select: {
-//               id: true,
-//               firstName: true,
-//               lastName: true,
-//               companyName: true,
-//             },
-//           },
-//           history: { include: { product: true } },
-//         },
-//       });
-//     });
-
-//     return sendSuccessResponse(res, 200, "Customer updated", { customer });
-//   } catch (err: any) {
-//     console.error("updateCustomer error:", err);
-//     if (err.message === "Not found or unauthorized") {
-//       return sendErrorResponse(res, 404, err.message);
-//     }
-//     return sendErrorResponse(res, 500, "Server error");
-//   }
-// };
-
-/**
- * DELETE /customers/:id
- */
-// export const deleteCustomer = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   const params = idParamSchema.safeParse(req.params);
-//   if (!params.success) return sendErrorResponse(res, 400, "Invalid ID");
-
-//   const user = req.user!;
-//   const adminId = user.role === "admin" ? user.id : user.adminId!;
-//   const partnerId = user.role === "partner" ? user.id : undefined;
-
-//   try {
-//     await prisma.$transaction(async (tx) => {
-//       const existing = await tx.customer.findUnique({
-//         where: { id: params.data.id },
-//         select: { adminId: true, partnerId: true },
-//       });
-//       if (
-//         !existing ||
-//         existing.adminId !== adminId ||
-//         (user.role === "partner" && existing.partnerId !== partnerId)
-//       ) {
-//         throw new Error("Not found or unauthorized");
-//       }
-//       await tx.customer.delete({ where: { id: params.data.id } });
-//     });
-
-//     return sendSuccessResponse(res, 200, "Customer deleted");
-//   } catch (err: any) {
-//     console.error("deleteCustomer error:", err);
-//     if (err.message === "Not found or unauthorized") {
-//       return sendErrorResponse(res, 404, err.message);
-//     }
-//     return sendErrorResponse(res, 500, "Server error");
 //   }
 // };

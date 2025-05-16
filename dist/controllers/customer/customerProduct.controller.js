@@ -11,28 +11,33 @@ const getCustomerProductsByCustomerId = async (req, res, next) => {
         return;
     }
     const adminId = user.role === "admin" ? user.id : user.adminId;
+    const scopeFilter = { id: customerId, adminId };
+    if (user.role === "partner")
+        scopeFilter.partnerId = user.id;
     if (!adminId) {
         (0, responseHandler_1.sendErrorResponse)(res, 403, "Forbidden: Admin ID not found");
         return;
     }
     try {
+        const customer = await database_config_1.prisma.customer.findUnique({ where: scopeFilter });
         const history = await database_config_1.prisma.customerProductHistory.findMany({
             where: {
                 customerId,
                 adminId,
                 status: true,
+                ...(user.role === "partner" && { partnerId: user.id }),
             },
+            orderBy: { purchaseDate: "desc" },
             include: {
                 product: true,
-            },
-            orderBy: {
-                purchaseDate: "desc",
             },
         });
         (0, responseHandler_1.sendSuccessResponse)(res, 200, "Customer products fetched", { history });
         return;
     }
     catch (error) {
+        console.error("Error fetching customer products:", error);
+        (0, responseHandler_1.sendErrorResponse)(res, 500, "Server error");
         return;
     }
 };

@@ -1,9 +1,8 @@
 export declare const validatedEnv: {
-    SALT_ROUNDS: string;
-    NODE_ENV: "development" | "local" | "production";
-    DATABASE_URL: string;
+    NODE_ENV: "local" | "development" | "production";
     HOST: string;
     PORT: number;
+    DATABASE_URL: string;
     DB_HOST: string;
     DB_PORT: number;
     DB_USERNAME: string;
@@ -18,6 +17,7 @@ export declare const validatedEnv: {
     SMTP_PASS: string;
     ADMIN_MAIL: string;
     STATIC_TOKEN: string;
+    SALT_ROUNDS: string;
     AWS_BUCKET_NAME?: string | undefined;
     AWS_REGION?: string | undefined;
     AWS_ACCESS_KEY_ID?: string | undefined;
