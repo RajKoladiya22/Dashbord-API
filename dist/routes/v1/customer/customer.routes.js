@@ -11,7 +11,7 @@ router.get("/customfield", jwt_token_1.authenticateUser, (0, jwt_token_1.authori
 router.post("/customfield", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin"), custommField_controller_1.createAdminCustomField);
 router.put("/customfield/:id", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin"), custommField_controller_1.updateAdminCustomField);
 router.delete("/customfield/:id", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin"), custommField_controller_1.deleteAdminCustomField);
-router.get("/list", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("partner", "team_member"), customer_controller_1.listCustomers);
+router.get("/list", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner", "team_member"), customer_controller_1.listCustomers);
 router.post("/add", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner"), customer_controller_1.createCustomer);
 router.patch("/update/:id", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner"), customer_controller_1.updateCustomer);
 router.patch("/status/:id", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner", "team_member"), customer_controller_1.setCustomerStatus);

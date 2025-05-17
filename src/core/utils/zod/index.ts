@@ -119,7 +119,7 @@ export const updateCustomerSchema = z.object({
   address: z.record(z.any()).optional(),
   joiningDate: z.string().optional(),
   // **New**: products to append to history
-  products: z
+  product: z
   .array(
     z.object({
       productId: z.string().uuid(),

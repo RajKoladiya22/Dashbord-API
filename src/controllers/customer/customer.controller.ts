@@ -127,10 +127,14 @@ export const createCustomer = async (
       return { customer, history };
     });
 
+    const sanitized = {
+      ...result.customer,
+      product: result.history
+    }
+
     // Return the created customer and its history
     sendSuccessResponse(res, 201, "Customer created", {
-      customers: result.customer,
-      history: result.history,
+       customer: sanitized,
     });
     return;
   } catch (err: any) {
@@ -339,7 +343,7 @@ export const updateCustomer = async (
   const parsed = updateCustomerSchema.safeParse(req.body);
   // console.log("customerId---->", customerId);
   // console.log("parsed---->", parsed);
-  
+
   if (!parsed.success) {
     console.error("Validation failed with errors: ", parsed.error.errors);
     sendErrorResponse(res, 400, "Invalid input", {
@@ -347,7 +351,7 @@ export const updateCustomer = async (
     });
     return;
   }
-  const { products, ...customerData } = parsed.data;
+  const { product, ...customerData } = parsed.data;
 
   // 3) Determine adminId from the authenticated user
   const user = req.user as { id: string; role: string; adminId?: string };
@@ -411,73 +415,67 @@ export const updateCustomer = async (
 
       // 5) If any new products provided, append them to CustomerProductHistory
       let createdHistory: Array<any> = [];
-      if (Array.isArray(products) && products.length > 0) {
-        createdHistory = products.map((p) => {
-          const purchase = new Date(p.purchaseDate);
-          let renewalDate: Date | undefined;
-          let expiryDate: Date | undefined;
+      if (Array.isArray(product) && product.length > 0) {
+        createdHistory = await Promise.all(
+          product.map((p) => {
+            const purchase = new Date(p.purchaseDate);
+            let renewalDate: Date | undefined;
+            let expiryDate: Date | undefined;
+            const period = p.renewPeriod ?? "custom";
 
-          switch (p.renewPeriod) {
-            case "monthly":
-              renewalDate = addMonths(purchase, 1);
+            switch (period) {
+              case "monthly":
+                renewalDate = addMonths(purchase, 1);
+                break;
+              case "quarterly":
+                renewalDate = addMonths(purchase, 3);
+                break;
+              case "half_yearly":
+                renewalDate = addMonths(purchase, 6);
+                break;
+              case "yearly":
+                renewalDate = addYears(purchase, 1);
+                break;
+              default:
+                renewalDate = p.renewalDate
+                  ? new Date(p.renewalDate)
+                  : undefined;
+                expiryDate = p.expiryDate ? new Date(p.expiryDate) : undefined;
+            }
+
+            if (renewalDate && !expiryDate) {
               expiryDate = new Date(renewalDate);
               expiryDate.setDate(expiryDate.getDate() - 1);
-              break;
+            }
 
-            case "quarterly":
-              renewalDate = addMonths(purchase, 3);
-              expiryDate = new Date(renewalDate);
-              expiryDate.setDate(expiryDate.getDate() - 1);
-              break;
-
-            case "half_yearly":
-              renewalDate = addMonths(purchase, 6);
-              expiryDate = new Date(renewalDate);
-              expiryDate.setDate(expiryDate.getDate() - 1);
-              break;
-
-            case "yearly":
-              renewalDate = addYears(purchase, 1);
-              expiryDate = new Date(renewalDate);
-              expiryDate.setDate(expiryDate.getDate() - 1);
-              break;
-
-            case "custom":
-            default:
-              // For custom, trust the incoming values (if any)
-              renewalDate = p.renewalDate ? new Date(p.renewalDate) : undefined;
-              expiryDate = p.expiryDate ? new Date(p.expiryDate) : undefined;
-              break;
-          }
-
-          return tx.customerProductHistory.create({
-            data: {
-              customerId: customerId,
-              adminId,
-              productId: p.productId,
-              purchaseDate: purchase,
-              status: true,
-              renewPeriod: p.renewPeriod,
-              renewal: p.renewal ?? false,
-              renewalDate,
-              expiryDate,
-            },
-          });
-        });
+            return tx.customerProductHistory.create({
+              data: {
+                customerId,
+                adminId,
+                productId: p.productId,
+                purchaseDate: purchase,
+                status: true,
+                renewPeriod: period,
+                renewal: p.renewal ?? false,
+                renewalDate,
+                expiryDate,
+              },
+            });
+          })
+        );
       }
+
+      // console.log("createdHistory----->", createdHistory)
 
       return { updatedCustomer, createdHistory };
     });
 
     const sanitized = {
       ...result.updatedCustomer,
-      ...result.createdHistory
-    }
-
+      ...result.createdHistory,
+    };
 
     // console.log("result.updatedCustomer----->", sanitized)
-
-
 
     // 6) Respond with both updated customer and any new history entries
     sendSuccessResponse(res, 200, "Customer updated", {
@@ -533,7 +531,7 @@ export const setCustomerStatus = async (
 
   try {
     // 3. Transaction: update customer.status and all its history.status
-    const customers = await prisma.$transaction(async (tx) => {
+    const customer = await prisma.$transaction(async (tx) => {
       // 3a. Update the customer
       const updatedCustomer = await tx.customer.update({
         where: baseFilter,
@@ -553,7 +551,7 @@ export const setCustomerStatus = async (
     });
 
     // 4. Send back counts of what was updated
-    sendSuccessResponse(res, 200, "Status updated", {customers});
+    sendSuccessResponse(res, 200, "Status updated", { customer });
   } catch (err: any) {
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
       if (err.code === "P2025")
@@ -636,7 +634,7 @@ export const deleteCustomer = async (
 
     sendSuccessResponse(res, 200, "Customer deleted", {
       customer: {
-        id : customerId,
+        id: customerId,
         renewalRecordsDeleted: result.renewalRecordsDeleted,
         historyRecordsDeleted: result.historyRecordsDeleted,
         customersDeleted: result.customersDeleted,

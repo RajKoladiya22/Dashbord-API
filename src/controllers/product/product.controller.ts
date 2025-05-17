@@ -55,6 +55,7 @@ export const listProducts = async (
   );
   const skip = (page - 1) * perPage;
 
+
   try {
     // Build filter
     const where: any = { adminId, status: statusFilter };
@@ -249,6 +250,7 @@ export const updateProduct = async (
           productLink: true,
           tags: true,
           specifications: true,
+          status: true,
           createdAt: true,
           updatedAt: true,
         },

@@ -261,7 +261,7 @@ export declare const updateCustomerSchema: z.ZodObject<{
     adminCustomFields: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodAny>>;
     address: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodAny>>;
     joiningDate: z.ZodOptional<z.ZodString>;
-    products: z.ZodOptional<z.ZodArray<z.ZodObject<{
+    product: z.ZodOptional<z.ZodArray<z.ZodObject<{
         productId: z.ZodString;
         purchaseDate: z.ZodString;
         renewal: z.ZodOptional<z.ZodBoolean>;
@@ -300,7 +300,7 @@ export declare const updateCustomerSchema: z.ZodObject<{
     partnerId?: string | null | undefined;
     adminCustomFields?: Record<string, any> | undefined;
     joiningDate?: string | undefined;
-    products?: {
+    product?: {
         productId: string;
         purchaseDate: string;
         expiryDate?: string | undefined;
@@ -323,7 +323,7 @@ export declare const updateCustomerSchema: z.ZodObject<{
     partnerId?: string | null | undefined;
     adminCustomFields?: Record<string, any> | undefined;
     joiningDate?: string | undefined;
-    products?: {
+    product?: {
         productId: string;
         purchaseDate: string;
         expiryDate?: string | undefined;

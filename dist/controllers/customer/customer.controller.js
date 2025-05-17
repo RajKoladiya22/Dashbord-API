@@ -89,9 +89,12 @@ const createCustomer = async (req, res, next) => {
             }
             return { customer, history };
         });
+        const sanitized = {
+            ...result.customer,
+            product: result.history
+        };
         (0, responseHandler_1.sendSuccessResponse)(res, 201, "Customer created", {
-            customers: result.customer,
-            history: result.history,
+            customer: sanitized,
         });
         return;
     }
@@ -272,7 +275,7 @@ const updateCustomer = async (req, res, next) => {
         });
         return;
     }
-    const { products, ...customerData } = parsed.data;
+    const { product, ...customerData } = parsed.data;
     const user = req.user;
     if (!user) {
         (0, responseHandler_1.sendErrorResponse)(res, 401, "Unauthorized");
@@ -329,59 +332,56 @@ const updateCustomer = async (req, res, next) => {
                 },
             });
             let createdHistory = [];
-            if (Array.isArray(products) && products.length > 0) {
-                createdHistory = products.map((p) => {
-                    var _a;
+            if (Array.isArray(product) && product.length > 0) {
+                createdHistory = await Promise.all(product.map((p) => {
+                    var _a, _b;
                     const purchase = new Date(p.purchaseDate);
                     let renewalDate;
                     let expiryDate;
-                    switch (p.renewPeriod) {
+                    const period = (_a = p.renewPeriod) !== null && _a !== void 0 ? _a : "custom";
+                    switch (period) {
                         case "monthly":
                             renewalDate = (0, dateHelpers_1.addMonths)(purchase, 1);
-                            expiryDate = new Date(renewalDate);
-                            expiryDate.setDate(expiryDate.getDate() - 1);
                             break;
                         case "quarterly":
                             renewalDate = (0, dateHelpers_1.addMonths)(purchase, 3);
-                            expiryDate = new Date(renewalDate);
-                            expiryDate.setDate(expiryDate.getDate() - 1);
                             break;
                         case "half_yearly":
                             renewalDate = (0, dateHelpers_1.addMonths)(purchase, 6);
-                            expiryDate = new Date(renewalDate);
-                            expiryDate.setDate(expiryDate.getDate() - 1);
                             break;
                         case "yearly":
                             renewalDate = (0, dateHelpers_1.addYears)(purchase, 1);
-                            expiryDate = new Date(renewalDate);
-                            expiryDate.setDate(expiryDate.getDate() - 1);
                             break;
-                        case "custom":
                         default:
-                            renewalDate = p.renewalDate ? new Date(p.renewalDate) : undefined;
+                            renewalDate = p.renewalDate
+                                ? new Date(p.renewalDate)
+                                : undefined;
                             expiryDate = p.expiryDate ? new Date(p.expiryDate) : undefined;
-                            break;
+                    }
+                    if (renewalDate && !expiryDate) {
+                        expiryDate = new Date(renewalDate);
+                        expiryDate.setDate(expiryDate.getDate() - 1);
                     }
                     return tx.customerProductHistory.create({
                         data: {
-                            customerId: customerId,
+                            customerId,
                             adminId,
                             productId: p.productId,
                             purchaseDate: purchase,
                             status: true,
-                            renewPeriod: p.renewPeriod,
-                            renewal: (_a = p.renewal) !== null && _a !== void 0 ? _a : false,
+                            renewPeriod: period,
+                            renewal: (_b = p.renewal) !== null && _b !== void 0 ? _b : false,
                             renewalDate,
                             expiryDate,
                         },
                     });
-                });
+                }));
             }
             return { updatedCustomer, createdHistory };
         });
         const sanitized = {
             ...result.updatedCustomer,
-            ...result.createdHistory
+            ...result.createdHistory,
         };
         (0, responseHandler_1.sendSuccessResponse)(res, 200, "Customer updated", {
             customer: sanitized,
@@ -429,7 +429,7 @@ const setCustomerStatus = async (req, res, next) => {
             return;
     }
     try {
-        const customers = await database_config_1.prisma.$transaction(async (tx) => {
+        const customer = await database_config_1.prisma.$transaction(async (tx) => {
             const updatedCustomer = await tx.customer.update({
                 where: baseFilter,
                 data: { status },
@@ -443,7 +443,7 @@ const setCustomerStatus = async (req, res, next) => {
             });
             return updatedCustomer;
         });
-        (0, responseHandler_1.sendSuccessResponse)(res, 200, "Status updated", { customers });
+        (0, responseHandler_1.sendSuccessResponse)(res, 200, "Status updated", { customer });
     }
     catch (err) {
         if (err instanceof client_1.Prisma.PrismaClientKnownRequestError) {

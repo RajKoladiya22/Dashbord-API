@@ -167,6 +167,7 @@ const updateProduct = async (req, res, next) => {
                     productLink: true,
                     tags: true,
                     specifications: true,
+                    status: true,
                     createdAt: true,
                     updatedAt: true,
                 },

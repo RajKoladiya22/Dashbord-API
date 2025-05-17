@@ -97,7 +97,7 @@ exports.updateCustomerSchema = zod_1.z.object({
     adminCustomFields: zod_1.z.record(zod_1.z.any()).optional(),
     address: zod_1.z.record(zod_1.z.any()).optional(),
     joiningDate: zod_1.z.string().optional(),
-    products: zod_1.z
+    product: zod_1.z
         .array(zod_1.z.object({
         productId: zod_1.z.string().uuid(),
         purchaseDate: zod_1.z.string(),
