@@ -33,14 +33,6 @@ export const bulkCreateCustomers = async (
   const rows: Row[] = [];
   const ext = req.file.originalname.split(".").pop()?.toLowerCase();
 
-  const user = req.user;
-  if (!user) {
-    sendErrorResponse(res, 401, "Unauthorized");
-    return;
-  }
-  const adminId = user.role === "admin" ? user.id : user.adminId!;
-  // const partnerId = user.role === "partner" ? user.id : incomingPartnerId;
-
   try {
     if (ext === "csv") {
       const stream = Readable.from(req.file.buffer);
@@ -51,30 +43,20 @@ export const bulkCreateCustomers = async (
           .on("end", () => resolve())
           .on("error", (err) => reject(err));
       });
-    } else {
-      // Excel parsing via exceljs 
+    } else if (ext === "xlsx" || ext === "xls") {
       const workbook = new ExcelJS.Workbook();
-      if (ext === "xls") {
-        await workbook.xlsx.load(req.file.buffer);
-      } else {
-        await workbook.xlsx.load(req.file.buffer);
-      }
+      await workbook.xlsx.load(req.file.buffer);
+
       workbook.eachSheet((sheet) => {
         sheet.eachRow((row, rowNumber) => {
           if (rowNumber === 1) return; // skip header
-          
 
-          // 1) Guard that values exist and are an array
-          if (!Array.isArray(row.values)) {
-            // e.g. empty row; skip or throw
-            return;
-          }
-          // 2) Now TS knows row.values is CellValue[]
-          const cells = row.values as ExcelJS.CellValue[];
-
-          // 3) Destructure your five columns (skip the leading null)
-          const [companyName, contactPerson, mobileNumber, email, serialNo] =
-            cells.slice(1).map((v) => String(v ?? "").trim());
+          const companyName = row.getCell(1).text?.trim() || "";
+          const contactPerson = row.getCell(2).text?.trim() || "";
+          const mobileNumber = row.getCell(3).text?.trim() || "";
+          const email = row.getCell(4).text?.trim() || "";
+          const serialNo = row.getCell(5).text?.trim() || "";
+          const joiningDate = row.getCell(6).text?.trim() || undefined;
 
           rows.push({
             companyName,
@@ -82,9 +64,13 @@ export const bulkCreateCustomers = async (
             mobileNumber,
             email,
             serialNo,
+            joiningDate,
           });
         });
       });
+    } else {
+      sendErrorResponse(res, 400, "Unsupported file type");
+      return;
     }
 
     if (!rows.length) {
@@ -92,7 +78,6 @@ export const bulkCreateCustomers = async (
       return;
     }
 
-    // Validate required fields presence
     for (const [i, r] of rows.entries()) {
       if (
         !r.companyName ||
@@ -106,23 +91,33 @@ export const bulkCreateCustomers = async (
       }
     }
 
-    // Map to Prisma data, parse optional dates
-    const data = rows.map((r) => ({
-      adminId: adminId,
-      companyName: r.companyName,
-      contactPerson: r.contactPerson,
-      mobileNumber: r.mobileNumber,
-      email: r.email,
-      serialNo: r.serialNo,
-      address: {},
-      joiningDate: r.joiningDate ? parseISO(r.joiningDate) : new Date(),
-    }));
+    const data = rows.map((r, i) => {
+      let parsedDate = new Date();
+      if (r.joiningDate) {
+        try {
+          parsedDate = parseISO(r.joiningDate);
+          if (isNaN(parsedDate.getTime())) {
+            throw new Error(`Invalid date at row ${i + 2}`);
+          }
+        } catch {
+          throw new Error(`Invalid joining date at row ${i + 2}`);
+        }
+      }
 
-    // Bulk insert with createMany inside transaction :contentReference[oaicite:7]{index=7}
+      return {
+        companyName: r.companyName,
+        contactPerson: r.contactPerson,
+        mobileNumber: r.mobileNumber,
+        email: r.email,
+        serialNo: r.serialNo,
+        joiningDate: parsedDate,
+      };
+    });
+
     const result = await prisma.$transaction([
       prisma.customer.createMany({
         data,
-        skipDuplicates: false,
+        skipDuplicates: true,
       }),
     ]);
 
@@ -130,8 +125,8 @@ export const bulkCreateCustomers = async (
       count: result[0].count,
     });
   } catch (err: any) {
-    console.error("bulkCreateCustomers error:", err);
-    sendErrorResponse(res, 500, "Failed to process file");
+    console.error("bulkCreateCustomers error:", err.message || err);
+    sendErrorResponse(res, 500, err.message || "Failed to process file");
   } finally {
     if (req.file && typeof req.file.path === "string") {
       fs.unlink(req.file.path, (err) => {
@@ -139,4 +134,4 @@ export const bulkCreateCustomers = async (
       });
     }
   }
-};
+};    

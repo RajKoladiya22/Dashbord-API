@@ -6,6 +6,8 @@ const jwt_token_1 = require("../../../core/middleware/jwt/jwt.token");
 const customer_controller_1 = require("../../../controllers/customer/customer.controller");
 const customerProduct_controller_1 = require("../../../controllers/customer/customerProduct.controller");
 const reminder_controller_1 = require("../../../controllers/customer/reminder.controller");
+const customer_bulk_controller_1 = require("../../../controllers/customer/customer.bulk.controller");
+const fileUpload_1 = require("../../../core/middleware/multer/fileUpload");
 const router = (0, express_1.Router)();
 router.get("/customfield", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner", "team_member"), custommField_controller_1.listAdminCustomFields);
 router.post("/customfield", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin"), custommField_controller_1.createAdminCustomField);
@@ -19,5 +21,6 @@ router.delete("/delete/:id", jwt_token_1.authenticateUser, (0, jwt_token_1.autho
 router.get("/product/:customerId", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner", "team_member"), customerProduct_controller_1.getCustomerProductsByCustomerId);
 router.patch("/product/update/:id", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner", "team_member"), reminder_controller_1.updateCustomerProduct);
 router.get("/reminders", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner", "team_member"), reminder_controller_1.listRenewalReminders);
+router.post("/bulk", fileUpload_1.upload.single("file"), customer_bulk_controller_1.bulkCreateCustomers);
 exports.default = router;
 //# sourceMappingURL=customer.routes.js.map

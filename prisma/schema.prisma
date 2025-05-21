@@ -3,8 +3,8 @@
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
-  // url      = "postgresql://postgres:Raj24315@localhost:5636/cpm_orm"
+  // url      = env("DATABASE_URL")
+  url      = "postgresql://postgres:8140991135@localhost:9000/CPM"
 }
 
 generator client {
@@ -339,7 +339,7 @@ model ProductRenewalHistory {
 // ——————————————————————————————————————————
 model Customer {
   id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  adminId           String   @db.Uuid
+  adminId           String?   @db.Uuid
   companyName       String   @map("company_name")
   contactPerson     String   @map("contact_person")
   mobileNumber      String   @unique @map("mobile_number")
@@ -349,7 +349,12 @@ model Customer {
   blacklisted       Boolean  @default(false)
   remark            String?
   adminCustomFields Json?
-  address           Json
+  address           Json?
+
+
+
+
+  
   joiningDate       DateTime @map("joining_date")
   hasReference      Boolean  @default(false) @map("has_reference")
   partnerId         String?  @map("partner_id") @db.Uuid
@@ -357,7 +362,7 @@ model Customer {
   createdAt         DateTime @default(now()) @map("created_at")
   updatedAt         DateTime @updatedAt @map("updated_at")
 
-  admin   Admin                    @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  admin   Admin?                    @relation(fields: [adminId], references: [id], onDelete: Cascade)
   partner Partner?                 @relation("PartnerCustomers", fields: [partnerId], references: [id])
   history CustomerProductHistory[]
 
