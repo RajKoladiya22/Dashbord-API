@@ -167,10 +167,18 @@ export const bulkCreateCustomers = async (
   res: Response,
   next: NextFunction
 ): Promise<void> => {
+
   if (!req.file) {
     sendErrorResponse(res, 400, "No file uploaded");
     return;
   }
+
+  const user = req.user;
+  if (!user) {
+    sendErrorResponse(res, 401, "Unauthorized");
+    return;
+  }
+  const adminId = user.role === "admin" ? user.id : user.adminId!;
 
   const rows: Row[] = [];
   const ext = req.file.originalname.split(".").pop()?.toLowerCase();
@@ -191,7 +199,7 @@ export const bulkCreateCustomers = async (
 
       workbook.eachSheet((sheet) => {
         sheet.eachRow((row, rowNumber) => {
-          if (rowNumber === 1) return; // skip header
+          if (rowNumber === 1) return;
 
           const companyName = row.getCell(1).text?.trim() || "";
           const contactPerson = row.getCell(2).text?.trim() || "";
@@ -247,6 +255,7 @@ export const bulkCreateCustomers = async (
       }
 
       return {
+        adminId: adminId,
         companyName: r.companyName,
         contactPerson: r.contactPerson,
         mobileNumber: r.mobileNumber,
@@ -263,9 +272,14 @@ export const bulkCreateCustomers = async (
       }),
     ]);
 
-    sendSuccessResponse(res, 201, "Bulk customers created", {
-      count: result[0].count,
-    });
+    if (result.length>1) {
+      sendSuccessResponse(res, 201, "Bulk customers created", {
+        count: result[0].count,
+      });
+    }
+    else {
+      sendErrorResponse(res, 500, "Failed to create customers");
+    }
   } catch (err: any) {
     console.error("bulkCreateCustomers error:", err.message || err);
     sendErrorResponse(res, 500, err.message || "Failed to process file");

@@ -17,6 +17,12 @@ const bulkCreateCustomers = async (req, res, next) => {
         (0, responseHandler_1.sendErrorResponse)(res, 400, "No file uploaded");
         return;
     }
+    const user = req.user;
+    if (!user) {
+        (0, responseHandler_1.sendErrorResponse)(res, 401, "Unauthorized");
+        return;
+    }
+    const adminId = user.role === "admin" ? user.id : user.adminId;
     const rows = [];
     const ext = (_a = req.file.originalname.split(".").pop()) === null || _a === void 0 ? void 0 : _a.toLowerCase();
     try {
@@ -87,6 +93,7 @@ const bulkCreateCustomers = async (req, res, next) => {
                 }
             }
             return {
+                adminId: adminId,
                 companyName: r.companyName,
                 contactPerson: r.contactPerson,
                 mobileNumber: r.mobileNumber,
@@ -101,9 +108,14 @@ const bulkCreateCustomers = async (req, res, next) => {
                 skipDuplicates: true,
             }),
         ]);
-        (0, responseHandler_1.sendSuccessResponse)(res, 201, "Bulk customers created", {
-            count: result[0].count,
-        });
+        if (result.length > 1) {
+            (0, responseHandler_1.sendSuccessResponse)(res, 201, "Bulk customers created", {
+                count: result[0].count,
+            });
+        }
+        else {
+            (0, responseHandler_1.sendErrorResponse)(res, 500, "Failed to create customers");
+        }
     }
     catch (err) {
         console.error("bulkCreateCustomers error:", err.message || err);

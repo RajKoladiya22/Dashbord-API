@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { prisma, env } from "../../config/database.config";
+import { log } from "winston";
 
 interface AdminLink {
   label: string;
@@ -84,6 +85,9 @@ export const subAdminDetails = async (
     res.status(401).json({ message: "Unauthorized" });
     return;
   }
+  // if(id){
+  //   res.status(400).json({ message: "Invalid id",id });
+  // }
 
   try {
 
@@ -118,7 +122,7 @@ export const subAdminDetails = async (
     else if (query === "patners") {
       const patners = await prisma.partner.findMany({
         where: {
-          adminId: id,
+          adminId: id
         },
         select: {
           // id: true,
@@ -136,7 +140,7 @@ export const subAdminDetails = async (
           updatedAt: true,
         },
       });
-      if (!patners || patners.length===0) {
+      if (!patners || patners.length === 0) {
         res.status(404).json({ message: "No patners are found" });
       }
       else {
@@ -145,8 +149,9 @@ export const subAdminDetails = async (
             ...team,
             backLink: '/api/v1/auth/details',
           };
-
         });
+        res.status(200).json({ data: adminDetailsWithBackLink });
+
       }
     }
     else if (query === "subscription") {
@@ -155,7 +160,6 @@ export const subAdminDetails = async (
           adminId: id,
         },
         select: {
-          // id: true,
           plan: true,
           planId: true,
           status: true,
@@ -165,12 +169,9 @@ export const subAdminDetails = async (
           cancelledAt: true,
           payments: true,
           events: true,
-          // address: true,
-          // createdAt: true,
-          // updatedAt: true,
         },
       });
-      if (!subscription  || subscription.length===0) {
+      if (!subscription || subscription.length === 0) {
         res.status(404).json({ message: "No subscription are found" });
       }
       else {
@@ -181,6 +182,8 @@ export const subAdminDetails = async (
           };
 
         });
+        res.status(200).json({ data: adminDetailsWithBackLink });
+
       }
     }
     else if (query === "products") {
@@ -204,7 +207,7 @@ export const subAdminDetails = async (
           // updatedAt: true,
         },
       });
-      if (!products  || products.length===0) {
+      if (!products || products.length === 0) {
         res.status(404).json({ message: "No products are found" });
       }
       else {
@@ -215,9 +218,12 @@ export const subAdminDetails = async (
           };
 
         });
+        res.status(200).json({ data: adminDetailsWithBackLink });
       }
     }
     else if (query === "customers") {
+      console.log("->>>>>>>>..cal query");
+
       const customer = await prisma.customer.findMany({
         where: {
           adminId: id,
@@ -238,18 +244,20 @@ export const subAdminDetails = async (
           // updatedAt: true,
         },
       });
-      if (!customer  || customer.length===0) {
+      console.log("-------> cusorm", id, customer);
+
+      if (!customer || customer.length === 0) {
         res.status(404).json({ message: "No customers are found" });
-      }
-      else {
+      } else {
         const adminDetailsWithBackLink = customer.map((team) => {
           return {
             ...team,
             backLink: '/api/v1/auth/details',
           };
-
         });
+        res.status(200).json({ data: adminDetailsWithBackLink });
       }
+
     }
     else if (query === "customerproducthistory") {
       const customerproducthistory = await prisma.customerProductHistory.findMany({
@@ -271,7 +279,7 @@ export const subAdminDetails = async (
 
         },
       });
-      if (!customerproducthistory  || customerproducthistory.length===0) {
+      if (!customerproducthistory || customerproducthistory.length === 0) {
         res.status(404).json({ message: "No customerproducthistory are found" });
       }
       else {
@@ -282,6 +290,8 @@ export const subAdminDetails = async (
           };
 
         });
+        res.status(200).json({ data: adminDetailsWithBackLink });
+
       }
     }
     else if (query === "admincustomfield") {
@@ -304,7 +314,7 @@ export const subAdminDetails = async (
 
         },
       });
-      if (!admincustomfield  || admincustomfield.length===0) {
+      if (!admincustomfield || admincustomfield.length === 0) {
         res.status(404).json({ message: "No admincustomfield are found" });
       }
       else {
@@ -313,7 +323,7 @@ export const subAdminDetails = async (
             ...team,
             backLink: '/api/v1/auth/details',
           };
-
+        res.status(200).json({ data: adminDetailsWithBackLink });
         });
       }
     }

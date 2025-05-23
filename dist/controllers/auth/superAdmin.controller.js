@@ -86,7 +86,7 @@ const subAdminDetails = async (req, res, next) => {
         else if (query === "patners") {
             const patners = await database_config_1.prisma.partner.findMany({
                 where: {
-                    adminId: id,
+                    adminId: id
                 },
                 select: {
                     firstName: true,
@@ -111,6 +111,7 @@ const subAdminDetails = async (req, res, next) => {
                         backLink: '/api/v1/auth/details',
                     };
                 });
+                res.status(200).json({ data: adminDetailsWithBackLink });
             }
         }
         else if (query === "subscription") {
@@ -140,6 +141,7 @@ const subAdminDetails = async (req, res, next) => {
                         backLink: '/api/v1/auth/details',
                     };
                 });
+                res.status(200).json({ data: adminDetailsWithBackLink });
             }
         }
         else if (query === "products") {
@@ -171,9 +173,11 @@ const subAdminDetails = async (req, res, next) => {
                         backLink: '/api/v1/auth/details',
                     };
                 });
+                res.status(200).json({ data: adminDetailsWithBackLink });
             }
         }
         else if (query === "customers") {
+            console.log("->>>>>>>>..cal query");
             const customer = await database_config_1.prisma.customer.findMany({
                 where: {
                     adminId: id,
@@ -191,6 +195,7 @@ const subAdminDetails = async (req, res, next) => {
                     joiningDate: true,
                 },
             });
+            console.log("-------> cusorm", id, customer);
             if (!customer || customer.length === 0) {
                 res.status(404).json({ message: "No customers are found" });
             }
@@ -201,6 +206,7 @@ const subAdminDetails = async (req, res, next) => {
                         backLink: '/api/v1/auth/details',
                     };
                 });
+                res.status(200).json({ data: adminDetailsWithBackLink });
             }
         }
         else if (query === "customerproducthistory") {
@@ -230,6 +236,7 @@ const subAdminDetails = async (req, res, next) => {
                         backLink: '/api/v1/auth/details',
                     };
                 });
+                res.status(200).json({ data: adminDetailsWithBackLink });
             }
         }
         else if (query === "admincustomfield") {
@@ -256,6 +263,7 @@ const subAdminDetails = async (req, res, next) => {
                         ...team,
                         backLink: '/api/v1/auth/details',
                     };
+                    res.status(200).json({ data: adminDetailsWithBackLink });
                 });
             }
         }

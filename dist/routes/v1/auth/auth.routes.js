@@ -9,6 +9,7 @@ const profile_controller_1 = require("../../../controllers/auth/profile.controll
 const forgotPassword_controller_1 = require("../../../controllers/auth/forgotPassword.controller");
 const resetPassword_controller_1 = require("../../../controllers/auth/resetPassword.controller");
 const superAdmin_controller_1 = require("../../../controllers/auth/superAdmin.controller");
+const role_controller_1 = require("../../../controllers/auth/role.controller");
 const router = (0, express_1.Router)();
 router.post("/super-admin/signup", auth_controller_1.signUpSuperAdmin);
 router.post("/signup", auth_controller_1.signUpAdmin);
@@ -21,5 +22,6 @@ router.post("/partner", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeR
 router.post("/team", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin"), teamAuth_controller_1.createTeamMember);
 router.get("/details", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("super_admin"), superAdmin_controller_1.listAllAdmins);
 router.get("/admins/:id/:query", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("super_admin"), superAdmin_controller_1.subAdminDetails);
+router.patch("/role/:id/", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin"), role_controller_1.updateTeamRole);
 exports.default = router;
 //# sourceMappingURL=auth.routes.js.map

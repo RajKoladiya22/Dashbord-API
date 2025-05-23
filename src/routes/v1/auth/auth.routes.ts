@@ -18,7 +18,7 @@ import {
 import { forgotPassword } from "../../../controllers/auth/forgotPassword.controller";
 import { resetPassword } from "../../../controllers/auth/resetPassword.controller";
 import { listAllAdmins,subAdminDetails } from "../../../controllers/auth/superAdmin.controller";
-
+import { updateTeamRole } from "../../../controllers/auth/role.controller";
 const router = Router();
 
 router.post("/super-admin/signup", signUpSuperAdmin);
@@ -74,6 +74,13 @@ router.get(
   authenticateUser,
   authorizeRoles("super_admin"),
   subAdminDetails
+);
+
+router.patch(
+  "/role/:id/",
+  authenticateUser,
+  authorizeRoles("admin"),
+  updateTeamRole
 );
 
 export default router;

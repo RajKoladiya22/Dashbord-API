@@ -5,7 +5,7 @@ import { config } from "dotenv";
 config();
 
 export const env = process.env;
-APP_BASE_URL:env.APP_BASE_URL || "http://localhost:3000/api/v1"
+// APP_BASE_URL:env.APP_BASE_URL || "http://localhost:3000/api/v1"
 
 
 

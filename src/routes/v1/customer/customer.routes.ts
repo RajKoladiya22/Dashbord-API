@@ -117,8 +117,8 @@ router.get(
 router.post(
   "/bulk",
   upload.single("file"), 
-  // authenticateUser,
-  // authorizeRoles("admin", "partner", "team_member"),
+  authenticateUser,
+  authorizeRoles("admin", "partner", "team_member"),
   bulkCreateCustomers
 );
 
