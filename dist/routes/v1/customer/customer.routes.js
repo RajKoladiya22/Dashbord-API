@@ -15,6 +15,7 @@ router.get("/list", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles
 router.post("/add", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner"), customer_controller_1.createCustomer);
 router.patch("/update/:id", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner"), customer_controller_1.updateCustomer);
 router.patch("/status/:id", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner", "team_member"), customer_controller_1.setCustomerStatus);
+router.put("/product/update/:customerId/:ProductId", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner", "team_member"), customer_controller_1.editCustomerProduct);
 router.delete("/delete/:id", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner", "team_member"), customer_controller_1.deleteCustomer);
 router.get("/product/:customerId", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner", "team_member"), customerProduct_controller_1.getCustomerProductsByCustomerId);
 router.patch("/product/update/:id", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner", "team_member"), reminder_controller_1.updateCustomerProduct);

@@ -256,6 +256,7 @@ export const signIn = async (
       }
     }
 
+    // console.log("cred----->", cred)
     // fetch profile by role
     let profile: any = null;
     switch (cred.role) {
@@ -278,6 +279,7 @@ export const signIn = async (
         });
         break;
       case "team_member":
+      case "sub_admin":
         profile = await prisma.teamMember.findUnique({
           where: { id: cred.userProfileId },
           select: { id: true, firstName: true, lastName: true, role: true },
@@ -288,6 +290,8 @@ export const signIn = async (
         return;
     }
 
+
+    // console.log("profile---->", profile)
     if (!profile) {
       sendErrorResponse(res, 500, "User profile missing");
       return;

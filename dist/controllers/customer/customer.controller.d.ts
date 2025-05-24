@@ -13,3 +13,7 @@ export declare const setCustomerStatus: (req: Request<{
 export declare const deleteCustomer: (req: Request<{
     id: string;
 }>, res: Response, next: NextFunction) => Promise<void>;
+export declare const editCustomerProduct: (req: Request<{
+    customerId: string;
+    ProductId: string;
+}, {}>, res: Response, next: NextFunction) => Promise<void>;
