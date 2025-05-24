@@ -5,13 +5,15 @@ import { requestLogger } from "./core/middleware/logs/requestLogger";
 import { errorHandler } from "./core/middleware/logs/errorHandler";
 import Router from "./routes/v1";
 import { checkStaticToken } from "./core/middleware/key/checkStaticToken";
+import  "./core/job/planStatus"
 // import path from "path";
 // import fs from "fs";
 
 const app = express();
 
 const corsOptions = {
-  origin: ["http://localhost:5173", "https://dashbord-seven-sigma.vercel.app"], // your frontend URL
+  // origin: ["http://localhost:5173", "https://dashbord-seven-sigma.vercel.app"], // your frontend URL
+  origin: true, // your frontend URL
   credentials: true, // <— allow cookies
 };
 

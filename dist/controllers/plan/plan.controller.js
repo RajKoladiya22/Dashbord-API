@@ -11,6 +11,8 @@ const createPlan = async (req, res, next) => {
         return;
     }
     const parsed = zod_1.createPlanSchema.safeParse(req.body);
+    console.log("req.body--->", req.body);
+    console.log("parsed--->", parsed);
     if (!parsed.success) {
         (0, responseHandler_1.sendErrorResponse)(res, 400, "Invalid input", {
             errors: parsed.error.errors,
@@ -80,6 +82,9 @@ const listPlans = async (req, res, next) => {
                 skip,
                 take: limit,
                 orderBy: { createdAt: "desc" },
+                include: {
+                    descriptions: true,
+                },
             }),
         ]);
         (0, responseHandler_1.sendSuccessResponse)(res, 200, "Plans fetched", {

@@ -1,8 +1,8 @@
 export declare const validatedEnv: {
-    NODE_ENV: "development" | "local" | "production";
-    DATABASE_URL: string;
+    NODE_ENV: "local" | "development" | "production";
     HOST: string;
     PORT: number;
+    DATABASE_URL: string;
     DB_HOST: string;
     DB_PORT: number;
     DB_USERNAME: string;

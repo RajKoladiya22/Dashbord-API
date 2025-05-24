@@ -1,48 +1,73 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.subAdminDetails = exports.listAllAdmins = void 0;
+exports.approveAdmin = exports.subAdminDetails = exports.listAllAdmins = void 0;
 const database_config_1 = require("../../config/database.config");
+const responseHandler_1 = require("../../core/utils/responseHandler");
 const listAllAdmins = async (req, res, next) => {
+    var _a;
     const user = req.user;
     if (!user || user.role !== "super_admin") {
-        res.status(401).json({ message: "Unauthorized" });
+        (0, responseHandler_1.sendErrorResponse)(res, 401, "Unauthorized");
         return;
     }
+    const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
+    const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 10, 1), 100);
+    const skip = (page - 1) * limit;
+    const allowedSortFields = ["companyName", "mobileNumber", "firstName", "lastName", "postName"];
+    const sortBy = req.query.sortBy || "companyName";
+    const sortOrder = ((_a = req.query.sortOrder) === null || _a === void 0 ? void 0 : _a.toLowerCase()) === "desc" ? "desc" : "asc";
+    if (!allowedSortFields.includes(sortBy)) {
+        (0, responseHandler_1.sendErrorResponse)(res, 400, `Invalid sortBy. Must be one of: ${allowedSortFields.join(", ")}`);
+        return;
+    }
+    const statusFilter = req.query.status === "false" ? false : true;
+    const field = req.query.field;
+    const query = typeof req.query.query === "string" ? req.query.query.trim() : "";
+    const allowedSearchFields = ["firstName", "lastName", "companyName", "mobileNumber", "postName"];
+    let searchFilter = {};
+    if (field && query && allowedSearchFields.includes(field)) {
+        searchFilter[field] = { contains: query, mode: "insensitive" };
+    }
+    const baseFilter = {
+        status: statusFilter,
+        ...searchFilter,
+    };
     try {
-        const admins = await database_config_1.prisma.admin.findMany({
-            select: {
-                id: true,
-                firstName: true,
-                lastName: true,
-                email: true,
-                status: true,
-                companyName: true,
-            },
-        });
+        const [total, admins] = await Promise.all([
+            database_config_1.prisma.admin.count({ where: baseFilter }),
+            database_config_1.prisma.admin.findMany({
+                where: baseFilter,
+                skip,
+                take: limit,
+                orderBy: { [sortBy]: sortOrder },
+                select: {
+                    id: true,
+                    firstName: true,
+                    lastName: true,
+                    email: true,
+                    status: true,
+                    companyName: true,
+                    contactInfo: true,
+                },
+            }),
+        ]);
         if (!admins || admins.length === 0) {
-            res.status(404).json({ message: "No admin found" });
+            (0, responseHandler_1.sendErrorResponse)(res, 404, "No admins found");
             return;
         }
-        const adminDetailsWithLinks = admins.map((admin) => {
-            const links = [
-                { label: "TeamMembers", url: `/admins/${admin.id}/teammembers` },
-                { label: "Patners", url: `/admins/${admin.id}/patners` },
-                { label: "Subscription", url: `/admins/${admin.id}/subscription` },
-                { label: "Product", url: `/admins/${admin.id}/products` },
-                { label: "Customers", url: `/admins/${admin.id}/customers` },
-                { label: "CustomerProductHistory", url: `/admins/${admin.id}/customerproducthistory` },
-                { label: "AdminCustomField", url: `/admins/${admin.id}/admincustomfield` },
-            ];
-            return {
-                ...admin,
-                links,
-            };
+        (0, responseHandler_1.sendSuccessResponse)(res, 200, "Admins fetched", {
+            admins,
+            meta: {
+                total,
+                page,
+                limit,
+                pages: Math.ceil(total / limit),
+            },
         });
-        res.status(200).json(adminDetailsWithLinks);
     }
     catch (err) {
         console.error("Error listing admin details:", err);
-        res.status(500).json({ message: "Server error" });
+        (0, responseHandler_1.sendErrorResponse)(res, 500, "Server error");
     }
 };
 exports.listAllAdmins = listAllAdmins;
@@ -277,4 +302,53 @@ const subAdminDetails = async (req, res, next) => {
     }
 };
 exports.subAdminDetails = subAdminDetails;
+const approveAdmin = async (req, res, next) => {
+    const user = req.user;
+    if (!user || user.role !== "super_admin") {
+        (0, responseHandler_1.sendErrorResponse)(res, 401, "Unauthorized");
+        return;
+    }
+    const adminId = req.params.id;
+    const statusRaw = req.body.status;
+    let adminStatus = null;
+    if (typeof statusRaw === "boolean") {
+        adminStatus = statusRaw;
+    }
+    else if (typeof statusRaw === "string") {
+        if (statusRaw.toLowerCase() === "true")
+            adminStatus = true;
+        else if (statusRaw.toLowerCase() === "false")
+            adminStatus = false;
+    }
+    if (adminStatus === null) {
+        (0, responseHandler_1.sendErrorResponse)(res, 400, "Invalid status");
+        return;
+    }
+    try {
+        const adminDetails = await database_config_1.prisma.admin.findUnique({ where: { id: adminId } });
+        if (!adminDetails) {
+            (0, responseHandler_1.sendErrorResponse)(res, 404, "Admin not found");
+            return;
+        }
+        const approvedAdmin = await database_config_1.prisma.admin.update({
+            where: { id: adminId },
+            data: {
+                status: adminStatus,
+            },
+            select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+                status: true,
+            },
+        });
+        (0, responseHandler_1.sendSuccessResponse)(res, 200, "Admin Status Updated", approvedAdmin);
+    }
+    catch (err) {
+        console.error("Error updating admin status:", err);
+        (0, responseHandler_1.sendErrorResponse)(res, 500, "Server error");
+    }
+};
+exports.approveAdmin = approveAdmin;
 //# sourceMappingURL=superAdmin.controller.js.map

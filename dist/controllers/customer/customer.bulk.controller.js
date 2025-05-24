@@ -41,7 +41,7 @@ const bulkCreateCustomers = async (req, res, next) => {
             await workbook.xlsx.load(req.file.buffer);
             workbook.eachSheet((sheet) => {
                 sheet.eachRow((row, rowNumber) => {
-                    var _a, _b, _c, _d, _e, _f;
+                    var _a, _b, _c, _d, _e, _f, _g;
                     if (rowNumber === 1)
                         return;
                     const companyName = ((_a = row.getCell(1).text) === null || _a === void 0 ? void 0 : _a.trim()) || "";
@@ -50,6 +50,7 @@ const bulkCreateCustomers = async (req, res, next) => {
                     const email = ((_d = row.getCell(4).text) === null || _d === void 0 ? void 0 : _d.trim()) || "";
                     const serialNo = ((_e = row.getCell(5).text) === null || _e === void 0 ? void 0 : _e.trim()) || "";
                     const joiningDate = ((_f = row.getCell(6).text) === null || _f === void 0 ? void 0 : _f.trim()) || undefined;
+                    const address = ((_g = row.getCell(7).text) === null || _g === void 0 ? void 0 : _g.trim()) || "";
                     rows.push({
                         companyName,
                         contactPerson,
@@ -57,6 +58,7 @@ const bulkCreateCustomers = async (req, res, next) => {
                         email,
                         serialNo,
                         joiningDate,
+                        address
                     });
                 });
             });
@@ -100,6 +102,7 @@ const bulkCreateCustomers = async (req, res, next) => {
                 email: r.email,
                 serialNo: r.serialNo,
                 joiningDate: parsedDate,
+                address: r.address
             };
         });
         const result = await database_config_1.prisma.$transaction([

@@ -17,7 +17,7 @@ import {
 } from "../../../controllers/auth/profile.controller";
 import { forgotPassword } from "../../../controllers/auth/forgotPassword.controller";
 import { resetPassword } from "../../../controllers/auth/resetPassword.controller";
-import { listAllAdmins,subAdminDetails } from "../../../controllers/auth/superAdmin.controller";
+import { listAllAdmins,subAdminDetails,approveAdmin } from "../../../controllers/auth/superAdmin.controller";
 import { updateTeamRole } from "../../../controllers/auth/role.controller";
 const router = Router();
 
@@ -63,7 +63,7 @@ router.post(
 );
 
 router.get(
-  "/details",
+  "/admins",
   authenticateUser,
   authorizeRoles("super_admin"),
   listAllAdmins
@@ -83,4 +83,10 @@ router.patch(
   updateTeamRole
 );
 
+router.patch(
+  "/admins/status/:id",
+  authenticateUser,
+  authorizeRoles("super_admin"),
+  approveAdmin
+);
 export default router;

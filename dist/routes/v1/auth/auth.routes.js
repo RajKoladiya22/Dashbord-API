@@ -20,8 +20,9 @@ router.post("/forgot-password", forgotPassword_controller_1.forgotPassword);
 router.post("/reset-password", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("super_admin", "admin", "partner", "team_member"), resetPassword_controller_1.resetPassword);
 router.post("/partner", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin"), partnerAuth_controller_1.createPartner);
 router.post("/team", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin"), teamAuth_controller_1.createTeamMember);
-router.get("/details", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("super_admin"), superAdmin_controller_1.listAllAdmins);
+router.get("/admins", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("super_admin"), superAdmin_controller_1.listAllAdmins);
 router.get("/admins/:id/:query", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("super_admin"), superAdmin_controller_1.subAdminDetails);
 router.patch("/role/:id/", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin"), role_controller_1.updateTeamRole);
+router.patch("/admins/status/:id", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("super_admin"), superAdmin_controller_1.approveAdmin);
 exports.default = router;
 //# sourceMappingURL=auth.routes.js.map

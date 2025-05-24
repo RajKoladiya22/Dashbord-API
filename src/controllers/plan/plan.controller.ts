@@ -28,6 +28,10 @@ export const createPlan = async (
 
   // Validate request body
   const parsed = createPlanSchema.safeParse(req.body);
+  console.log("req.body--->", req.body);
+  console.log("parsed--->", parsed);
+
+
   if (!parsed.success) {
     sendErrorResponse(res, 400, "Invalid input", {
       errors: parsed.error.errors,
@@ -108,12 +112,15 @@ export const listPlans = async (
 
   try {
     const [total, plans] = await Promise.all([
-      prisma.plan.count({ where: { status } }), // count with status filter
+      prisma.plan.count({ where: { status } }),
       prisma.plan.findMany({
         where: { status },
         skip,
         take: limit,
         orderBy: { createdAt: "desc" },
+        include: {
+          descriptions: true, 
+        },
       }),
     ]);
 
@@ -121,6 +128,7 @@ export const listPlans = async (
       plans,
       meta: { total, page, limit, pages: Math.ceil(total / limit) },
     });
+
   } catch (err: any) {
     console.error("listPlans error:", err);
     sendErrorResponse(res, 500, "Server error");

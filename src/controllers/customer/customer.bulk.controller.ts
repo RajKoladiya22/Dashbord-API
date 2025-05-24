@@ -160,6 +160,7 @@ interface Row {
   email: string;
   serialNo: string;
   joiningDate?: string;
+  address: string
 }
 
 export const bulkCreateCustomers = async (
@@ -207,6 +208,7 @@ export const bulkCreateCustomers = async (
           const email = row.getCell(4).text?.trim() || "";
           const serialNo = row.getCell(5).text?.trim() || "";
           const joiningDate = row.getCell(6).text?.trim() || undefined;
+          const address = row.getCell(7).text?.trim() || "";
 
           rows.push({
             companyName,
@@ -215,6 +217,7 @@ export const bulkCreateCustomers = async (
             email,
             serialNo,
             joiningDate,
+            address
           });
         });
       });
@@ -262,6 +265,7 @@ export const bulkCreateCustomers = async (
         email: r.email,
         serialNo: r.serialNo,
         joiningDate: parsedDate,
+        address:r.address
       };
     });
 
