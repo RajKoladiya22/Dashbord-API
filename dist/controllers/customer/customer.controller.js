@@ -566,7 +566,8 @@ const editCustomerProduct = async (req, res, next) => {
         (0, responseHandler_1.sendErrorResponse)(res, 404, "Invalid input");
         return;
     }
-    const { purchaseDate, renewPeriod, renewal = false, renewalDate, expiryDate, status, } = req.body;
+    const { purchaseDate, renewPeriod, renewal, renewalDate, expiryDate, status, } = req.body;
+    console.log("--->", req.body);
     const user = req.user;
     if (!user) {
         (0, responseHandler_1.sendErrorResponse)(res, 401, "Unauthorized");
@@ -593,44 +594,66 @@ const editCustomerProduct = async (req, res, next) => {
             (0, responseHandler_1.sendErrorResponse)(res, 403, "Forbidden");
             return;
     }
-    const purchase = (0, date_fns_1.parseISO)(purchaseDate);
-    let newRenewalDate;
-    let newExpiryDate;
-    switch (renewPeriod) {
-        case "monthly":
-            newRenewalDate = (0, dateHelpers_1.addMonths)(purchase, 1);
-            break;
-        case "quarterly":
-            newRenewalDate = (0, dateHelpers_1.addMonths)(purchase, 3);
-            break;
-        case "half_yearly":
-            newRenewalDate = (0, dateHelpers_1.addMonths)(purchase, 6);
-            break;
-        case "yearly":
-            newRenewalDate = (0, dateHelpers_1.addYears)(purchase, 1);
-            break;
-        case "custom":
-        default:
-            newRenewalDate = renewalDate ? new Date(renewalDate) : undefined;
-            newExpiryDate = expiryDate ? new Date(expiryDate) : undefined;
-            break;
-    }
-    if (newRenewalDate && !newExpiryDate) {
-        newExpiryDate = new Date(newRenewalDate);
-        newExpiryDate.setDate(newExpiryDate.getDate() - 1);
-    }
+    let updateData = {};
     try {
+        let purchase;
+        let newRenewalDate;
+        let newExpiryDate;
+        if (purchaseDate) {
+            purchase = (0, date_fns_1.parseISO)(purchaseDate);
+            if (isNaN(purchase.getTime())) {
+                (0, responseHandler_1.sendErrorResponse)(res, 400, "Invalid purchaseDate format");
+                return;
+            }
+            if (purchase > new Date()) {
+                (0, responseHandler_1.sendErrorResponse)(res, 400, "Purchase date cannot be in the future");
+                return;
+            }
+            updateData.purchaseDate = purchaseDate;
+        }
+        if (renewPeriod) {
+            updateData.renewPeriod = renewPeriod;
+            if (purchase) {
+                switch (renewPeriod) {
+                    case "monthly":
+                        newRenewalDate = (0, dateHelpers_1.addMonths)(purchase, 1);
+                        break;
+                    case "quarterly":
+                        newRenewalDate = (0, dateHelpers_1.addMonths)(purchase, 3);
+                        break;
+                    case "half_yearly":
+                        newRenewalDate = (0, dateHelpers_1.addMonths)(purchase, 6);
+                        break;
+                    case "yearly":
+                        newRenewalDate = (0, dateHelpers_1.addYears)(purchase, 1);
+                        break;
+                    case "custom":
+                    default:
+                        break;
+                }
+            }
+        }
+        if (renewal !== undefined)
+            updateData.renewal = renewal;
+        if (renewPeriod === "custom") {
+            if (renewalDate)
+                updateData.renewalDate = new Date(renewalDate);
+            if (expiryDate)
+                updateData.expiryDate = new Date(expiryDate);
+        }
+        else {
+            if (newRenewalDate) {
+                updateData.renewalDate = newRenewalDate;
+                updateData.expiryDate = new Date(newRenewalDate);
+                updateData.expiryDate.setDate(updateData.expiryDate.getDate() - 1);
+            }
+        }
+        if (status !== undefined)
+            updateData.status = status;
         const updatedHistory = await database_config_1.prisma.$transaction(async (tx) => {
             const product = await tx.customerProductHistory.update({
                 where: baseFilter,
-                data: {
-                    purchaseDate: purchase,
-                    renewPeriod,
-                    renewal,
-                    renewalDate: newRenewalDate,
-                    expiryDate: newExpiryDate,
-                    status,
-                },
+                data: updateData,
             });
             const customer = await tx.customer.findMany({
                 where: { id: customerId },
@@ -670,13 +693,15 @@ const editCustomerProduct = async (req, res, next) => {
                     },
                 },
             });
-            return customer;
+            return { customer, product };
         });
         (0, responseHandler_1.sendSuccessResponse)(res, 200, "Product updated", {
-            customer: updatedHistory,
+            customer: updatedHistory.customer,
+            product: updatedHistory.product,
         });
     }
     catch (err) {
+        console.log("\n\neditCustomerProduct error----->", err);
         if (err instanceof client_1.Prisma.PrismaClientKnownRequestError &&
             err.code === "P2025") {
             (0, responseHandler_1.sendErrorResponse)(res, 404, "Product history not found or out of scope");

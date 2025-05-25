@@ -80,7 +80,7 @@ router.patch(
   authorizeRoles("admin", "partner", "team_member"),
   setCustomerStatus
 );
-router.put(
+router.patch(
   "/product/update/:customerId/:ProductId",
   authenticateUser,
   authorizeRoles("admin", "partner", "team_member"),

@@ -515,7 +515,7 @@ export const updateCustomer = async (
 
     // 6) Respond with both updated customer and any new history entries
     sendSuccessResponse(res, 200, "Customer updated", {
-            customer: sanitized,
+      customer: sanitized,
     });
   } catch (err: any) {
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
@@ -684,48 +684,39 @@ export const deleteCustomer = async (
  * PUT /customers/:customerId/products/:historyId
  */
 export const editCustomerProduct = async (
-  req: Request<
-    { customerId: string; ProductId: string },
-    {}
-    // EditCustomerProductBody
-  >,
+  req: Request<{ customerId: string; ProductId: string }, {}>,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
   const { customerId, ProductId } = req.params;
+
   if (!customerId || !ProductId) {
     sendErrorResponse(res, 404, "Invalid input");
     return;
   }
 
-  // 1) Validate request body
-  // const parsed = editCustomerProductSchema.safeParse(req.body);
-  // if (!parsed.success) {
-  //   sendErrorResponse(res, 400, "Invalid input", {
-  //     errors: parsed.error.errors,
-  //   });
-  //   return;
-  // }
   const {
     purchaseDate,
     renewPeriod,
-    renewal = false,
+    renewal,
     renewalDate,
     expiryDate,
     status,
   } = req.body;
 
-  // 2) Auth & scope check
+  console.log("--->",req.body)
+
   const user = req.user as { id: string; role: string; adminId?: string };
   if (!user) {
     sendErrorResponse(res, 401, "Unauthorized");
     return;
   }
-  // build scope filter for the history record
+
   const baseFilter: any = {
     id: ProductId,
     customerId,
   };
+
   switch (user.role) {
     case "admin":
     case "super_admin":
@@ -744,48 +735,69 @@ export const editCustomerProduct = async (
       return;
   }
 
-  // 3) Recalculate renewal/expiry dates if needed
-  const purchase = parseISO(purchaseDate);
-  let newRenewalDate: Date | undefined;
-  let newExpiryDate: Date | undefined;
-
-  switch (renewPeriod) {
-    case "monthly":
-      newRenewalDate = addMonths(purchase, 1);
-      break;
-    case "quarterly":
-      newRenewalDate = addMonths(purchase, 3);
-      break;
-    case "half_yearly":
-      newRenewalDate = addMonths(purchase, 6);
-      break;
-    case "yearly":
-      newRenewalDate = addYears(purchase, 1);
-      break;
-    case "custom":
-    default:
-      newRenewalDate = renewalDate ? new Date(renewalDate) : undefined;
-      newExpiryDate = expiryDate ? new Date(expiryDate) : undefined;
-      break;
-  }
-  if (newRenewalDate && !newExpiryDate) {
-    newExpiryDate = new Date(newRenewalDate);
-    newExpiryDate.setDate(newExpiryDate.getDate() - 1);
-  }
+  let updateData: any = {};
 
   try {
-    // 4) Perform update in a transaction
+    let purchase: Date | undefined;
+    let newRenewalDate: Date | undefined;
+    let newExpiryDate: Date | undefined;
+
+    if (purchaseDate) {
+      purchase = parseISO(purchaseDate);
+      if (isNaN(purchase.getTime())) {
+        sendErrorResponse(res, 400, "Invalid purchaseDate format");
+        return;
+      }
+      if (purchase > new Date()) {
+        sendErrorResponse(res, 400, "Purchase date cannot be in the future");
+        return;
+      }
+      updateData.purchaseDate = purchaseDate;
+    }
+
+    if (renewPeriod) {
+      updateData.renewPeriod = renewPeriod;
+
+      if (purchase) {
+        switch (renewPeriod) {
+          case "monthly":
+            newRenewalDate = addMonths(purchase, 1);
+            break;
+          case "quarterly":
+            newRenewalDate = addMonths(purchase, 3);
+            break;
+          case "half_yearly":
+            newRenewalDate = addMonths(purchase, 6);
+            break;
+          case "yearly":
+            newRenewalDate = addYears(purchase, 1);
+            break;
+          case "custom":
+          default:
+            break;
+        }
+      }
+    }
+
+    if (renewal !== undefined) updateData.renewal = renewal;
+
+    if (renewPeriod === "custom") {
+      if (renewalDate) updateData.renewalDate = new Date(renewalDate);
+      if (expiryDate) updateData.expiryDate = new Date(expiryDate);
+    } else {
+      if (newRenewalDate) {
+        updateData.renewalDate = newRenewalDate;
+        updateData.expiryDate = new Date(newRenewalDate);
+        updateData.expiryDate.setDate(updateData.expiryDate.getDate() - 1);
+      }
+    }
+
+    if (status !== undefined) updateData.status = status;
+
     const updatedHistory = await prisma.$transaction(async (tx) => {
       const product = await tx.customerProductHistory.update({
         where: baseFilter,
-        data: {
-          purchaseDate: purchase,
-          renewPeriod,
-          renewal,
-          renewalDate: newRenewalDate,
-          expiryDate: newExpiryDate,
-          status,
-        },
+        data: updateData,
       });
 
       const customer = await tx.customer.findMany({
@@ -804,7 +816,6 @@ export const editCustomerProduct = async (
             },
           },
           history: {
-            // take: 1,
             include: {
               product: {
                 select: {
@@ -828,14 +839,15 @@ export const editCustomerProduct = async (
         },
       });
 
-      return customer;
+      return { customer, product };
     });
 
-    // 5) Respond with the updated history entry
     sendSuccessResponse(res, 200, "Product updated", {
-      customer: updatedHistory,
+      customer: updatedHistory.customer,
+      product: updatedHistory.product,
     });
   } catch (err: any) {
+    console.log("\n\neditCustomerProduct error----->", err);
     if (
       err instanceof Prisma.PrismaClientKnownRequestError &&
       err.code === "P2025"
@@ -848,3 +860,4 @@ export const editCustomerProduct = async (
     else sendErrorResponse(res, 500, "Server error");
   }
 };
+
