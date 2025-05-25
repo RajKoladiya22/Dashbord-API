@@ -58,7 +58,7 @@ export const signUpAdmin = async (
           companyName,
           contactInfo: { contactNumber },
           address,
-          role: "admin",
+          role: "admin", 
         },
         select: {
           id: true,
@@ -235,7 +235,7 @@ export const signIn = async (
     );
     if (!cred || !match || cred.status !== true || !cred.userProfileId) {
       sendErrorResponse(res, 401, "Invalid credentials");
-      return;
+      return; 
     }
 
     const now = new Date();
