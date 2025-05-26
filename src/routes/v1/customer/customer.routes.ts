@@ -16,6 +16,7 @@ import {
   listCustomers,
   setCustomerStatus,
   updateCustomer,
+  editCustomerProduct,
 } from "../../../controllers/customer/customer.controller";
 import { getCustomerProductsByCustomerId } from "../../../controllers/customer/customerProduct.controller";
 import {
@@ -78,6 +79,12 @@ router.patch(
   authenticateUser,
   authorizeRoles("admin", "partner", "team_member"),
   setCustomerStatus
+);
+router.patch(
+  "/product/update/:customerId/:ProductId",
+  authenticateUser,
+  authorizeRoles("admin", "partner", "team_member"),
+  editCustomerProduct
 );
 router.delete(
   "/delete/:id",

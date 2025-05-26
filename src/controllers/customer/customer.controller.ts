@@ -129,12 +129,12 @@ export const createCustomer = async (
 
     const sanitized = {
       ...result.customer,
-      product: result.history
-    }
+      product: result.history,
+    };
 
     // Return the created customer and its history
     sendSuccessResponse(res, 201, "Customer created", {
-       customer: sanitized,
+      customer: sanitized,
     });
     return;
   } catch (err: any) {
@@ -410,6 +410,42 @@ export const updateCustomer = async (
             joiningDate: new Date(customerData.joiningDate),
           }),
         },
+        include: {
+          partner: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              companyName: true,
+              contactInfo: true,
+              email: true,
+              address: true,
+              status: true,
+            },
+          },
+          history: {
+            // take: 1,
+            include: {
+              product: {
+                select: {
+                  id: true,
+                  productName: true,
+                  productPrice: true,
+                  status: true,
+                },
+              },
+              renewals: {
+                select: {
+                  id: true,
+                  purchaseDate: true,
+                  renewalDate: true,
+                  expiryDate: true,
+                },
+                orderBy: { purchaseDate: "desc" },
+              },
+            },
+          },
+        },
       });
       // if (updatedCustomer.count === 0) throw new Error("Not found or unauthorized");
 
@@ -479,9 +515,7 @@ export const updateCustomer = async (
 
     // 6) Respond with both updated customer and any new history entries
     sendSuccessResponse(res, 200, "Customer updated", {
-      // customers: sanitized,
       customer: sanitized,
-      // history: result.createdHistory,
     });
   } catch (err: any) {
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
@@ -646,67 +680,184 @@ export const deleteCustomer = async (
   }
 };
 
-// export const listCustomers = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ): Promise<void> => {
-//   const user = req.user;
-//   if (!user) {
-//     sendErrorResponse(res, 401, "Unauthorized");
-//     return;
-//   }
+/**
+ * PUT /customers/:customerId/products/:historyId
+ */
+export const editCustomerProduct = async (
+  req: Request<{ customerId: string; ProductId: string }, {}>,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  const { customerId, ProductId } = req.params;
 
-//   // Build base filter
-//   const baseFilter: any = {};
+  if (!customerId || !ProductId) {
+    sendErrorResponse(res, 404, "Invalid input");
+    return;
+  }
 
-//   switch (user.role) {
-//     case "admin":
-//     case "super_admin":
-//       // Admins see their own customers
-//       baseFilter.adminId = user.id;
-//       break;
+  const {
+    purchaseDate,
+    renewPeriod,
+    renewal,
+    renewalDate,
+    expiryDate,
+    status,
+  } = req.body;
 
-//     case "partner":
-//       // Partners only see customers they own
-//       baseFilter.adminId = user.adminId!;
-//       baseFilter.partnerId = user.id;
-//       break;
+  console.log("--->",req.body)
 
-//     case "team_member":
-//       // Team members see all customers under their admin
-//       baseFilter.adminId = user.adminId!;
-//       break;
+  const user = req.user as { id: string; role: string; adminId?: string };
+  if (!user) {
+    sendErrorResponse(res, 401, "Unauthorized");
+    return;
+  }
 
-//     default:
-//       sendErrorResponse(res, 403, "Forbidden");
-//       return;
-//   }
+  const baseFilter: any = {
+    id: ProductId,
+    customerId,
+  };
 
-//   try {
-//     const customers = await prisma.customer.findMany({
-//       where: baseFilter,
-//       orderBy: { createdAt: "desc" },
-//       include: {
-//         partner: {
-//           select: {
-//             id: true,
-//             firstName: true,
-//             lastName: true,
-//             companyName: true,
-//           },
-//         },
-//         history: {
-//           include: { product: true },
-//         },
-//       },
-//     });
+  switch (user.role) {
+    case "admin":
+    case "super_admin":
+      baseFilter.adminId = user.id;
+      break;
+    case "partner":
+      baseFilter.adminId = user.adminId!;
+      baseFilter.customer = { partnerId: user.id };
+      break;
+    case "team_member":
+    case "sub_admin":
+      baseFilter.adminId = user.adminId!;
+      break;
+    default:
+      sendErrorResponse(res, 403, "Forbidden");
+      return;
+  }
 
-//     sendSuccessResponse(res, 200, "Customers fetched", { customers });
-//     return;
-//   } catch (err) {
-//     console.error("listCustomers error:", err);
-//     sendErrorResponse(res, 500, "Server error");
-//     return;
-//   }
-// };
+  let updateData: any = {};
+
+  try {
+    let purchase: Date | undefined;
+    let newRenewalDate: Date | undefined;
+    let newExpiryDate: Date | undefined;
+
+    if (purchaseDate) {
+      purchase = parseISO(purchaseDate);
+      if (isNaN(purchase.getTime())) {
+        sendErrorResponse(res, 400, "Invalid purchaseDate format");
+        return;
+      }
+      if (purchase > new Date()) {
+        sendErrorResponse(res, 400, "Purchase date cannot be in the future");
+        return;
+      }
+      updateData.purchaseDate = purchaseDate;
+    }
+
+    if (renewPeriod) {
+      updateData.renewPeriod = renewPeriod;
+
+      if (purchase) {
+        switch (renewPeriod) {
+          case "monthly":
+            newRenewalDate = addMonths(purchase, 1);
+            break;
+          case "quarterly":
+            newRenewalDate = addMonths(purchase, 3);
+            break;
+          case "half_yearly":
+            newRenewalDate = addMonths(purchase, 6);
+            break;
+          case "yearly":
+            newRenewalDate = addYears(purchase, 1);
+            break;
+          case "custom":
+          default:
+            break;
+        }
+      }
+    }
+
+    if (renewal !== undefined) updateData.renewal = renewal;
+
+    if (renewPeriod === "custom") {
+      if (renewalDate) updateData.renewalDate = new Date(renewalDate);
+      if (expiryDate) updateData.expiryDate = new Date(expiryDate);
+    } else {
+      if (newRenewalDate) {
+        updateData.renewalDate = newRenewalDate;
+        updateData.expiryDate = new Date(newRenewalDate);
+        updateData.expiryDate.setDate(updateData.expiryDate.getDate() - 1);
+      }
+    }
+
+    if (status !== undefined) updateData.status = status;
+
+    const updatedHistory = await prisma.$transaction(async (tx) => {
+      const product = await tx.customerProductHistory.update({
+        where: baseFilter,
+        data: updateData,
+      });
+
+      const customer = await tx.customer.findMany({
+        where: { id: customerId },
+        include: {
+          partner: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              companyName: true,
+              contactInfo: true,
+              email: true,
+              address: true,
+              status: true,
+            },
+          },
+          history: {
+            include: {
+              product: {
+                select: {
+                  id: true,
+                  productName: true,
+                  productPrice: true,
+                  status: true,
+                },
+              },
+              renewals: {
+                select: {
+                  id: true,
+                  purchaseDate: true,
+                  renewalDate: true,
+                  expiryDate: true,
+                },
+                orderBy: { purchaseDate: "desc" },
+              },
+            },
+          },
+        },
+      });
+
+      return { customer, product };
+    });
+
+    sendSuccessResponse(res, 200, "Product updated", {
+      customer: updatedHistory.customer,
+      product: updatedHistory.product,
+    });
+  } catch (err: any) {
+    console.log("\n\neditCustomerProduct error----->", err);
+    if (
+      err instanceof Prisma.PrismaClientKnownRequestError &&
+      err.code === "P2025"
+    ) {
+      sendErrorResponse(res, 404, "Product history not found or out of scope");
+      return;
+    }
+    console.error("editCustomerProduct error:", err);
+    if (!res.headersSent) next(err);
+    else sendErrorResponse(res, 500, "Server error");
+  }
+};
+

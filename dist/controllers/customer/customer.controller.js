@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteCustomer = exports.setCustomerStatus = exports.updateCustomer = exports.listCustomers = exports.createCustomer = void 0;
+exports.editCustomerProduct = exports.deleteCustomer = exports.setCustomerStatus = exports.updateCustomer = exports.listCustomers = exports.createCustomer = void 0;
 const database_config_1 = require("../../config/database.config");
 const date_fns_1 = require("date-fns");
 const responseHandler_1 = require("../../core/utils/responseHandler");
@@ -91,7 +91,7 @@ const createCustomer = async (req, res, next) => {
         });
         const sanitized = {
             ...result.customer,
-            product: result.history
+            product: result.history,
         };
         (0, responseHandler_1.sendSuccessResponse)(res, 201, "Customer created", {
             customer: sanitized,
@@ -330,6 +330,41 @@ const updateCustomer = async (req, res, next) => {
                         joiningDate: new Date(customerData.joiningDate),
                     }),
                 },
+                include: {
+                    partner: {
+                        select: {
+                            id: true,
+                            firstName: true,
+                            lastName: true,
+                            companyName: true,
+                            contactInfo: true,
+                            email: true,
+                            address: true,
+                            status: true,
+                        },
+                    },
+                    history: {
+                        include: {
+                            product: {
+                                select: {
+                                    id: true,
+                                    productName: true,
+                                    productPrice: true,
+                                    status: true,
+                                },
+                            },
+                            renewals: {
+                                select: {
+                                    id: true,
+                                    purchaseDate: true,
+                                    renewalDate: true,
+                                    expiryDate: true,
+                                },
+                                orderBy: { purchaseDate: "desc" },
+                            },
+                        },
+                    },
+                },
             });
             let createdHistory = [];
             if (Array.isArray(product) && product.length > 0) {
@@ -525,4 +560,159 @@ const deleteCustomer = async (req, res, next) => {
     }
 };
 exports.deleteCustomer = deleteCustomer;
+const editCustomerProduct = async (req, res, next) => {
+    const { customerId, ProductId } = req.params;
+    if (!customerId || !ProductId) {
+        (0, responseHandler_1.sendErrorResponse)(res, 404, "Invalid input");
+        return;
+    }
+    const { purchaseDate, renewPeriod, renewal, renewalDate, expiryDate, status, } = req.body;
+    console.log("--->", req.body);
+    const user = req.user;
+    if (!user) {
+        (0, responseHandler_1.sendErrorResponse)(res, 401, "Unauthorized");
+        return;
+    }
+    const baseFilter = {
+        id: ProductId,
+        customerId,
+    };
+    switch (user.role) {
+        case "admin":
+        case "super_admin":
+            baseFilter.adminId = user.id;
+            break;
+        case "partner":
+            baseFilter.adminId = user.adminId;
+            baseFilter.customer = { partnerId: user.id };
+            break;
+        case "team_member":
+        case "sub_admin":
+            baseFilter.adminId = user.adminId;
+            break;
+        default:
+            (0, responseHandler_1.sendErrorResponse)(res, 403, "Forbidden");
+            return;
+    }
+    let updateData = {};
+    try {
+        let purchase;
+        let newRenewalDate;
+        let newExpiryDate;
+        if (purchaseDate) {
+            purchase = (0, date_fns_1.parseISO)(purchaseDate);
+            if (isNaN(purchase.getTime())) {
+                (0, responseHandler_1.sendErrorResponse)(res, 400, "Invalid purchaseDate format");
+                return;
+            }
+            if (purchase > new Date()) {
+                (0, responseHandler_1.sendErrorResponse)(res, 400, "Purchase date cannot be in the future");
+                return;
+            }
+            updateData.purchaseDate = purchaseDate;
+        }
+        if (renewPeriod) {
+            updateData.renewPeriod = renewPeriod;
+            if (purchase) {
+                switch (renewPeriod) {
+                    case "monthly":
+                        newRenewalDate = (0, dateHelpers_1.addMonths)(purchase, 1);
+                        break;
+                    case "quarterly":
+                        newRenewalDate = (0, dateHelpers_1.addMonths)(purchase, 3);
+                        break;
+                    case "half_yearly":
+                        newRenewalDate = (0, dateHelpers_1.addMonths)(purchase, 6);
+                        break;
+                    case "yearly":
+                        newRenewalDate = (0, dateHelpers_1.addYears)(purchase, 1);
+                        break;
+                    case "custom":
+                    default:
+                        break;
+                }
+            }
+        }
+        if (renewal !== undefined)
+            updateData.renewal = renewal;
+        if (renewPeriod === "custom") {
+            if (renewalDate)
+                updateData.renewalDate = new Date(renewalDate);
+            if (expiryDate)
+                updateData.expiryDate = new Date(expiryDate);
+        }
+        else {
+            if (newRenewalDate) {
+                updateData.renewalDate = newRenewalDate;
+                updateData.expiryDate = new Date(newRenewalDate);
+                updateData.expiryDate.setDate(updateData.expiryDate.getDate() - 1);
+            }
+        }
+        if (status !== undefined)
+            updateData.status = status;
+        const updatedHistory = await database_config_1.prisma.$transaction(async (tx) => {
+            const product = await tx.customerProductHistory.update({
+                where: baseFilter,
+                data: updateData,
+            });
+            const customer = await tx.customer.findMany({
+                where: { id: customerId },
+                include: {
+                    partner: {
+                        select: {
+                            id: true,
+                            firstName: true,
+                            lastName: true,
+                            companyName: true,
+                            contactInfo: true,
+                            email: true,
+                            address: true,
+                            status: true,
+                        },
+                    },
+                    history: {
+                        include: {
+                            product: {
+                                select: {
+                                    id: true,
+                                    productName: true,
+                                    productPrice: true,
+                                    status: true,
+                                },
+                            },
+                            renewals: {
+                                select: {
+                                    id: true,
+                                    purchaseDate: true,
+                                    renewalDate: true,
+                                    expiryDate: true,
+                                },
+                                orderBy: { purchaseDate: "desc" },
+                            },
+                        },
+                    },
+                },
+            });
+            return { customer, product };
+        });
+        (0, responseHandler_1.sendSuccessResponse)(res, 200, "Product updated", {
+            customer: updatedHistory.customer,
+            product: updatedHistory.product,
+        });
+    }
+    catch (err) {
+        console.log("\n\neditCustomerProduct error----->", err);
+        if (err instanceof client_1.Prisma.PrismaClientKnownRequestError &&
+            err.code === "P2025") {
+            (0, responseHandler_1.sendErrorResponse)(res, 404, "Product history not found or out of scope");
+            return;
+        }
+        console.error("editCustomerProduct error:", err);
+        if (!res.headersSent)
+            next(err);
+        else
+            (0, responseHandler_1.sendErrorResponse)(res, 500, "Server error");
+    }
+};
+exports.editCustomerProduct = editCustomerProduct;
 //# sourceMappingURL=customer.controller.js.map

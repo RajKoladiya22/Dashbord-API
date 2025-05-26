@@ -10,4 +10,8 @@ node_modules
 /test
 .vercel
 .env*.local
-/prisma/migrations
+<<<<<<< HEAD
+prisma/migrations
+dist/tsconfig.tsbuildinfo
+
+dist/tsconfig.tsbuildinfo
