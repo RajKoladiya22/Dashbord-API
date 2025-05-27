@@ -704,13 +704,16 @@ export const editCustomerProduct = async (
     status,
   } = req.body;
 
-  console.log("--->",req.body)
+  // console.log("BODY--->",req.body)
 
   const user = req.user as { id: string; role: string; adminId?: string };
+
+
   if (!user) {
     sendErrorResponse(res, 401, "Unauthorized");
     return;
   }
+  // console.log("user--->",user)
 
   const baseFilter: any = {
     id: ProductId,
@@ -748,10 +751,10 @@ export const editCustomerProduct = async (
         sendErrorResponse(res, 400, "Invalid purchaseDate format");
         return;
       }
-      if (purchase > new Date()) {
-        sendErrorResponse(res, 400, "Purchase date cannot be in the future");
-        return;
-      }
+      // if (purchase > new Date()) {
+      //   sendErrorResponse(res, 400, "Purchase date cannot be in the future");
+      //   return;
+      // }
       updateData.purchaseDate = purchaseDate;
     }
 
@@ -842,9 +845,39 @@ export const editCustomerProduct = async (
       return { customer, product };
     });
 
+    const sanitized = updatedHistory.customer.map((cust) => ({
+      id: cust.id,
+      companyName: cust.companyName,
+      contactPerson: cust.contactPerson,
+      mobileNumber: cust.mobileNumber,
+      email: cust.email,
+      serialNo: cust.serialNo,
+      prime: cust.prime,
+      blacklisted: cust.blacklisted,
+      remark: cust.remark,
+      address: cust.address,
+      adminCustomFields: cust.adminCustomFields,
+      joiningDate: cust.joiningDate,
+      hasReference: cust.hasReference,
+      status: cust.status,
+      partner: cust.partner,
+      createdAt: cust.createdAt,
+      product: cust.history.map((h) => ({
+        productDetails: h.product,
+        id: h.id,
+        renewPeriod: h.renewPeriod,
+        purchaseDate: h.purchaseDate,
+        expiryDate: h.expiryDate,
+        renewalDate: h.renewalDate,
+        renewal: h.renewal,
+        status: h.status,
+        history: h.renewals ?? null,
+      })),
+    }));
+
     sendSuccessResponse(res, 200, "Product updated", {
-      customer: updatedHistory.customer,
-      product: updatedHistory.product,
+      customer: sanitized[0], // Assuming only one customer is returned
+      // product: updatedHistory.product,
     });
   } catch (err: any) {
     console.log("\n\neditCustomerProduct error----->", err);

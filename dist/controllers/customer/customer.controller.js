@@ -567,7 +567,6 @@ const editCustomerProduct = async (req, res, next) => {
         return;
     }
     const { purchaseDate, renewPeriod, renewal, renewalDate, expiryDate, status, } = req.body;
-    console.log("--->", req.body);
     const user = req.user;
     if (!user) {
         (0, responseHandler_1.sendErrorResponse)(res, 401, "Unauthorized");
@@ -603,10 +602,6 @@ const editCustomerProduct = async (req, res, next) => {
             purchase = (0, date_fns_1.parseISO)(purchaseDate);
             if (isNaN(purchase.getTime())) {
                 (0, responseHandler_1.sendErrorResponse)(res, 400, "Invalid purchaseDate format");
-                return;
-            }
-            if (purchase > new Date()) {
-                (0, responseHandler_1.sendErrorResponse)(res, 400, "Purchase date cannot be in the future");
                 return;
             }
             updateData.purchaseDate = purchaseDate;
@@ -695,9 +690,40 @@ const editCustomerProduct = async (req, res, next) => {
             });
             return { customer, product };
         });
+        const sanitized = updatedHistory.customer.map((cust) => ({
+            id: cust.id,
+            companyName: cust.companyName,
+            contactPerson: cust.contactPerson,
+            mobileNumber: cust.mobileNumber,
+            email: cust.email,
+            serialNo: cust.serialNo,
+            prime: cust.prime,
+            blacklisted: cust.blacklisted,
+            remark: cust.remark,
+            address: cust.address,
+            adminCustomFields: cust.adminCustomFields,
+            joiningDate: cust.joiningDate,
+            hasReference: cust.hasReference,
+            status: cust.status,
+            partner: cust.partner,
+            createdAt: cust.createdAt,
+            product: cust.history.map((h) => {
+                var _a;
+                return ({
+                    productDetails: h.product,
+                    id: h.id,
+                    renewPeriod: h.renewPeriod,
+                    purchaseDate: h.purchaseDate,
+                    expiryDate: h.expiryDate,
+                    renewalDate: h.renewalDate,
+                    renewal: h.renewal,
+                    status: h.status,
+                    history: (_a = h.renewals) !== null && _a !== void 0 ? _a : null,
+                });
+            }),
+        }));
         (0, responseHandler_1.sendSuccessResponse)(res, 200, "Product updated", {
-            customer: updatedHistory.customer,
-            product: updatedHistory.product,
+            customer: sanitized[0],
         });
     }
     catch (err) {
