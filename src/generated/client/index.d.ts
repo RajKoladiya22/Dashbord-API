@@ -2900,11 +2900,11 @@ export namespace Prisma {
    */
 
   export type CustomerCountOutputType = {
-    history: number
+    product: number
   }
 
   export type CustomerCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    history?: boolean | CustomerCountOutputTypeCountHistoryArgs
+    product?: boolean | CustomerCountOutputTypeCountProductArgs
   }
 
   // Custom InputTypes
@@ -2921,7 +2921,7 @@ export namespace Prisma {
   /**
    * CustomerCountOutputType without action
    */
-  export type CustomerCountOutputTypeCountHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CustomerCountOutputTypeCountProductArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CustomerProductHistoryWhereInput
   }
 
@@ -19445,7 +19445,7 @@ export namespace Prisma {
     updatedAt?: boolean
     admin?: boolean | AdminDefaultArgs<ExtArgs>
     partner?: boolean | Customer$partnerArgs<ExtArgs>
-    history?: boolean | Customer$historyArgs<ExtArgs>
+    product?: boolean | Customer$productArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["customer"]>
 
@@ -19520,7 +19520,7 @@ export namespace Prisma {
   export type CustomerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     admin?: boolean | AdminDefaultArgs<ExtArgs>
     partner?: boolean | Customer$partnerArgs<ExtArgs>
-    history?: boolean | Customer$historyArgs<ExtArgs>
+    product?: boolean | Customer$productArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CustomerIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -19537,7 +19537,7 @@ export namespace Prisma {
     objects: {
       admin: Prisma.$AdminPayload<ExtArgs>
       partner: Prisma.$PartnerPayload<ExtArgs> | null
-      history: Prisma.$CustomerProductHistoryPayload<ExtArgs>[]
+      product: Prisma.$CustomerProductHistoryPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -19954,7 +19954,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     admin<T extends AdminDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AdminDefaultArgs<ExtArgs>>): Prisma__AdminClient<$Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     partner<T extends Customer$partnerArgs<ExtArgs> = {}>(args?: Subset<T, Customer$partnerArgs<ExtArgs>>): Prisma__PartnerClient<$Result.GetResult<Prisma.$PartnerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    history<T extends Customer$historyArgs<ExtArgs> = {}>(args?: Subset<T, Customer$historyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerProductHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    product<T extends Customer$productArgs<ExtArgs> = {}>(args?: Subset<T, Customer$productArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerProductHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -20417,9 +20417,9 @@ export namespace Prisma {
   }
 
   /**
-   * Customer.history
+   * Customer.product
    */
-  export type Customer$historyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Customer$productArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the CustomerProductHistory
      */
@@ -26534,7 +26534,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Customer"> | Date | string
     admin?: XOR<AdminScalarRelationFilter, AdminWhereInput>
     partner?: XOR<PartnerNullableScalarRelationFilter, PartnerWhereInput> | null
-    history?: CustomerProductHistoryListRelationFilter
+    product?: CustomerProductHistoryListRelationFilter
   }
 
   export type CustomerOrderByWithRelationInput = {
@@ -26558,7 +26558,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     admin?: AdminOrderByWithRelationInput
     partner?: PartnerOrderByWithRelationInput
-    history?: CustomerProductHistoryOrderByRelationAggregateInput
+    product?: CustomerProductHistoryOrderByRelationAggregateInput
   }
 
   export type CustomerWhereUniqueInput = Prisma.AtLeast<{
@@ -26585,7 +26585,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Customer"> | Date | string
     admin?: XOR<AdminScalarRelationFilter, AdminWhereInput>
     partner?: XOR<PartnerNullableScalarRelationFilter, PartnerWhereInput> | null
-    history?: CustomerProductHistoryListRelationFilter
+    product?: CustomerProductHistoryListRelationFilter
   }, "id" | "mobileNumber" | "email">
 
   export type CustomerOrderByWithAggregationInput = {
@@ -28236,7 +28236,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     admin: AdminCreateNestedOneWithoutCustomersInput
     partner?: PartnerCreateNestedOneWithoutCustomersInput
-    history?: CustomerProductHistoryCreateNestedManyWithoutCustomerInput
+    product?: CustomerProductHistoryCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateInput = {
@@ -28258,7 +28258,7 @@ export namespace Prisma {
     status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    history?: CustomerProductHistoryUncheckedCreateNestedManyWithoutCustomerInput
+    product?: CustomerProductHistoryUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUpdateInput = {
@@ -28280,7 +28280,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     admin?: AdminUpdateOneRequiredWithoutCustomersNestedInput
     partner?: PartnerUpdateOneWithoutCustomersNestedInput
-    history?: CustomerProductHistoryUpdateManyWithoutCustomerNestedInput
+    product?: CustomerProductHistoryUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateInput = {
@@ -28302,7 +28302,7 @@ export namespace Prisma {
     status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    history?: CustomerProductHistoryUncheckedUpdateManyWithoutCustomerNestedInput
+    product?: CustomerProductHistoryUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerCreateManyInput = {
@@ -28376,7 +28376,7 @@ export namespace Prisma {
     status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    customer: CustomerCreateNestedOneWithoutHistoryInput
+    customer: CustomerCreateNestedOneWithoutProductInput
     admin: AdminCreateNestedOneWithoutProductHistoriesInput
     product: ProductCreateNestedOneWithoutCustomerProductHistoryInput
     renewals?: ProductRenewalHistoryCreateNestedManyWithoutCustomerProductHistoryInput
@@ -28408,7 +28408,7 @@ export namespace Prisma {
     status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    customer?: CustomerUpdateOneRequiredWithoutHistoryNestedInput
+    customer?: CustomerUpdateOneRequiredWithoutProductNestedInput
     admin?: AdminUpdateOneRequiredWithoutProductHistoriesNestedInput
     product?: ProductUpdateOneRequiredWithoutCustomerProductHistoryNestedInput
     renewals?: ProductRenewalHistoryUpdateManyWithoutCustomerProductHistoryNestedInput
@@ -31155,9 +31155,9 @@ export namespace Prisma {
     deleteMany?: CustomerProductHistoryScalarWhereInput | CustomerProductHistoryScalarWhereInput[]
   }
 
-  export type CustomerCreateNestedOneWithoutHistoryInput = {
-    create?: XOR<CustomerCreateWithoutHistoryInput, CustomerUncheckedCreateWithoutHistoryInput>
-    connectOrCreate?: CustomerCreateOrConnectWithoutHistoryInput
+  export type CustomerCreateNestedOneWithoutProductInput = {
+    create?: XOR<CustomerCreateWithoutProductInput, CustomerUncheckedCreateWithoutProductInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutProductInput
     connect?: CustomerWhereUniqueInput
   }
 
@@ -31191,12 +31191,12 @@ export namespace Prisma {
     set?: $Enums.renewPeriod
   }
 
-  export type CustomerUpdateOneRequiredWithoutHistoryNestedInput = {
-    create?: XOR<CustomerCreateWithoutHistoryInput, CustomerUncheckedCreateWithoutHistoryInput>
-    connectOrCreate?: CustomerCreateOrConnectWithoutHistoryInput
-    upsert?: CustomerUpsertWithoutHistoryInput
+  export type CustomerUpdateOneRequiredWithoutProductNestedInput = {
+    create?: XOR<CustomerCreateWithoutProductInput, CustomerUncheckedCreateWithoutProductInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutProductInput
+    upsert?: CustomerUpsertWithoutProductInput
     connect?: CustomerWhereUniqueInput
-    update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutHistoryInput, CustomerUpdateWithoutHistoryInput>, CustomerUncheckedUpdateWithoutHistoryInput>
+    update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutProductInput, CustomerUpdateWithoutProductInput>, CustomerUncheckedUpdateWithoutProductInput>
   }
 
   export type AdminUpdateOneRequiredWithoutProductHistoriesNestedInput = {
@@ -31815,7 +31815,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     partner?: PartnerCreateNestedOneWithoutCustomersInput
-    history?: CustomerProductHistoryCreateNestedManyWithoutCustomerInput
+    product?: CustomerProductHistoryCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutAdminInput = {
@@ -31836,7 +31836,7 @@ export namespace Prisma {
     status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    history?: CustomerProductHistoryUncheckedCreateNestedManyWithoutCustomerInput
+    product?: CustomerProductHistoryUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutAdminInput = {
@@ -32009,7 +32009,7 @@ export namespace Prisma {
     status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    customer: CustomerCreateNestedOneWithoutHistoryInput
+    customer: CustomerCreateNestedOneWithoutProductInput
     product: ProductCreateNestedOneWithoutCustomerProductHistoryInput
     renewals?: ProductRenewalHistoryCreateNestedManyWithoutCustomerProductHistoryInput
   }
@@ -32469,7 +32469,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     admin: AdminCreateNestedOneWithoutCustomersInput
-    history?: CustomerProductHistoryCreateNestedManyWithoutCustomerInput
+    product?: CustomerProductHistoryCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutPartnerInput = {
@@ -32490,7 +32490,7 @@ export namespace Prisma {
     status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    history?: CustomerProductHistoryUncheckedCreateNestedManyWithoutCustomerInput
+    product?: CustomerProductHistoryUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutPartnerInput = {
@@ -33724,7 +33724,7 @@ export namespace Prisma {
     status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    customer: CustomerCreateNestedOneWithoutHistoryInput
+    customer: CustomerCreateNestedOneWithoutProductInput
     admin: AdminCreateNestedOneWithoutProductHistoriesInput
     renewals?: ProductRenewalHistoryCreateNestedManyWithoutCustomerProductHistoryInput
   }
@@ -33895,7 +33895,7 @@ export namespace Prisma {
     status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    customer: CustomerCreateNestedOneWithoutHistoryInput
+    customer: CustomerCreateNestedOneWithoutProductInput
     admin: AdminCreateNestedOneWithoutProductHistoriesInput
     product: ProductCreateNestedOneWithoutCustomerProductHistoryInput
   }
@@ -33978,7 +33978,7 @@ export namespace Prisma {
     status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    customer?: CustomerUpdateOneRequiredWithoutHistoryNestedInput
+    customer?: CustomerUpdateOneRequiredWithoutProductNestedInput
     admin?: AdminUpdateOneRequiredWithoutProductHistoriesNestedInput
     product?: ProductUpdateOneRequiredWithoutCustomerProductHistoryNestedInput
   }
@@ -34281,7 +34281,7 @@ export namespace Prisma {
     data: XOR<CustomerProductHistoryUpdateManyMutationInput, CustomerProductHistoryUncheckedUpdateManyWithoutCustomerInput>
   }
 
-  export type CustomerCreateWithoutHistoryInput = {
+  export type CustomerCreateWithoutProductInput = {
     id?: string
     companyName: string
     contactPerson: string
@@ -34302,7 +34302,7 @@ export namespace Prisma {
     partner?: PartnerCreateNestedOneWithoutCustomersInput
   }
 
-  export type CustomerUncheckedCreateWithoutHistoryInput = {
+  export type CustomerUncheckedCreateWithoutProductInput = {
     id?: string
     adminId: string
     companyName: string
@@ -34323,9 +34323,9 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type CustomerCreateOrConnectWithoutHistoryInput = {
+  export type CustomerCreateOrConnectWithoutProductInput = {
     where: CustomerWhereUniqueInput
-    create: XOR<CustomerCreateWithoutHistoryInput, CustomerUncheckedCreateWithoutHistoryInput>
+    create: XOR<CustomerCreateWithoutProductInput, CustomerUncheckedCreateWithoutProductInput>
   }
 
   export type AdminCreateWithoutProductHistoriesInput = {
@@ -34444,18 +34444,18 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type CustomerUpsertWithoutHistoryInput = {
-    update: XOR<CustomerUpdateWithoutHistoryInput, CustomerUncheckedUpdateWithoutHistoryInput>
-    create: XOR<CustomerCreateWithoutHistoryInput, CustomerUncheckedCreateWithoutHistoryInput>
+  export type CustomerUpsertWithoutProductInput = {
+    update: XOR<CustomerUpdateWithoutProductInput, CustomerUncheckedUpdateWithoutProductInput>
+    create: XOR<CustomerCreateWithoutProductInput, CustomerUncheckedCreateWithoutProductInput>
     where?: CustomerWhereInput
   }
 
-  export type CustomerUpdateToOneWithWhereWithoutHistoryInput = {
+  export type CustomerUpdateToOneWithWhereWithoutProductInput = {
     where?: CustomerWhereInput
-    data: XOR<CustomerUpdateWithoutHistoryInput, CustomerUncheckedUpdateWithoutHistoryInput>
+    data: XOR<CustomerUpdateWithoutProductInput, CustomerUncheckedUpdateWithoutProductInput>
   }
 
-  export type CustomerUpdateWithoutHistoryInput = {
+  export type CustomerUpdateWithoutProductInput = {
     id?: StringFieldUpdateOperationsInput | string
     companyName?: StringFieldUpdateOperationsInput | string
     contactPerson?: StringFieldUpdateOperationsInput | string
@@ -34476,7 +34476,7 @@ export namespace Prisma {
     partner?: PartnerUpdateOneWithoutCustomersNestedInput
   }
 
-  export type CustomerUncheckedUpdateWithoutHistoryInput = {
+  export type CustomerUncheckedUpdateWithoutProductInput = {
     id?: StringFieldUpdateOperationsInput | string
     adminId?: StringFieldUpdateOperationsInput | string
     companyName?: StringFieldUpdateOperationsInput | string
@@ -35061,7 +35061,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partner?: PartnerUpdateOneWithoutCustomersNestedInput
-    history?: CustomerProductHistoryUpdateManyWithoutCustomerNestedInput
+    product?: CustomerProductHistoryUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutAdminInput = {
@@ -35082,7 +35082,7 @@ export namespace Prisma {
     status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    history?: CustomerProductHistoryUncheckedUpdateManyWithoutCustomerNestedInput
+    product?: CustomerProductHistoryUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateManyWithoutAdminInput = {
@@ -35275,7 +35275,7 @@ export namespace Prisma {
     status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    customer?: CustomerUpdateOneRequiredWithoutHistoryNestedInput
+    customer?: CustomerUpdateOneRequiredWithoutProductNestedInput
     product?: ProductUpdateOneRequiredWithoutCustomerProductHistoryNestedInput
     renewals?: ProductRenewalHistoryUpdateManyWithoutCustomerProductHistoryNestedInput
   }
@@ -35347,7 +35347,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     admin?: AdminUpdateOneRequiredWithoutCustomersNestedInput
-    history?: CustomerProductHistoryUpdateManyWithoutCustomerNestedInput
+    product?: CustomerProductHistoryUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutPartnerInput = {
@@ -35368,7 +35368,7 @@ export namespace Prisma {
     status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    history?: CustomerProductHistoryUncheckedUpdateManyWithoutCustomerNestedInput
+    product?: CustomerProductHistoryUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateManyWithoutPartnerInput = {
@@ -35697,7 +35697,7 @@ export namespace Prisma {
     status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    customer?: CustomerUpdateOneRequiredWithoutHistoryNestedInput
+    customer?: CustomerUpdateOneRequiredWithoutProductNestedInput
     admin?: AdminUpdateOneRequiredWithoutProductHistoriesNestedInput
     renewals?: ProductRenewalHistoryUpdateManyWithoutCustomerProductHistoryNestedInput
   }

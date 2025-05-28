@@ -213,6 +213,7 @@ const signIn = async (req, res, next) => {
                 });
                 break;
             case "team_member":
+            case "sub_admin":
                 profile = await database_config_1.prisma.teamMember.findUnique({
                     where: { id: cred.userProfileId },
                     select: { id: true, firstName: true, lastName: true, role: true },

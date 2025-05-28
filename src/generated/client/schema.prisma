@@ -359,7 +359,7 @@ model Customer {
 
   admin   Admin                    @relation(fields: [adminId], references: [id], onDelete: Cascade)
   partner Partner?                 @relation("PartnerCustomers", fields: [partnerId], references: [id])
-  history CustomerProductHistory[]
+  product CustomerProductHistory[]
 
   @@index([adminId])
   @@index([partnerId])
