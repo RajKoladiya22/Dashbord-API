@@ -74,7 +74,7 @@ export const authenticateUser = (
 };
 
 // 🔐 Middleware: Role-based Authorization
-export const authorizeRoles =
+export const  authorizeRoles =
   (...allowedRoles: string[]) =>
   (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
     const role = req.user?.role;
@@ -82,6 +82,7 @@ export const authorizeRoles =
 
     if (!role || !allowedRoles.includes(role)) {
       sendErrorResponse(res, 403, "Forbidden:You Don't have Permission");
+      return;
     }
 
     next();

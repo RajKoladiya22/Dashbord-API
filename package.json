@@ -42,8 +42,12 @@
     "express-rate-limit": "^7.5.0",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
+
+    "nodemailer": "^7.0.3",
+=======
     "lodash-es": "^4.17.21",
     "multer": "^1.4.5-lts.2",
+
     "vercel": "^41.7.0",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0",
@@ -55,11 +59,14 @@
     "@types/express": "^5.0.1",
     "@types/jest": "^29.5.14",
     "@types/jsonwebtoken": "^9.0.9",
+    "@types/multer": "^1.4.12",
     "@types/node": "^22.15.3",
+    "@types/nodemailer": "^6.4.17",
     "concurrently": "^9.1.2",
     "cross-env": "^7.0.3",
     "dotenv-cli": "^8.0.0",
     "jest": "^29.7.0",
+    "multer": "^2.0.0",
     "nodemon": "^3.1.10",
     "prisma": "^6.7.0",
     "ts-jest": "^29.3.2",

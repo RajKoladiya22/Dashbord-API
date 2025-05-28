@@ -63,6 +63,7 @@ const authorizeRoles = (...allowedRoles) => (req, res, next) => {
     const role = (_a = req.user) === null || _a === void 0 ? void 0 : _a.role;
     if (!role || !allowedRoles.includes(role)) {
         (0, httpResponse_1.sendErrorResponse)(res, 403, "Forbidden:You Don't have Permission");
+        return;
     }
     next();
 };

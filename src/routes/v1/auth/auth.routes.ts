@@ -17,6 +17,7 @@ import {
 } from "../../../controllers/auth/profile.controller";
 import { forgotPassword } from "../../../controllers/auth/forgotPassword.controller";
 import { resetPassword } from "../../../controllers/auth/resetPassword.controller";
+import { listAllAdmins,subAdminDetails } from "../../../controllers/auth/superAdmin.controller";
 
 const router = Router();
 
@@ -59,6 +60,20 @@ router.post(
   authenticateUser,
   authorizeRoles("admin"),
   createTeamMember
+);
+
+router.get(
+  "/details",
+  authenticateUser,
+  authorizeRoles("super_admin"),
+  listAllAdmins
+);
+
+router.get(
+  "/admins/:id/:query",
+  authenticateUser,
+  authorizeRoles("super_admin"),
+  subAdminDetails
 );
 
 export default router;

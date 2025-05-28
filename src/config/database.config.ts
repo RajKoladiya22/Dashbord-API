@@ -5,6 +5,8 @@ import { config } from "dotenv";
 config();
 
 export const env = process.env;
+APP_BASE_URL:env.APP_BASE_URL || "http://localhost:3000/api/v1"
+
 
 
 // Ensure DATABASE_URL is defined
@@ -53,3 +55,5 @@ export async function shutdownDb() {
 process.on("unhandledRejection", () =>
   shutdownDb().then(() => process.exit(1))
 );
+
+

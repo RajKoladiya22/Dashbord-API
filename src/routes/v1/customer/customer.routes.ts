@@ -1,3 +1,4 @@
+
 //routes/v1/teamMemberRoutes/teamMember.routes.ts
 import { Router } from "express";
 import {
@@ -23,7 +24,8 @@ import {
   listRenewalReminders,
   updateCustomerProduct,
 } from "../../../controllers/customer/reminder.controller";
-import { bulkCreateCustomers } from "src/controllers/customer/customer.bulk.controller";
+// import { bulkCreateCustomers } from "./controllers/customer/customer.bulk.controller";
+import { bulkCreateCustomers } from "../../../controllers/customer/customer.bulk.controller";
 import { upload } from "../../../core/middleware/multer/fileUpload";
 
 const router = Router();
@@ -119,13 +121,13 @@ router.get(
 );
 //  ── BULK UPLOAD ───────────────────────────────────────────────────────────────
 
-// router.post(
-//   "/bulk",
-//   authenticateUser,
-//   authorizeRoles("admin", "partner", "team_member"),
-//   upload.single("file"), 
-//   bulkCreateCustomers
-// );
+router.post(
+  "/bulk",
+  upload.single("file"), 
+  // authenticateUser,
+  // authorizeRoles("admin", "partner", "team_member"),
+  bulkCreateCustomers
+);
 
 
 export default router;

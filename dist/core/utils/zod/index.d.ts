@@ -94,10 +94,17 @@ export declare const createTeamMemberSchema: z.ZodObject<{
         zip?: string | undefined;
     }>>;
 }, "strip", z.ZodTypeAny, {
+
+    firstName: string;
+    lastName: string;
+    email: string;
+    status: string;
+=======
     status: string;
     firstName: string;
     lastName: string;
     email: string;
+
     role: "team_member" | "sub_admin";
     adminId: string;
     password: string;
@@ -122,7 +129,10 @@ export declare const createTeamMemberSchema: z.ZodObject<{
     adminId: string;
     password: string;
     full_name: string;
+
+=======
     status?: string | undefined;
+
     contactInfo?: {
         email?: string | undefined;
         phone?: string | undefined;
@@ -133,6 +143,7 @@ export declare const createTeamMemberSchema: z.ZodObject<{
         state?: string | undefined;
         zip?: string | undefined;
     } | undefined;
+    status?: string | undefined;
     department?: string | undefined;
     position?: string | undefined;
 }>;
@@ -273,7 +284,11 @@ export declare const updateCustomerSchema: z.ZodObject<{
         productId: string;
         purchaseDate: string;
         renewal?: boolean | undefined;
+
+        renewPeriod?: "monthly" | "quarterly" | "yearly" | "half_yearly" | "custom" | undefined;
+=======
         renewPeriod?: "custom" | "monthly" | "quarterly" | "yearly" | "half_yearly" | undefined;
+
         expiryDate?: string | undefined;
         renewalDate?: string | undefined;
         details?: string | undefined;
@@ -281,7 +296,11 @@ export declare const updateCustomerSchema: z.ZodObject<{
         productId: string;
         purchaseDate: string;
         renewal?: boolean | undefined;
+
+        renewPeriod?: "monthly" | "quarterly" | "yearly" | "half_yearly" | "custom" | undefined;
+=======
         renewPeriod?: "custom" | "monthly" | "quarterly" | "yearly" | "half_yearly" | undefined;
+
         expiryDate?: string | undefined;
         renewalDate?: string | undefined;
         details?: string | undefined;
@@ -294,7 +313,11 @@ export declare const updateCustomerSchema: z.ZodObject<{
         productId: string;
         purchaseDate: string;
         renewal?: boolean | undefined;
+
+        renewPeriod?: "monthly" | "quarterly" | "yearly" | "half_yearly" | "custom" | undefined;
+=======
         renewPeriod?: "custom" | "monthly" | "quarterly" | "yearly" | "half_yearly" | undefined;
+
         expiryDate?: string | undefined;
         renewalDate?: string | undefined;
         details?: string | undefined;
@@ -317,7 +340,11 @@ export declare const updateCustomerSchema: z.ZodObject<{
         productId: string;
         purchaseDate: string;
         renewal?: boolean | undefined;
+
+        renewPeriod?: "monthly" | "quarterly" | "yearly" | "half_yearly" | "custom" | undefined;
+=======
         renewPeriod?: "custom" | "monthly" | "quarterly" | "yearly" | "half_yearly" | undefined;
+
         expiryDate?: string | undefined;
         renewalDate?: string | undefined;
         details?: string | undefined;
@@ -361,16 +388,16 @@ export declare const updateCustomFieldSchema: z.ZodObject<{
     options: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
     isMultiSelect: z.ZodOptional<z.ZodBoolean>;
 }, "strip", z.ZodTypeAny, {
-    options?: string[] | undefined;
     fieldName?: string | undefined;
     fieldType?: string | undefined;
     isRequired?: boolean | undefined;
+    options?: string[] | undefined;
     isMultiSelect?: boolean | undefined;
 }, {
-    options?: string[] | undefined;
     fieldName?: string | undefined;
     fieldType?: string | undefined;
     isRequired?: boolean | undefined;
+    options?: string[] | undefined;
     isMultiSelect?: boolean | undefined;
 }>;
 export declare const createCustomFieldSchema: z.ZodObject<{
@@ -382,14 +409,14 @@ export declare const createCustomFieldSchema: z.ZodObject<{
 }, "strip", z.ZodTypeAny, {
     fieldName: string;
     fieldType: string;
-    options?: string[] | undefined;
     isRequired?: boolean | undefined;
+    options?: string[] | undefined;
     isMultiSelect?: boolean | undefined;
 }, {
     fieldName: string;
     fieldType: string;
-    options?: string[] | undefined;
     isRequired?: boolean | undefined;
+    options?: string[] | undefined;
     isMultiSelect?: boolean | undefined;
 }>;
 export declare const listPlansQuery: z.ZodObject<{
@@ -425,14 +452,22 @@ export declare const createPlanSchema: z.ZodObject<{
         endsAt: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
         offerType: "fixed" | "free_trial" | "percentage";
+
+        startsAt?: string | undefined;
+        endsAt?: string | undefined;
+=======
         value?: number | undefined;
         startsAt?: string | undefined;
         endsAt?: string | undefined;
     }, {
         offerType: "fixed" | "free_trial" | "percentage";
+
         value?: number | undefined;
+    }, {
+        offerType: "fixed" | "free_trial" | "percentage";
         startsAt?: string | undefined;
         endsAt?: string | undefined;
+        value?: number | undefined;
     }>, "many">>;
     specs: z.ZodOptional<z.ZodArray<z.ZodObject<{
         specName: z.ZodString;
@@ -457,9 +492,13 @@ export declare const createPlanSchema: z.ZodObject<{
     price: number;
     offers?: {
         offerType: "fixed" | "free_trial" | "percentage";
+
+=======
         value?: number | undefined;
+
         startsAt?: string | undefined;
         endsAt?: string | undefined;
+        value?: number | undefined;
     }[] | undefined;
     specs?: {
         specName: string;
@@ -474,9 +513,13 @@ export declare const createPlanSchema: z.ZodObject<{
     price: number;
     offers?: {
         offerType: "fixed" | "free_trial" | "percentage";
+
+=======
         value?: number | undefined;
+
         startsAt?: string | undefined;
         endsAt?: string | undefined;
+        value?: number | undefined;
     }[] | undefined;
     specs?: {
         specName: string;

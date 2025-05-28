@@ -19,12 +19,6 @@ const bulkCreateCustomers = async (req, res, next) => {
     }
     const rows = [];
     const ext = (_a = req.file.originalname.split(".").pop()) === null || _a === void 0 ? void 0 : _a.toLowerCase();
-    const user = req.user;
-    if (!user) {
-        (0, responseHandler_1.sendErrorResponse)(res, 401, "Unauthorized");
-        return;
-    }
-    const adminId = user.role === "admin" ? user.id : user.adminId;
     try {
         if (ext === "csv") {
             const stream = stream_1.Readable.from(req.file.buffer);
@@ -36,32 +30,34 @@ const bulkCreateCustomers = async (req, res, next) => {
                     .on("error", (err) => reject(err));
             });
         }
-        else {
+        else if (ext === "xlsx" || ext === "xls") {
             const workbook = new exceljs_1.default.Workbook();
-            if (ext === "xls") {
-                await workbook.xlsx.load(req.file.buffer);
-            }
-            else {
-                await workbook.xlsx.load(req.file.buffer);
-            }
+            await workbook.xlsx.load(req.file.buffer);
             workbook.eachSheet((sheet) => {
                 sheet.eachRow((row, rowNumber) => {
+                    var _a, _b, _c, _d, _e, _f;
                     if (rowNumber === 1)
                         return;
-                    if (!Array.isArray(row.values)) {
-                        return;
-                    }
-                    const cells = row.values;
-                    const [companyName, contactPerson, mobileNumber, email, serialNo] = cells.slice(1).map((v) => String(v !== null && v !== void 0 ? v : "").trim());
+                    const companyName = ((_a = row.getCell(1).text) === null || _a === void 0 ? void 0 : _a.trim()) || "";
+                    const contactPerson = ((_b = row.getCell(2).text) === null || _b === void 0 ? void 0 : _b.trim()) || "";
+                    const mobileNumber = ((_c = row.getCell(3).text) === null || _c === void 0 ? void 0 : _c.trim()) || "";
+                    const email = ((_d = row.getCell(4).text) === null || _d === void 0 ? void 0 : _d.trim()) || "";
+                    const serialNo = ((_e = row.getCell(5).text) === null || _e === void 0 ? void 0 : _e.trim()) || "";
+                    const joiningDate = ((_f = row.getCell(6).text) === null || _f === void 0 ? void 0 : _f.trim()) || undefined;
                     rows.push({
                         companyName,
                         contactPerson,
                         mobileNumber,
                         email,
                         serialNo,
+                        joiningDate,
                     });
                 });
             });
+        }
+        else {
+            (0, responseHandler_1.sendErrorResponse)(res, 400, "Unsupported file type");
+            return;
         }
         if (!rows.length) {
             (0, responseHandler_1.sendErrorResponse)(res, 400, "File contains no data");
@@ -77,20 +73,32 @@ const bulkCreateCustomers = async (req, res, next) => {
                 return;
             }
         }
-        const data = rows.map((r) => ({
-            adminId: adminId,
-            companyName: r.companyName,
-            contactPerson: r.contactPerson,
-            mobileNumber: r.mobileNumber,
-            email: r.email,
-            serialNo: r.serialNo,
-            address: {},
-            joiningDate: r.joiningDate ? (0, date_fns_1.parseISO)(r.joiningDate) : new Date(),
-        }));
+        const data = rows.map((r, i) => {
+            let parsedDate = new Date();
+            if (r.joiningDate) {
+                try {
+                    parsedDate = (0, date_fns_1.parseISO)(r.joiningDate);
+                    if (isNaN(parsedDate.getTime())) {
+                        throw new Error(`Invalid date at row ${i + 2}`);
+                    }
+                }
+                catch {
+                    throw new Error(`Invalid joining date at row ${i + 2}`);
+                }
+            }
+            return {
+                companyName: r.companyName,
+                contactPerson: r.contactPerson,
+                mobileNumber: r.mobileNumber,
+                email: r.email,
+                serialNo: r.serialNo,
+                joiningDate: parsedDate,
+            };
+        });
         const result = await database_config_1.prisma.$transaction([
             database_config_1.prisma.customer.createMany({
                 data,
-                skipDuplicates: false,
+                skipDuplicates: true,
             }),
         ]);
         (0, responseHandler_1.sendSuccessResponse)(res, 201, "Bulk customers created", {
@@ -98,8 +106,8 @@ const bulkCreateCustomers = async (req, res, next) => {
         });
     }
     catch (err) {
-        console.error("bulkCreateCustomers error:", err);
-        (0, responseHandler_1.sendErrorResponse)(res, 500, "Failed to process file");
+        console.error("bulkCreateCustomers error:", err.message || err);
+        (0, responseHandler_1.sendErrorResponse)(res, 500, err.message || "Failed to process file");
     }
     finally {
         if (req.file && typeof req.file.path === "string") {
