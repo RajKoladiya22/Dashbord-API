@@ -2,12 +2,15 @@
 import { config } from 'dotenv';
 
 import { envSchema } from './env.validation';
+import { log } from 'console';
 
 // 1) Load the correct .env file based on NODE_ENV (fallback to .env.local)
 config({ path: `.env.${process.env.NODE_ENV || 'local'}` });
 
 // 2) Validate and parse
 const parsed = envSchema.safeParse(process.env);
+
+// log('Parsed environment variables:', parsed);
 
 if (!parsed.success) {
   console.error('❌ Invalid environment variables:');
