@@ -10,7 +10,7 @@
     "lint": "eslint \"src/**/*.ts\" --fix",
     "prisma:generate": "prisma generate",
     "migration:generate": "npx prisma migrate dev --name init_20_05",
-    "migration:deploy": "npx prisma migrate deploy",
+    "migration:deploy": "npx prisma migrate deploy", 
     "migration:reset": "prisma migrate reset --force",
     "seed": "ts-node prisma/seed.ts",
     "start": "node dist/server.js",
@@ -42,12 +42,9 @@
     "express-rate-limit": "^7.5.0",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
-
     "nodemailer": "^7.0.3",
-=======
     "lodash-es": "^4.17.21",
     "multer": "^1.4.5-lts.2",
-
     "vercel": "^41.7.0",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0",

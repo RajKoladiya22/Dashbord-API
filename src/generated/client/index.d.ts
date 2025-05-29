@@ -2900,11 +2900,11 @@ export namespace Prisma {
    */
 
   export type CustomerCountOutputType = {
-    product: number
+    history: number
   }
 
   export type CustomerCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    product?: boolean | CustomerCountOutputTypeCountProductArgs
+    history?: boolean | CustomerCountOutputTypeCountHistoryArgs
   }
 
   // Custom InputTypes
@@ -2921,7 +2921,7 @@ export namespace Prisma {
   /**
    * CustomerCountOutputType without action
    */
-  export type CustomerCountOutputTypeCountProductArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CustomerCountOutputTypeCountHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CustomerProductHistoryWhereInput
   }
 
@@ -19388,7 +19388,7 @@ export namespace Prisma {
 
   export type CustomerGroupByOutputType = {
     id: string
-    adminId: string
+    adminId: string | null
     companyName: string
     contactPerson: string
     mobileNumber: string
@@ -19398,7 +19398,7 @@ export namespace Prisma {
     blacklisted: boolean
     remark: string | null
     adminCustomFields: JsonValue | null
-    address: JsonValue
+    address: JsonValue | null
     joiningDate: Date
     hasReference: boolean
     partnerId: string | null
@@ -19443,9 +19443,9 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    admin?: boolean | AdminDefaultArgs<ExtArgs>
+    admin?: boolean | Customer$adminArgs<ExtArgs>
     partner?: boolean | Customer$partnerArgs<ExtArgs>
-    product?: boolean | Customer$productArgs<ExtArgs>
+    history?: boolean | Customer$historyArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["customer"]>
 
@@ -19468,7 +19468,7 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    admin?: boolean | AdminDefaultArgs<ExtArgs>
+    admin?: boolean | Customer$adminArgs<ExtArgs>
     partner?: boolean | Customer$partnerArgs<ExtArgs>
   }, ExtArgs["result"]["customer"]>
 
@@ -19491,7 +19491,7 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    admin?: boolean | AdminDefaultArgs<ExtArgs>
+    admin?: boolean | Customer$adminArgs<ExtArgs>
     partner?: boolean | Customer$partnerArgs<ExtArgs>
   }, ExtArgs["result"]["customer"]>
 
@@ -19518,30 +19518,30 @@ export namespace Prisma {
 
   export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "adminId" | "companyName" | "contactPerson" | "mobileNumber" | "email" | "serialNo" | "prime" | "blacklisted" | "remark" | "adminCustomFields" | "address" | "joiningDate" | "hasReference" | "partnerId" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
   export type CustomerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    admin?: boolean | AdminDefaultArgs<ExtArgs>
+    admin?: boolean | Customer$adminArgs<ExtArgs>
     partner?: boolean | Customer$partnerArgs<ExtArgs>
-    product?: boolean | Customer$productArgs<ExtArgs>
+    history?: boolean | Customer$historyArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CustomerIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    admin?: boolean | AdminDefaultArgs<ExtArgs>
+    admin?: boolean | Customer$adminArgs<ExtArgs>
     partner?: boolean | Customer$partnerArgs<ExtArgs>
   }
   export type CustomerIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    admin?: boolean | AdminDefaultArgs<ExtArgs>
+    admin?: boolean | Customer$adminArgs<ExtArgs>
     partner?: boolean | Customer$partnerArgs<ExtArgs>
   }
 
   export type $CustomerPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Customer"
     objects: {
-      admin: Prisma.$AdminPayload<ExtArgs>
+      admin: Prisma.$AdminPayload<ExtArgs> | null
       partner: Prisma.$PartnerPayload<ExtArgs> | null
-      product: Prisma.$CustomerProductHistoryPayload<ExtArgs>[]
+      history: Prisma.$CustomerProductHistoryPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      adminId: string
+      adminId: string | null
       companyName: string
       contactPerson: string
       mobileNumber: string
@@ -19551,7 +19551,7 @@ export namespace Prisma {
       blacklisted: boolean
       remark: string | null
       adminCustomFields: Prisma.JsonValue | null
-      address: Prisma.JsonValue
+      address: Prisma.JsonValue | null
       joiningDate: Date
       hasReference: boolean
       partnerId: string | null
@@ -19952,9 +19952,9 @@ export namespace Prisma {
    */
   export interface Prisma__CustomerClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    admin<T extends AdminDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AdminDefaultArgs<ExtArgs>>): Prisma__AdminClient<$Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    admin<T extends Customer$adminArgs<ExtArgs> = {}>(args?: Subset<T, Customer$adminArgs<ExtArgs>>): Prisma__AdminClient<$Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     partner<T extends Customer$partnerArgs<ExtArgs> = {}>(args?: Subset<T, Customer$partnerArgs<ExtArgs>>): Prisma__PartnerClient<$Result.GetResult<Prisma.$PartnerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    product<T extends Customer$productArgs<ExtArgs> = {}>(args?: Subset<T, Customer$productArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerProductHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    history<T extends Customer$historyArgs<ExtArgs> = {}>(args?: Subset<T, Customer$historyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerProductHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -20398,6 +20398,25 @@ export namespace Prisma {
   }
 
   /**
+   * Customer.admin
+   */
+  export type Customer$adminArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Admin
+     */
+    select?: AdminSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Admin
+     */
+    omit?: AdminOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminInclude<ExtArgs> | null
+    where?: AdminWhereInput
+  }
+
+  /**
    * Customer.partner
    */
   export type Customer$partnerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -20417,9 +20436,9 @@ export namespace Prisma {
   }
 
   /**
-   * Customer.product
+   * Customer.history
    */
-  export type Customer$productArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Customer$historyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the CustomerProductHistory
      */
@@ -26515,7 +26534,7 @@ export namespace Prisma {
     OR?: CustomerWhereInput[]
     NOT?: CustomerWhereInput | CustomerWhereInput[]
     id?: UuidFilter<"Customer"> | string
-    adminId?: UuidFilter<"Customer"> | string
+    adminId?: UuidNullableFilter<"Customer"> | string | null
     companyName?: StringFilter<"Customer"> | string
     contactPerson?: StringFilter<"Customer"> | string
     mobileNumber?: StringFilter<"Customer"> | string
@@ -26525,21 +26544,21 @@ export namespace Prisma {
     blacklisted?: BoolFilter<"Customer"> | boolean
     remark?: StringNullableFilter<"Customer"> | string | null
     adminCustomFields?: JsonNullableFilter<"Customer">
-    address?: JsonFilter<"Customer">
+    address?: JsonNullableFilter<"Customer">
     joiningDate?: DateTimeFilter<"Customer"> | Date | string
     hasReference?: BoolFilter<"Customer"> | boolean
     partnerId?: UuidNullableFilter<"Customer"> | string | null
     status?: BoolFilter<"Customer"> | boolean
     createdAt?: DateTimeFilter<"Customer"> | Date | string
     updatedAt?: DateTimeFilter<"Customer"> | Date | string
-    admin?: XOR<AdminScalarRelationFilter, AdminWhereInput>
+    admin?: XOR<AdminNullableScalarRelationFilter, AdminWhereInput> | null
     partner?: XOR<PartnerNullableScalarRelationFilter, PartnerWhereInput> | null
-    product?: CustomerProductHistoryListRelationFilter
+    history?: CustomerProductHistoryListRelationFilter
   }
 
   export type CustomerOrderByWithRelationInput = {
     id?: SortOrder
-    adminId?: SortOrder
+    adminId?: SortOrderInput | SortOrder
     companyName?: SortOrder
     contactPerson?: SortOrder
     mobileNumber?: SortOrder
@@ -26549,7 +26568,7 @@ export namespace Prisma {
     blacklisted?: SortOrder
     remark?: SortOrderInput | SortOrder
     adminCustomFields?: SortOrderInput | SortOrder
-    address?: SortOrder
+    address?: SortOrderInput | SortOrder
     joiningDate?: SortOrder
     hasReference?: SortOrder
     partnerId?: SortOrderInput | SortOrder
@@ -26558,7 +26577,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     admin?: AdminOrderByWithRelationInput
     partner?: PartnerOrderByWithRelationInput
-    product?: CustomerProductHistoryOrderByRelationAggregateInput
+    history?: CustomerProductHistoryOrderByRelationAggregateInput
   }
 
   export type CustomerWhereUniqueInput = Prisma.AtLeast<{
@@ -26568,7 +26587,7 @@ export namespace Prisma {
     AND?: CustomerWhereInput | CustomerWhereInput[]
     OR?: CustomerWhereInput[]
     NOT?: CustomerWhereInput | CustomerWhereInput[]
-    adminId?: UuidFilter<"Customer"> | string
+    adminId?: UuidNullableFilter<"Customer"> | string | null
     companyName?: StringFilter<"Customer"> | string
     contactPerson?: StringFilter<"Customer"> | string
     serialNo?: StringFilter<"Customer"> | string
@@ -26576,21 +26595,21 @@ export namespace Prisma {
     blacklisted?: BoolFilter<"Customer"> | boolean
     remark?: StringNullableFilter<"Customer"> | string | null
     adminCustomFields?: JsonNullableFilter<"Customer">
-    address?: JsonFilter<"Customer">
+    address?: JsonNullableFilter<"Customer">
     joiningDate?: DateTimeFilter<"Customer"> | Date | string
     hasReference?: BoolFilter<"Customer"> | boolean
     partnerId?: UuidNullableFilter<"Customer"> | string | null
     status?: BoolFilter<"Customer"> | boolean
     createdAt?: DateTimeFilter<"Customer"> | Date | string
     updatedAt?: DateTimeFilter<"Customer"> | Date | string
-    admin?: XOR<AdminScalarRelationFilter, AdminWhereInput>
+    admin?: XOR<AdminNullableScalarRelationFilter, AdminWhereInput> | null
     partner?: XOR<PartnerNullableScalarRelationFilter, PartnerWhereInput> | null
-    product?: CustomerProductHistoryListRelationFilter
+    history?: CustomerProductHistoryListRelationFilter
   }, "id" | "mobileNumber" | "email">
 
   export type CustomerOrderByWithAggregationInput = {
     id?: SortOrder
-    adminId?: SortOrder
+    adminId?: SortOrderInput | SortOrder
     companyName?: SortOrder
     contactPerson?: SortOrder
     mobileNumber?: SortOrder
@@ -26600,7 +26619,7 @@ export namespace Prisma {
     blacklisted?: SortOrder
     remark?: SortOrderInput | SortOrder
     adminCustomFields?: SortOrderInput | SortOrder
-    address?: SortOrder
+    address?: SortOrderInput | SortOrder
     joiningDate?: SortOrder
     hasReference?: SortOrder
     partnerId?: SortOrderInput | SortOrder
@@ -26617,7 +26636,7 @@ export namespace Prisma {
     OR?: CustomerScalarWhereWithAggregatesInput[]
     NOT?: CustomerScalarWhereWithAggregatesInput | CustomerScalarWhereWithAggregatesInput[]
     id?: UuidWithAggregatesFilter<"Customer"> | string
-    adminId?: UuidWithAggregatesFilter<"Customer"> | string
+    adminId?: UuidNullableWithAggregatesFilter<"Customer"> | string | null
     companyName?: StringWithAggregatesFilter<"Customer"> | string
     contactPerson?: StringWithAggregatesFilter<"Customer"> | string
     mobileNumber?: StringWithAggregatesFilter<"Customer"> | string
@@ -26627,7 +26646,7 @@ export namespace Prisma {
     blacklisted?: BoolWithAggregatesFilter<"Customer"> | boolean
     remark?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     adminCustomFields?: JsonNullableWithAggregatesFilter<"Customer">
-    address?: JsonWithAggregatesFilter<"Customer">
+    address?: JsonNullableWithAggregatesFilter<"Customer">
     joiningDate?: DateTimeWithAggregatesFilter<"Customer"> | Date | string
     hasReference?: BoolWithAggregatesFilter<"Customer"> | boolean
     partnerId?: UuidNullableWithAggregatesFilter<"Customer"> | string | null
@@ -28228,20 +28247,20 @@ export namespace Prisma {
     blacklisted?: boolean
     remark?: string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
-    address: JsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
     joiningDate: Date | string
     hasReference?: boolean
     status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    admin: AdminCreateNestedOneWithoutCustomersInput
+    admin?: AdminCreateNestedOneWithoutCustomersInput
     partner?: PartnerCreateNestedOneWithoutCustomersInput
-    product?: CustomerProductHistoryCreateNestedManyWithoutCustomerInput
+    history?: CustomerProductHistoryCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateInput = {
     id?: string
-    adminId: string
+    adminId?: string | null
     companyName: string
     contactPerson: string
     mobileNumber: string
@@ -28251,14 +28270,14 @@ export namespace Prisma {
     blacklisted?: boolean
     remark?: string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
-    address: JsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
     joiningDate: Date | string
     hasReference?: boolean
     partnerId?: string | null
     status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    product?: CustomerProductHistoryUncheckedCreateNestedManyWithoutCustomerInput
+    history?: CustomerProductHistoryUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUpdateInput = {
@@ -28272,20 +28291,20 @@ export namespace Prisma {
     blacklisted?: BoolFieldUpdateOperationsInput | boolean
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
-    address?: JsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
     status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    admin?: AdminUpdateOneRequiredWithoutCustomersNestedInput
+    admin?: AdminUpdateOneWithoutCustomersNestedInput
     partner?: PartnerUpdateOneWithoutCustomersNestedInput
-    product?: CustomerProductHistoryUpdateManyWithoutCustomerNestedInput
+    history?: CustomerProductHistoryUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    adminId?: StringFieldUpdateOperationsInput | string
+    adminId?: NullableStringFieldUpdateOperationsInput | string | null
     companyName?: StringFieldUpdateOperationsInput | string
     contactPerson?: StringFieldUpdateOperationsInput | string
     mobileNumber?: StringFieldUpdateOperationsInput | string
@@ -28295,19 +28314,19 @@ export namespace Prisma {
     blacklisted?: BoolFieldUpdateOperationsInput | boolean
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
-    address?: JsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    product?: CustomerProductHistoryUncheckedUpdateManyWithoutCustomerNestedInput
+    history?: CustomerProductHistoryUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerCreateManyInput = {
     id?: string
-    adminId: string
+    adminId?: string | null
     companyName: string
     contactPerson: string
     mobileNumber: string
@@ -28317,7 +28336,7 @@ export namespace Prisma {
     blacklisted?: boolean
     remark?: string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
-    address: JsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
     joiningDate: Date | string
     hasReference?: boolean
     partnerId?: string | null
@@ -28337,7 +28356,7 @@ export namespace Prisma {
     blacklisted?: BoolFieldUpdateOperationsInput | boolean
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
-    address?: JsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
     status?: BoolFieldUpdateOperationsInput | boolean
@@ -28347,7 +28366,7 @@ export namespace Prisma {
 
   export type CustomerUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    adminId?: StringFieldUpdateOperationsInput | string
+    adminId?: NullableStringFieldUpdateOperationsInput | string | null
     companyName?: StringFieldUpdateOperationsInput | string
     contactPerson?: StringFieldUpdateOperationsInput | string
     mobileNumber?: StringFieldUpdateOperationsInput | string
@@ -28357,7 +28376,7 @@ export namespace Prisma {
     blacklisted?: BoolFieldUpdateOperationsInput | boolean
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
-    address?: JsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28376,7 +28395,7 @@ export namespace Prisma {
     status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    customer: CustomerCreateNestedOneWithoutProductInput
+    customer: CustomerCreateNestedOneWithoutHistoryInput
     admin: AdminCreateNestedOneWithoutProductHistoriesInput
     product: ProductCreateNestedOneWithoutCustomerProductHistoryInput
     renewals?: ProductRenewalHistoryCreateNestedManyWithoutCustomerProductHistoryInput
@@ -28408,7 +28427,7 @@ export namespace Prisma {
     status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    customer?: CustomerUpdateOneRequiredWithoutProductNestedInput
+    customer?: CustomerUpdateOneRequiredWithoutHistoryNestedInput
     admin?: AdminUpdateOneRequiredWithoutProductHistoriesNestedInput
     product?: ProductUpdateOneRequiredWithoutCustomerProductHistoryNestedInput
     renewals?: ProductRenewalHistoryUpdateManyWithoutCustomerProductHistoryNestedInput
@@ -31109,10 +31128,12 @@ export namespace Prisma {
     connect?: CustomerProductHistoryWhereUniqueInput | CustomerProductHistoryWhereUniqueInput[]
   }
 
-  export type AdminUpdateOneRequiredWithoutCustomersNestedInput = {
+  export type AdminUpdateOneWithoutCustomersNestedInput = {
     create?: XOR<AdminCreateWithoutCustomersInput, AdminUncheckedCreateWithoutCustomersInput>
     connectOrCreate?: AdminCreateOrConnectWithoutCustomersInput
     upsert?: AdminUpsertWithoutCustomersInput
+    disconnect?: AdminWhereInput | boolean
+    delete?: AdminWhereInput | boolean
     connect?: AdminWhereUniqueInput
     update?: XOR<XOR<AdminUpdateToOneWithWhereWithoutCustomersInput, AdminUpdateWithoutCustomersInput>, AdminUncheckedUpdateWithoutCustomersInput>
   }
@@ -31155,9 +31176,9 @@ export namespace Prisma {
     deleteMany?: CustomerProductHistoryScalarWhereInput | CustomerProductHistoryScalarWhereInput[]
   }
 
-  export type CustomerCreateNestedOneWithoutProductInput = {
-    create?: XOR<CustomerCreateWithoutProductInput, CustomerUncheckedCreateWithoutProductInput>
-    connectOrCreate?: CustomerCreateOrConnectWithoutProductInput
+  export type CustomerCreateNestedOneWithoutHistoryInput = {
+    create?: XOR<CustomerCreateWithoutHistoryInput, CustomerUncheckedCreateWithoutHistoryInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutHistoryInput
     connect?: CustomerWhereUniqueInput
   }
 
@@ -31191,12 +31212,12 @@ export namespace Prisma {
     set?: $Enums.renewPeriod
   }
 
-  export type CustomerUpdateOneRequiredWithoutProductNestedInput = {
-    create?: XOR<CustomerCreateWithoutProductInput, CustomerUncheckedCreateWithoutProductInput>
-    connectOrCreate?: CustomerCreateOrConnectWithoutProductInput
-    upsert?: CustomerUpsertWithoutProductInput
+  export type CustomerUpdateOneRequiredWithoutHistoryNestedInput = {
+    create?: XOR<CustomerCreateWithoutHistoryInput, CustomerUncheckedCreateWithoutHistoryInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutHistoryInput
+    upsert?: CustomerUpsertWithoutHistoryInput
     connect?: CustomerWhereUniqueInput
-    update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutProductInput, CustomerUpdateWithoutProductInput>, CustomerUncheckedUpdateWithoutProductInput>
+    update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutHistoryInput, CustomerUpdateWithoutHistoryInput>, CustomerUncheckedUpdateWithoutHistoryInput>
   }
 
   export type AdminUpdateOneRequiredWithoutProductHistoriesNestedInput = {
@@ -31808,14 +31829,14 @@ export namespace Prisma {
     blacklisted?: boolean
     remark?: string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
-    address: JsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
     joiningDate: Date | string
     hasReference?: boolean
     status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     partner?: PartnerCreateNestedOneWithoutCustomersInput
-    product?: CustomerProductHistoryCreateNestedManyWithoutCustomerInput
+    history?: CustomerProductHistoryCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutAdminInput = {
@@ -31829,14 +31850,14 @@ export namespace Prisma {
     blacklisted?: boolean
     remark?: string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
-    address: JsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
     joiningDate: Date | string
     hasReference?: boolean
     partnerId?: string | null
     status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    product?: CustomerProductHistoryUncheckedCreateNestedManyWithoutCustomerInput
+    history?: CustomerProductHistoryUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutAdminInput = {
@@ -32009,7 +32030,7 @@ export namespace Prisma {
     status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    customer: CustomerCreateNestedOneWithoutProductInput
+    customer: CustomerCreateNestedOneWithoutHistoryInput
     product: ProductCreateNestedOneWithoutCustomerProductHistoryInput
     renewals?: ProductRenewalHistoryCreateNestedManyWithoutCustomerProductHistoryInput
   }
@@ -32131,7 +32152,7 @@ export namespace Prisma {
     OR?: CustomerScalarWhereInput[]
     NOT?: CustomerScalarWhereInput | CustomerScalarWhereInput[]
     id?: UuidFilter<"Customer"> | string
-    adminId?: UuidFilter<"Customer"> | string
+    adminId?: UuidNullableFilter<"Customer"> | string | null
     companyName?: StringFilter<"Customer"> | string
     contactPerson?: StringFilter<"Customer"> | string
     mobileNumber?: StringFilter<"Customer"> | string
@@ -32141,7 +32162,7 @@ export namespace Prisma {
     blacklisted?: BoolFilter<"Customer"> | boolean
     remark?: StringNullableFilter<"Customer"> | string | null
     adminCustomFields?: JsonNullableFilter<"Customer">
-    address?: JsonFilter<"Customer">
+    address?: JsonNullableFilter<"Customer">
     joiningDate?: DateTimeFilter<"Customer"> | Date | string
     hasReference?: BoolFilter<"Customer"> | boolean
     partnerId?: UuidNullableFilter<"Customer"> | string | null
@@ -32462,19 +32483,19 @@ export namespace Prisma {
     blacklisted?: boolean
     remark?: string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
-    address: JsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
     joiningDate: Date | string
     hasReference?: boolean
     status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    admin: AdminCreateNestedOneWithoutCustomersInput
-    product?: CustomerProductHistoryCreateNestedManyWithoutCustomerInput
+    admin?: AdminCreateNestedOneWithoutCustomersInput
+    history?: CustomerProductHistoryCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutPartnerInput = {
     id?: string
-    adminId: string
+    adminId?: string | null
     companyName: string
     contactPerson: string
     mobileNumber: string
@@ -32484,13 +32505,13 @@ export namespace Prisma {
     blacklisted?: boolean
     remark?: string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
-    address: JsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
     joiningDate: Date | string
     hasReference?: boolean
     status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    product?: CustomerProductHistoryUncheckedCreateNestedManyWithoutCustomerInput
+    history?: CustomerProductHistoryUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutPartnerInput = {
@@ -33724,7 +33745,7 @@ export namespace Prisma {
     status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    customer: CustomerCreateNestedOneWithoutProductInput
+    customer: CustomerCreateNestedOneWithoutHistoryInput
     admin: AdminCreateNestedOneWithoutProductHistoriesInput
     renewals?: ProductRenewalHistoryCreateNestedManyWithoutCustomerProductHistoryInput
   }
@@ -33895,7 +33916,7 @@ export namespace Prisma {
     status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    customer: CustomerCreateNestedOneWithoutProductInput
+    customer: CustomerCreateNestedOneWithoutHistoryInput
     admin: AdminCreateNestedOneWithoutProductHistoriesInput
     product: ProductCreateNestedOneWithoutCustomerProductHistoryInput
   }
@@ -33978,7 +33999,7 @@ export namespace Prisma {
     status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    customer?: CustomerUpdateOneRequiredWithoutProductNestedInput
+    customer?: CustomerUpdateOneRequiredWithoutHistoryNestedInput
     admin?: AdminUpdateOneRequiredWithoutProductHistoriesNestedInput
     product?: ProductUpdateOneRequiredWithoutCustomerProductHistoryNestedInput
   }
@@ -34281,7 +34302,7 @@ export namespace Prisma {
     data: XOR<CustomerProductHistoryUpdateManyMutationInput, CustomerProductHistoryUncheckedUpdateManyWithoutCustomerInput>
   }
 
-  export type CustomerCreateWithoutProductInput = {
+  export type CustomerCreateWithoutHistoryInput = {
     id?: string
     companyName: string
     contactPerson: string
@@ -34292,19 +34313,19 @@ export namespace Prisma {
     blacklisted?: boolean
     remark?: string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
-    address: JsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
     joiningDate: Date | string
     hasReference?: boolean
     status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    admin: AdminCreateNestedOneWithoutCustomersInput
+    admin?: AdminCreateNestedOneWithoutCustomersInput
     partner?: PartnerCreateNestedOneWithoutCustomersInput
   }
 
-  export type CustomerUncheckedCreateWithoutProductInput = {
+  export type CustomerUncheckedCreateWithoutHistoryInput = {
     id?: string
-    adminId: string
+    adminId?: string | null
     companyName: string
     contactPerson: string
     mobileNumber: string
@@ -34314,7 +34335,7 @@ export namespace Prisma {
     blacklisted?: boolean
     remark?: string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
-    address: JsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
     joiningDate: Date | string
     hasReference?: boolean
     partnerId?: string | null
@@ -34323,9 +34344,9 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type CustomerCreateOrConnectWithoutProductInput = {
+  export type CustomerCreateOrConnectWithoutHistoryInput = {
     where: CustomerWhereUniqueInput
-    create: XOR<CustomerCreateWithoutProductInput, CustomerUncheckedCreateWithoutProductInput>
+    create: XOR<CustomerCreateWithoutHistoryInput, CustomerUncheckedCreateWithoutHistoryInput>
   }
 
   export type AdminCreateWithoutProductHistoriesInput = {
@@ -34444,18 +34465,18 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type CustomerUpsertWithoutProductInput = {
-    update: XOR<CustomerUpdateWithoutProductInput, CustomerUncheckedUpdateWithoutProductInput>
-    create: XOR<CustomerCreateWithoutProductInput, CustomerUncheckedCreateWithoutProductInput>
+  export type CustomerUpsertWithoutHistoryInput = {
+    update: XOR<CustomerUpdateWithoutHistoryInput, CustomerUncheckedUpdateWithoutHistoryInput>
+    create: XOR<CustomerCreateWithoutHistoryInput, CustomerUncheckedCreateWithoutHistoryInput>
     where?: CustomerWhereInput
   }
 
-  export type CustomerUpdateToOneWithWhereWithoutProductInput = {
+  export type CustomerUpdateToOneWithWhereWithoutHistoryInput = {
     where?: CustomerWhereInput
-    data: XOR<CustomerUpdateWithoutProductInput, CustomerUncheckedUpdateWithoutProductInput>
+    data: XOR<CustomerUpdateWithoutHistoryInput, CustomerUncheckedUpdateWithoutHistoryInput>
   }
 
-  export type CustomerUpdateWithoutProductInput = {
+  export type CustomerUpdateWithoutHistoryInput = {
     id?: StringFieldUpdateOperationsInput | string
     companyName?: StringFieldUpdateOperationsInput | string
     contactPerson?: StringFieldUpdateOperationsInput | string
@@ -34466,19 +34487,19 @@ export namespace Prisma {
     blacklisted?: BoolFieldUpdateOperationsInput | boolean
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
-    address?: JsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
     status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    admin?: AdminUpdateOneRequiredWithoutCustomersNestedInput
+    admin?: AdminUpdateOneWithoutCustomersNestedInput
     partner?: PartnerUpdateOneWithoutCustomersNestedInput
   }
 
-  export type CustomerUncheckedUpdateWithoutProductInput = {
+  export type CustomerUncheckedUpdateWithoutHistoryInput = {
     id?: StringFieldUpdateOperationsInput | string
-    adminId?: StringFieldUpdateOperationsInput | string
+    adminId?: NullableStringFieldUpdateOperationsInput | string | null
     companyName?: StringFieldUpdateOperationsInput | string
     contactPerson?: StringFieldUpdateOperationsInput | string
     mobileNumber?: StringFieldUpdateOperationsInput | string
@@ -34488,7 +34509,7 @@ export namespace Prisma {
     blacklisted?: BoolFieldUpdateOperationsInput | boolean
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
-    address?: JsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34875,7 +34896,7 @@ export namespace Prisma {
     blacklisted?: boolean
     remark?: string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
-    address: JsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
     joiningDate: Date | string
     hasReference?: boolean
     partnerId?: string | null
@@ -35054,14 +35075,14 @@ export namespace Prisma {
     blacklisted?: BoolFieldUpdateOperationsInput | boolean
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
-    address?: JsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
     status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partner?: PartnerUpdateOneWithoutCustomersNestedInput
-    product?: CustomerProductHistoryUpdateManyWithoutCustomerNestedInput
+    history?: CustomerProductHistoryUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutAdminInput = {
@@ -35075,14 +35096,14 @@ export namespace Prisma {
     blacklisted?: BoolFieldUpdateOperationsInput | boolean
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
-    address?: JsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    product?: CustomerProductHistoryUncheckedUpdateManyWithoutCustomerNestedInput
+    history?: CustomerProductHistoryUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateManyWithoutAdminInput = {
@@ -35096,7 +35117,7 @@ export namespace Prisma {
     blacklisted?: BoolFieldUpdateOperationsInput | boolean
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
-    address?: JsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35275,7 +35296,7 @@ export namespace Prisma {
     status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    customer?: CustomerUpdateOneRequiredWithoutProductNestedInput
+    customer?: CustomerUpdateOneRequiredWithoutHistoryNestedInput
     product?: ProductUpdateOneRequiredWithoutCustomerProductHistoryNestedInput
     renewals?: ProductRenewalHistoryUpdateManyWithoutCustomerProductHistoryNestedInput
   }
@@ -35311,7 +35332,7 @@ export namespace Prisma {
 
   export type CustomerCreateManyPartnerInput = {
     id?: string
-    adminId: string
+    adminId?: string | null
     companyName: string
     contactPerson: string
     mobileNumber: string
@@ -35321,7 +35342,7 @@ export namespace Prisma {
     blacklisted?: boolean
     remark?: string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
-    address: JsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
     joiningDate: Date | string
     hasReference?: boolean
     status?: boolean
@@ -35340,19 +35361,19 @@ export namespace Prisma {
     blacklisted?: BoolFieldUpdateOperationsInput | boolean
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
-    address?: JsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
     status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    admin?: AdminUpdateOneRequiredWithoutCustomersNestedInput
-    product?: CustomerProductHistoryUpdateManyWithoutCustomerNestedInput
+    admin?: AdminUpdateOneWithoutCustomersNestedInput
+    history?: CustomerProductHistoryUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutPartnerInput = {
     id?: StringFieldUpdateOperationsInput | string
-    adminId?: StringFieldUpdateOperationsInput | string
+    adminId?: NullableStringFieldUpdateOperationsInput | string | null
     companyName?: StringFieldUpdateOperationsInput | string
     contactPerson?: StringFieldUpdateOperationsInput | string
     mobileNumber?: StringFieldUpdateOperationsInput | string
@@ -35362,18 +35383,18 @@ export namespace Prisma {
     blacklisted?: BoolFieldUpdateOperationsInput | boolean
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
-    address?: JsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
     status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    product?: CustomerProductHistoryUncheckedUpdateManyWithoutCustomerNestedInput
+    history?: CustomerProductHistoryUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateManyWithoutPartnerInput = {
     id?: StringFieldUpdateOperationsInput | string
-    adminId?: StringFieldUpdateOperationsInput | string
+    adminId?: NullableStringFieldUpdateOperationsInput | string | null
     companyName?: StringFieldUpdateOperationsInput | string
     contactPerson?: StringFieldUpdateOperationsInput | string
     mobileNumber?: StringFieldUpdateOperationsInput | string
@@ -35383,7 +35404,7 @@ export namespace Prisma {
     blacklisted?: BoolFieldUpdateOperationsInput | boolean
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
-    address?: JsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
     status?: BoolFieldUpdateOperationsInput | boolean
@@ -35697,7 +35718,7 @@ export namespace Prisma {
     status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    customer?: CustomerUpdateOneRequiredWithoutProductNestedInput
+    customer?: CustomerUpdateOneRequiredWithoutHistoryNestedInput
     admin?: AdminUpdateOneRequiredWithoutProductHistoriesNestedInput
     renewals?: ProductRenewalHistoryUpdateManyWithoutCustomerProductHistoryNestedInput
   }

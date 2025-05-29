@@ -4,7 +4,6 @@
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  // url      = "postgresql://postgres:Raj24315@localhost:5636/cpm_orm"
 }
 
 generator client {
@@ -338,28 +337,29 @@ model ProductRenewalHistory {
 // Customer & History
 // ——————————————————————————————————————————
 model Customer {
-  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  adminId           String   @db.Uuid
-  companyName       String   @map("company_name")
-  contactPerson     String   @map("contact_person")
-  mobileNumber      String   @unique @map("mobile_number")
-  email             String   @unique
-  serialNo          String   @map("serial_no")
-  prime             Boolean  @default(false)
-  blacklisted       Boolean  @default(false)
+  id                String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  adminId           String? @db.Uuid
+  companyName       String  @map("company_name")
+  contactPerson     String  @map("contact_person")
+  mobileNumber      String  @unique @map("mobile_number")
+  email             String  @unique
+  serialNo          String  @map("serial_no")
+  prime             Boolean @default(false)
+  blacklisted       Boolean @default(false)
   remark            String?
   adminCustomFields Json?
-  address           Json
-  joiningDate       DateTime @map("joining_date")
-  hasReference      Boolean  @default(false) @map("has_reference")
-  partnerId         String?  @map("partner_id") @db.Uuid
-  status            Boolean  @default(true) @map("status")
-  createdAt         DateTime @default(now()) @map("created_at")
-  updatedAt         DateTime @updatedAt @map("updated_at")
+  address           Json?
 
-  admin   Admin                    @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  joiningDate  DateTime @map("joining_date")
+  hasReference Boolean  @default(false) @map("has_reference")
+  partnerId    String?  @map("partner_id") @db.Uuid
+  status       Boolean  @default(true) @map("status")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  admin   Admin?                   @relation(fields: [adminId], references: [id], onDelete: Cascade)
   partner Partner?                 @relation("PartnerCustomers", fields: [partnerId], references: [id])
-  product CustomerProductHistory[]
+  history CustomerProductHistory[]
 
   @@index([adminId])
   @@index([partnerId])

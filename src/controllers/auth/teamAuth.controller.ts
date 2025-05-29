@@ -101,7 +101,7 @@ export const createTeamMember = async (
     sendErrorResponse(res, 403, "Only admins can create team members.");
     return;
   }
-  console.log("call createTeamMember---------");
+  // console.log("call createTeamMember---------");
 
   // 2. Extract & validate body
   const {
