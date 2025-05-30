@@ -6,6 +6,7 @@ import teamMemberRoutes from './teamMemberRoutes/teamMember.routes';
 import productRoutes from './product/product.routes'
 import customerRoutes from './customer/customer.routes'
 import planRoutes from './plan/plan.routes'
+import chatRoutes from './chat/chat.routes'
 import { sendSuccessResponse } from '../../core/utils/httpResponse';
 
 
@@ -15,7 +16,8 @@ router.use('/partner', partnerRoutes);
 router.use('/team-members', teamMemberRoutes);                                
 router.use('/product', productRoutes);                                
 router.use('/customer', customerRoutes);                                
-router.use('/plan', planRoutes);                                
-
+router.use('/plan', planRoutes);        
+router.use('/chat',chatRoutes)                        
+    
 
 export default router;

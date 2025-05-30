@@ -6,10 +6,17 @@ import { errorHandler } from "./core/middleware/logs/errorHandler";
 import Router from "./routes/v1";
 import { checkStaticToken } from "./core/middleware/key/checkStaticToken";
 import  "./core/job/planStatus"
+// import http from "http";
+// import { initSocket } from "./socket.io/socket";
+
+
 // import path from "path";
 // import fs from "fs";
 
 const app = express();
+// const server = http.createServer(app);
+// initSocket(server);
+
 
 const corsOptions = {
   // origin: ["http://localhost:5173", "https://dashbord-seven-sigma.vercel.app"], // your frontend URL

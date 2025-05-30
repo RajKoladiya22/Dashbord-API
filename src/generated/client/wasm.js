@@ -194,6 +194,17 @@ exports.Prisma.LoginCredentialScalarFieldEnum = {
   superAdminId: 'superAdminId'
 };
 
+exports.Prisma.LiveChatAppScalarFieldEnum = {
+  id: 'id',
+  adminId: 'adminId',
+  senderId: 'senderId',
+  receiverId: 'receiverId',
+  senderRole: 'senderRole',
+  receiverRole: 'receiverRole',
+  content: 'content',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.PlanScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -432,6 +443,7 @@ exports.Prisma.ModelName = {
   TeamMember: 'TeamMember',
   Partner: 'Partner',
   LoginCredential: 'LoginCredential',
+  LiveChatApp: 'LiveChatApp',
   Plan: 'Plan',
   PlanOffer: 'PlanOffer',
   PlanSpec: 'PlanSpec',
