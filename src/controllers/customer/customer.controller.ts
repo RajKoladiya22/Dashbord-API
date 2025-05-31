@@ -361,6 +361,12 @@ export const updateCustomer = async (
   }
   const adminId = user.role === "admin" ? user.id : user.adminId!;
 
+  // ----------------------
+   if(!await prisma.customer.findFirst({where:{id:customerId,adminId:user.adminId}})){ // Check if customer exists
+     sendErrorResponse(res, 404, "Customer not found");
+     return
+  }
+
   try {
     const result = await prisma.$transaction(async (tx) => {
       // 4) Update only the customer record

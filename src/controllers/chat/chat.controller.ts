@@ -155,7 +155,7 @@ export const storedMSG = async (req: Request, res: Response): Promise<void> => {
 
 
         if (!senderData || !receiverData) {
-            res.status(404).json({ message: "Sender or receiver not found" });
+            sendErrorResponse(res,404,"Sender or receiver not found")
             return;
         }
 
@@ -183,10 +183,7 @@ export const storedMSG = async (req: Request, res: Response): Promise<void> => {
         // send message to sendMessgeToUser function for with senderId and receiverId
         sendMessageToUser(receiverData.id, responseMessage);
 
-        res.json({
-            message: "Message sent successfully...",
-            data: responseMessage,
-        });
+        sendSuccessResponse(res,200,"Message sent successfully...",{data:responseMessage})
 
     } catch (error) {
         console.error("Message creation error:", error);

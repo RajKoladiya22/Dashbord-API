@@ -101,7 +101,7 @@ export const createTeamMember = async (
     sendErrorResponse(res, 403, "Only admins can create team members.");
     return;
   }
-  // console.log("call createTeamMember---------");
+  console.log("call createTeamMember---------");
 
   // 2. Extract & validate body
   const {
@@ -128,8 +128,12 @@ export const createTeamMember = async (
       // 3a. ensure unique email
       const exists = await tx.teamMember.findUnique({
         where: { email: email.toLowerCase() },
-      });
-      if (exists) {
+      }); 
+      // 
+      const existsAny = await tx.loginCredential.findUnique({
+        where: { email: email.toLowerCase() },
+      })
+      if (exists || existsAny) {
         throw new Error("Email already in use.");
       }
 

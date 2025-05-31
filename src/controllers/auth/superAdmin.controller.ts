@@ -418,7 +418,12 @@ export const approveAdmin = async (
       sendErrorResponse(res, 404, "Admin not found");
       return;
     }
-
+    await prisma.loginCredential.updateMany({
+      where: { userProfileId: adminDetails.id },
+      data: {
+        status: adminStatus,
+      },
+    })
     const approvedAdmin = await prisma.admin.update({
       where: { id: adminId },
       data: {
@@ -432,6 +437,7 @@ export const approveAdmin = async (
         status: true,
       },
     });
+
 
     sendSuccessResponse(res, 200, "Admin Status Updated", approvedAdmin);
   } catch (err: any) {

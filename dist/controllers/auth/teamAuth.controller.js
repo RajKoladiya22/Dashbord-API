@@ -23,6 +23,7 @@ const createTeamMember = async (req, res, next) => {
         (0, httpResponse_1.sendErrorResponse)(res, 403, "Only admins can create team members.");
         return;
     }
+    console.log("call createTeamMember---------");
     const { firstName, email, password, department, position, role, } = req.body;
     if (!["team_member", "sub_admin"].includes(role)) {
         (0, httpResponse_1.sendErrorResponse)(res, 400, "Role must be 'team_member' or 'sub_admin'.");
@@ -36,7 +37,10 @@ const createTeamMember = async (req, res, next) => {
             const exists = await tx.teamMember.findUnique({
                 where: { email: email.toLowerCase() },
             });
-            if (exists) {
+            const existsAny = await tx.loginCredential.findUnique({
+                where: { email: email.toLowerCase() },
+            });
+            if (exists || existsAny) {
                 throw new Error("Email already in use.");
             }
             const passwordHash = await bcrypt_1.default.hash(password, SALT_ROUNDS);

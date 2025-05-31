@@ -32,6 +32,10 @@ export const getCustomerProductsByCustomerId = async (
   try {
     // const history = {}
     const customer = await prisma.customer.findUnique({ where: scopeFilter });
+    if (!customer) {
+      sendErrorResponse(res, 404, "Customer not found");
+      return;
+    }
     const history = await prisma.customerProductHistory.findMany({
       where: {
         customerId,

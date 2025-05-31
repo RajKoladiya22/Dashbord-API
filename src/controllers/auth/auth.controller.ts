@@ -220,6 +220,7 @@ export const signIn = async (
         status: true,
       },
     });
+    
     // timing‑safe compare
     const dummyHash = "$2b$12$........................................";
     if (!cred) {

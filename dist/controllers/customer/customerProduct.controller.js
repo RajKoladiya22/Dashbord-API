@@ -20,6 +20,10 @@ const getCustomerProductsByCustomerId = async (req, res, next) => {
     }
     try {
         const customer = await database_config_1.prisma.customer.findUnique({ where: scopeFilter });
+        if (!customer) {
+            (0, responseHandler_1.sendErrorResponse)(res, 404, "Customer not found");
+            return;
+        }
         const history = await database_config_1.prisma.customerProductHistory.findMany({
             where: {
                 customerId,

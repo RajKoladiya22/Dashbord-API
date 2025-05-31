@@ -1,7 +1,7 @@
 /* // src/controllers/customer/customer.bulk.controller.ts
 import { Request, Response, NextFunction } from "express";
 import fs from "fs";
-import csv from "csv-parser";
+impor t csv from "csv-parser";
 import ExcelJS from "exceljs";
 import { prisma } from "../../config/database.config";
 import {
@@ -150,7 +150,7 @@ import {
   sendSuccessResponse,
   sendErrorResponse,
 } from "../../core/utils/responseHandler";
-import { parseISO } from "date-fns";
+import { parse } from "date-fns";
 import { Readable } from "stream";
 
 interface Row {
@@ -244,17 +244,35 @@ export const bulkCreateCustomers = async (
       }
     }
 
+    const supportedDateFormats = [
+      "yyyy-MM-dd",
+      "dd/MM/yyyy",
+      "MM/dd/yyyy",
+      "dd-MM-yyyy",
+      "MMM dd, yyyy",
+    ];
+
+
     const data = rows.map((r, i) => {
       let parsedDate = new Date();
+
       if (r.joiningDate) {
-        try {
-          parsedDate = parseISO(r.joiningDate);
-          if (isNaN(parsedDate.getTime())) {
-            throw new Error(`Invalid date at row ${i + 2}`);
+        const dateStr = r.joiningDate.trim();
+        let validDate: Date | null = null;
+
+        for (const format of supportedDateFormats) {
+          const parsed = parse(dateStr, format, new Date());
+          if (!isNaN(parsed.getTime())) {
+            validDate = parsed;
+            break;
           }
-        } catch {
+        }
+
+        if (!validDate) {
           throw new Error(`Invalid joining date at row ${i + 2}`);
         }
+
+        parsedDate = validDate;
       }
 
       return {
@@ -265,9 +283,11 @@ export const bulkCreateCustomers = async (
         email: r.email,
         serialNo: r.serialNo,
         joiningDate: parsedDate,
-        address:r.address
+        address: r.address,
       };
     });
+
+    console.log(data); 
 
     const result = await prisma.$transaction([
       prisma.customer.createMany({
@@ -276,7 +296,9 @@ export const bulkCreateCustomers = async (
       }),
     ]);
 
-    if (result.length>1) {
+    console.log("-------------------???????",result,"length",result.length)
+
+    if (result.length >= 1 && result[0].count > 0) {
       sendSuccessResponse(res, 201, "Bulk customers created", {
         count: result[0].count,
       });

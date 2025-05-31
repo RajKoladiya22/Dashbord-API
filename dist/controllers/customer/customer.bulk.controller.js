@@ -81,18 +81,29 @@ const bulkCreateCustomers = async (req, res, next) => {
                 return;
             }
         }
+        const supportedDateFormats = [
+            "yyyy-MM-dd",
+            "dd/MM/yyyy",
+            "MM/dd/yyyy",
+            "dd-MM-yyyy",
+            "MMM dd, yyyy",
+        ];
         const data = rows.map((r, i) => {
             let parsedDate = new Date();
             if (r.joiningDate) {
-                try {
-                    parsedDate = (0, date_fns_1.parseISO)(r.joiningDate);
-                    if (isNaN(parsedDate.getTime())) {
-                        throw new Error(`Invalid date at row ${i + 2}`);
+                const dateStr = r.joiningDate.trim();
+                let validDate = null;
+                for (const format of supportedDateFormats) {
+                    const parsed = (0, date_fns_1.parse)(dateStr, format, new Date());
+                    if (!isNaN(parsed.getTime())) {
+                        validDate = parsed;
+                        break;
                     }
                 }
-                catch {
+                if (!validDate) {
                     throw new Error(`Invalid joining date at row ${i + 2}`);
                 }
+                parsedDate = validDate;
             }
             return {
                 adminId: adminId,
@@ -102,16 +113,18 @@ const bulkCreateCustomers = async (req, res, next) => {
                 email: r.email,
                 serialNo: r.serialNo,
                 joiningDate: parsedDate,
-                address: r.address
+                address: r.address,
             };
         });
+        console.log(data);
         const result = await database_config_1.prisma.$transaction([
             database_config_1.prisma.customer.createMany({
                 data,
                 skipDuplicates: true,
             }),
         ]);
-        if (result.length > 1) {
+        console.log("-------------------???????", result, "length", result.length);
+        if (result.length >= 1 && result[0].count > 0) {
             (0, responseHandler_1.sendSuccessResponse)(res, 201, "Bulk customers created", {
                 count: result[0].count,
             });

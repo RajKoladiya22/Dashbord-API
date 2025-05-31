@@ -282,6 +282,10 @@ const updateCustomer = async (req, res, next) => {
         return;
     }
     const adminId = user.role === "admin" ? user.id : user.adminId;
+    if (!await database_config_1.prisma.customer.findFirst({ where: { id: customerId, adminId: user.adminId } })) {
+        (0, responseHandler_1.sendErrorResponse)(res, 404, "Customer not found");
+        return;
+    }
     try {
         const result = await database_config_1.prisma.$transaction(async (tx) => {
             const updatedCustomer = await tx.customer.update({

@@ -88,7 +88,7 @@ const listPlans = async (req, res, next) => {
             }),
         ]);
         (0, responseHandler_1.sendSuccessResponse)(res, 200, "Plans fetched", {
-            plans,
+            plan,
             meta: { total, page, limit, pages: Math.ceil(total / limit) },
         });
     }

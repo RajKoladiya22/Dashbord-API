@@ -92,7 +92,10 @@ export const createPartner = async (
       const exists = await tx.partner.findUnique({
         where: { email: email.toLowerCase() },
       });
-      if (exists) throw new Error("Email already in use.");
+      const existsAny = await tx.loginCredential.findUnique({
+        where: { email: email.toLowerCase() }
+      })
+      if (exists || existsAny) throw new Error("Email already in use.");
 
       // 2) hash password
       const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);

@@ -3,13 +3,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createPlanSchema = exports.statusSchema = exports.listPlansQuery = exports.createCustomFieldSchema = exports.updateCustomFieldSchema = exports.updateHistorySchema = exports.updateCustomerSchema = exports.createCustomerSchema = exports.signUpSuperAdminSchema = exports.createProductSchema = exports.createTeamMemberSchema = exports.createPartnerSchema = exports.signUpSchema = exports.signInSchema = void 0;
 const zod_1 = require("zod");
 exports.signInSchema = zod_1.z.object({
-    identifier: zod_1.z.string().email(),
+    identifier: zod_1.z.string().trim().toLowerCase().email(),
     password: zod_1.z.string(),
 });
 exports.signUpSchema = zod_1.z.object({
     firstName: zod_1.z.string().min(1),
     lastName: zod_1.z.string().min(1),
-    email: zod_1.z.string().email(),
+    email: zod_1.z.string().trim().toLowerCase().email(),
     password: zod_1.z.string().min(8),
     contactNumber: zod_1.z.string().optional(),
     companyName: zod_1.z.string().min(1),
@@ -19,7 +19,7 @@ exports.createPartnerSchema = zod_1.z.object({
     firstName: zod_1.z.string().min(1),
     companyName: zod_1.z.string().min(1),
     contact_info: zod_1.z.record(zod_1.z.any()).optional(),
-    email: zod_1.z.string().email(),
+    email: zod_1.z.string().trim().toLowerCase().email(),
     password: zod_1.z.string().min(8),
 });
 exports.createTeamMemberSchema = zod_1.z.object({
@@ -57,7 +57,7 @@ exports.createProductSchema = zod_1.z.object({
 exports.signUpSuperAdminSchema = zod_1.z.object({
     firstName: zod_1.z.string().min(1),
     lastName: zod_1.z.string().min(1),
-    email: zod_1.z.string().email(),
+    email: zod_1.z.string().trim().toLowerCase().email(),
     password: zod_1.z.string().min(8),
     contactNumber: zod_1.z.string().optional(),
     address: zod_1.z.record(zod_1.z.any()).optional(),
@@ -66,7 +66,7 @@ exports.createCustomerSchema = zod_1.z.object({
     companyName: zod_1.z.string().min(1),
     contactPerson: zod_1.z.string().min(1),
     mobileNumber: zod_1.z.string().min(1),
-    email: zod_1.z.string().email(),
+    email: zod_1.z.string().trim().toLowerCase().email(),
     serialNo: zod_1.z.string().optional(),
     prime: zod_1.z.boolean().optional(),
     blacklisted: zod_1.z.boolean().optional(),
@@ -87,7 +87,7 @@ exports.updateCustomerSchema = zod_1.z.object({
     companyName: zod_1.z.string().optional(),
     contactPerson: zod_1.z.string().optional(),
     mobileNumber: zod_1.z.string().optional(),
-    email: zod_1.z.string().email().optional(),
+    email: zod_1.z.string().trim().toLowerCase().email().optional(),
     serialNo: zod_1.z.string().optional(),
     prime: zod_1.z.boolean().optional(),
     blacklisted: zod_1.z.boolean().optional(),

@@ -125,7 +125,7 @@ export const listPlans = async (
     ]);
 
     sendSuccessResponse(res, 200, "Plans fetched", {
-      plans,
+      plan,
       meta: { total, page, limit, pages: Math.ceil(total / limit) },
     });
 

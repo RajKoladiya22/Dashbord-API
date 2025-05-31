@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const signInSchema = z.object({
-  identifier: z.string().email(),
+  identifier: z.string().trim().toLowerCase().email(),
   password: z.string(),
   // password: z.string().min(8),
 });
@@ -10,7 +10,7 @@ export type SignInSchema = z.infer<typeof signInSchema>;
 export const signUpSchema = z.object({
   firstName: z.string().min(1),
   lastName: z.string().min(1),
-  email: z.string().email(),  
+  email: z.string().trim().toLowerCase().email(),  
   password: z.string().min(8),
   contactNumber: z.string().optional(),
   companyName: z.string().min(1),
@@ -22,7 +22,7 @@ export const createPartnerSchema = z.object({
   firstName: z.string().min(1),
   companyName: z.string().min(1),
   contact_info: z.record(z.any()).optional(),
-  email: z.string().email(),
+  email: z.string().trim().toLowerCase().email(),
   password: z.string().min(8),
 });
 export type CreatePartnerInput = z.infer<typeof createPartnerSchema>;
@@ -33,6 +33,7 @@ export const createTeamMemberSchema = z.object({
   firstName: z.string().min(1),
   lastName: z.string().min(1),
   email: z.string().email(),
+  // email: z.string().trim().toLowerCase().email(),
   password: z.string().min(8),
   department: z.string().optional(),
   position: z.string().optional(),
@@ -66,7 +67,7 @@ export type CreateProductBody = z.infer<typeof createProductSchema>;
 export const signUpSuperAdminSchema = z.object({
   firstName: z.string().min(1),
   lastName: z.string().min(1),
-  email: z.string().email(),
+  email: z.string().trim().toLowerCase().email(),
   password: z.string().min(8),
   contactNumber: z.string().optional(),
   address: z.record(z.any()).optional(),
@@ -76,7 +77,7 @@ export const createCustomerSchema = z.object({
   companyName: z.string().min(1),
   contactPerson: z.string().min(1),
   mobileNumber: z.string().min(1),
-  email: z.string().email(),
+  email: z.string().trim().toLowerCase().email(),
   serialNo: z.string().optional(),
   prime: z.boolean().optional(),
   blacklisted: z.boolean().optional(),
@@ -108,7 +109,7 @@ export const updateCustomerSchema = z.object({
   companyName: z.string().optional(),
   contactPerson: z.string().optional(),
   mobileNumber: z.string().optional(),
-  email: z.string().email().optional(),
+  email: z.string().trim().toLowerCase().email().optional(),
   serialNo: z.string().optional(),
   prime: z.boolean().optional(),
   blacklisted: z.boolean().optional(),

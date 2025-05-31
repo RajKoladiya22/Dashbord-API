@@ -101,6 +101,8 @@ export const updatePartnerStatus = async (
         data: { status },
       }),
     ]);
+    
+
 
     // 4️⃣ Return updated partner
     sendSuccessResponse(res, 200, "Partner status updated", { partners });

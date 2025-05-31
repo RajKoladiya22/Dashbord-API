@@ -19,21 +19,21 @@ export declare const signUpSchema: z.ZodObject<{
     companyName: z.ZodString;
     address: z.ZodOptional<z.ZodAny>;
 }, "strip", z.ZodTypeAny, {
+    password: string;
     firstName: string;
     lastName: string;
     email: string;
     companyName: string;
-    password: string;
-    address?: any;
     contactNumber?: string | undefined;
+    address?: any;
 }, {
+    password: string;
     firstName: string;
     lastName: string;
     email: string;
     companyName: string;
-    password: string;
-    address?: any;
     contactNumber?: string | undefined;
+    address?: any;
 }>;
 export type SignUpSchema = z.infer<typeof signUpSchema>;
 export declare const createPartnerSchema: z.ZodObject<{
@@ -43,16 +43,16 @@ export declare const createPartnerSchema: z.ZodObject<{
     email: z.ZodString;
     password: z.ZodString;
 }, "strip", z.ZodTypeAny, {
+    password: string;
     firstName: string;
     email: string;
     companyName: string;
-    password: string;
     contact_info?: Record<string, any> | undefined;
 }, {
+    password: string;
     firstName: string;
     email: string;
     companyName: string;
-    password: string;
     contact_info?: Record<string, any> | undefined;
 }>;
 export type CreatePartnerInput = z.infer<typeof createPartnerSchema>;
@@ -94,47 +94,47 @@ export declare const createTeamMemberSchema: z.ZodObject<{
         zip?: string | undefined;
     }>>;
 }, "strip", z.ZodTypeAny, {
-    firstName: string;
-    lastName: string;
-    email: string;
+    password: string;
     status: string;
-    role: "team_member" | "sub_admin";
-    adminId: string;
-    password: string;
-    full_name: string;
-    contactInfo?: {
-        email?: string | undefined;
-        phone?: string | undefined;
-    } | undefined;
-    address?: {
-        street?: string | undefined;
-        city?: string | undefined;
-        state?: string | undefined;
-        zip?: string | undefined;
-    } | undefined;
-    department?: string | undefined;
-    position?: string | undefined;
-}, {
     firstName: string;
     lastName: string;
     email: string;
-    role: "team_member" | "sub_admin";
     adminId: string;
-    password: string;
     full_name: string;
-    contactInfo?: {
-        email?: string | undefined;
-        phone?: string | undefined;
-    } | undefined;
+    role: "team_member" | "sub_admin";
     address?: {
         street?: string | undefined;
         city?: string | undefined;
         state?: string | undefined;
         zip?: string | undefined;
     } | undefined;
-    status?: string | undefined;
     department?: string | undefined;
     position?: string | undefined;
+    contactInfo?: {
+        email?: string | undefined;
+        phone?: string | undefined;
+    } | undefined;
+}, {
+    password: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    adminId: string;
+    full_name: string;
+    role: "team_member" | "sub_admin";
+    status?: string | undefined;
+    address?: {
+        street?: string | undefined;
+        city?: string | undefined;
+        state?: string | undefined;
+        zip?: string | undefined;
+    } | undefined;
+    department?: string | undefined;
+    position?: string | undefined;
+    contactInfo?: {
+        email?: string | undefined;
+        phone?: string | undefined;
+    } | undefined;
 }>;
 export type CreateTeamMemberInput = z.infer<typeof createTeamMemberSchema>;
 export declare const createProductSchema: z.ZodObject<{
@@ -146,19 +146,19 @@ export declare const createProductSchema: z.ZodObject<{
     tags: z.ZodArray<z.ZodString, "many">;
     specifications: z.ZodRecord<z.ZodString, z.ZodAny>;
 }, "strip", z.ZodTypeAny, {
-    tags: string[];
-    specifications: Record<string, any>;
     product_name: string;
     product_category: Record<string, any>;
     product_price: string;
+    tags: string[];
+    specifications: Record<string, any>;
     description?: string | undefined;
     product_link?: string | undefined;
 }, {
-    tags: string[];
-    specifications: Record<string, any>;
     product_name: string;
     product_category: Record<string, any>;
     product_price: string;
+    tags: string[];
+    specifications: Record<string, any>;
     description?: string | undefined;
     product_link?: string | undefined;
 }>;
@@ -171,19 +171,19 @@ export declare const signUpSuperAdminSchema: z.ZodObject<{
     contactNumber: z.ZodOptional<z.ZodString>;
     address: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodAny>>;
 }, "strip", z.ZodTypeAny, {
+    password: string;
     firstName: string;
     lastName: string;
     email: string;
-    password: string;
-    address?: Record<string, any> | undefined;
     contactNumber?: string | undefined;
+    address?: Record<string, any> | undefined;
 }, {
+    password: string;
     firstName: string;
     lastName: string;
     email: string;
-    password: string;
-    address?: Record<string, any> | undefined;
     contactNumber?: string | undefined;
+    address?: Record<string, any> | undefined;
 }>;
 export declare const createCustomerSchema: z.ZodObject<{
     companyName: z.ZodString;
@@ -211,8 +211,8 @@ export declare const createCustomerSchema: z.ZodObject<{
     }>, "many">>;
 }, "strip", z.ZodTypeAny, {
     email: string;
-    address: Record<string, any>;
     companyName: string;
+    address: Record<string, any>;
     contactPerson: string;
     mobileNumber: string;
     joiningDate: string;
@@ -220,17 +220,17 @@ export declare const createCustomerSchema: z.ZodObject<{
     prime?: boolean | undefined;
     blacklisted?: boolean | undefined;
     remark?: string | undefined;
-    adminCustomFields?: Record<string, any> | undefined;
     hasReference?: boolean | undefined;
     partnerId?: string | undefined;
+    adminCustomFields?: Record<string, any> | undefined;
     products?: {
         productId: string;
         expiryDate?: string | undefined;
     }[] | undefined;
 }, {
     email: string;
-    address: Record<string, any>;
     companyName: string;
+    address: Record<string, any>;
     contactPerson: string;
     mobileNumber: string;
     joiningDate: string;
@@ -238,9 +238,9 @@ export declare const createCustomerSchema: z.ZodObject<{
     prime?: boolean | undefined;
     blacklisted?: boolean | undefined;
     remark?: string | undefined;
-    adminCustomFields?: Record<string, any> | undefined;
     hasReference?: boolean | undefined;
     partnerId?: string | undefined;
+    adminCustomFields?: Record<string, any> | undefined;
     products?: {
         productId: string;
         expiryDate?: string | undefined;
@@ -272,66 +272,66 @@ export declare const updateCustomerSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         productId: string;
         purchaseDate: string;
-        renewal?: boolean | undefined;
-        renewPeriod?: "monthly" | "quarterly" | "yearly" | "half_yearly" | "custom" | undefined;
         expiryDate?: string | undefined;
+        renewal?: boolean | undefined;
         renewalDate?: string | undefined;
         details?: string | undefined;
+        renewPeriod?: "custom" | "monthly" | "quarterly" | "half_yearly" | "yearly" | undefined;
     }, {
         productId: string;
         purchaseDate: string;
-        renewal?: boolean | undefined;
-        renewPeriod?: "monthly" | "quarterly" | "yearly" | "half_yearly" | "custom" | undefined;
         expiryDate?: string | undefined;
+        renewal?: boolean | undefined;
         renewalDate?: string | undefined;
         details?: string | undefined;
+        renewPeriod?: "custom" | "monthly" | "quarterly" | "half_yearly" | "yearly" | undefined;
     }>, "many">>;
 }, "strip", z.ZodTypeAny, {
     remark: string | null;
     email?: string | undefined;
-    address?: Record<string, any> | undefined;
-    product?: {
-        productId: string;
-        purchaseDate: string;
-        renewal?: boolean | undefined;
-        renewPeriod?: "monthly" | "quarterly" | "yearly" | "half_yearly" | "custom" | undefined;
-        expiryDate?: string | undefined;
-        renewalDate?: string | undefined;
-        details?: string | undefined;
-    }[] | undefined;
     companyName?: string | undefined;
+    address?: Record<string, any> | undefined;
     contactPerson?: string | undefined;
     mobileNumber?: string | undefined;
     serialNo?: string | undefined;
     prime?: boolean | undefined;
     blacklisted?: boolean | undefined;
-    adminCustomFields?: Record<string, any> | undefined;
-    joiningDate?: string | undefined;
     hasReference?: boolean | undefined;
     partnerId?: string | null | undefined;
+    adminCustomFields?: Record<string, any> | undefined;
+    joiningDate?: string | undefined;
+    product?: {
+        productId: string;
+        purchaseDate: string;
+        expiryDate?: string | undefined;
+        renewal?: boolean | undefined;
+        renewalDate?: string | undefined;
+        details?: string | undefined;
+        renewPeriod?: "custom" | "monthly" | "quarterly" | "half_yearly" | "yearly" | undefined;
+    }[] | undefined;
 }, {
     remark: string | null;
     email?: string | undefined;
-    address?: Record<string, any> | undefined;
-    product?: {
-        productId: string;
-        purchaseDate: string;
-        renewal?: boolean | undefined;
-        renewPeriod?: "monthly" | "quarterly" | "yearly" | "half_yearly" | "custom" | undefined;
-        expiryDate?: string | undefined;
-        renewalDate?: string | undefined;
-        details?: string | undefined;
-    }[] | undefined;
     companyName?: string | undefined;
+    address?: Record<string, any> | undefined;
     contactPerson?: string | undefined;
     mobileNumber?: string | undefined;
     serialNo?: string | undefined;
     prime?: boolean | undefined;
     blacklisted?: boolean | undefined;
-    adminCustomFields?: Record<string, any> | undefined;
-    joiningDate?: string | undefined;
     hasReference?: boolean | undefined;
     partnerId?: string | null | undefined;
+    adminCustomFields?: Record<string, any> | undefined;
+    joiningDate?: string | undefined;
+    product?: {
+        productId: string;
+        purchaseDate: string;
+        expiryDate?: string | undefined;
+        renewal?: boolean | undefined;
+        renewalDate?: string | undefined;
+        details?: string | undefined;
+        renewPeriod?: "custom" | "monthly" | "quarterly" | "half_yearly" | "yearly" | undefined;
+    }[] | undefined;
 }>;
 export type UpdateCustomerBody = z.infer<typeof updateCustomerSchema>;
 export declare const updateHistorySchema: z.ZodObject<{
@@ -342,15 +342,15 @@ export declare const updateHistorySchema: z.ZodObject<{
     status: z.ZodOptional<z.ZodBoolean>;
 }, "strip", z.ZodTypeAny, {
     status?: boolean | undefined;
+    expiryDate?: string | undefined;
     purchaseDate?: string | undefined;
     renewal?: boolean | undefined;
-    expiryDate?: string | undefined;
     renewalDate?: string | undefined;
 }, {
     status?: boolean | undefined;
+    expiryDate?: string | undefined;
     purchaseDate?: string | undefined;
     renewal?: boolean | undefined;
-    expiryDate?: string | undefined;
     renewalDate?: string | undefined;
 }>;
 export type UpdateHistoryBody = z.infer<typeof updateHistorySchema>;
@@ -361,16 +361,16 @@ export declare const updateCustomFieldSchema: z.ZodObject<{
     options: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
     isMultiSelect: z.ZodOptional<z.ZodBoolean>;
 }, "strip", z.ZodTypeAny, {
+    options?: string[] | undefined;
     fieldName?: string | undefined;
     fieldType?: string | undefined;
     isRequired?: boolean | undefined;
-    options?: string[] | undefined;
     isMultiSelect?: boolean | undefined;
 }, {
+    options?: string[] | undefined;
     fieldName?: string | undefined;
     fieldType?: string | undefined;
     isRequired?: boolean | undefined;
-    options?: string[] | undefined;
     isMultiSelect?: boolean | undefined;
 }>;
 export declare const createCustomFieldSchema: z.ZodObject<{
@@ -382,14 +382,14 @@ export declare const createCustomFieldSchema: z.ZodObject<{
 }, "strip", z.ZodTypeAny, {
     fieldName: string;
     fieldType: string;
-    isRequired?: boolean | undefined;
     options?: string[] | undefined;
+    isRequired?: boolean | undefined;
     isMultiSelect?: boolean | undefined;
 }, {
     fieldName: string;
     fieldType: string;
-    isRequired?: boolean | undefined;
     options?: string[] | undefined;
+    isRequired?: boolean | undefined;
     isMultiSelect?: boolean | undefined;
 }>;
 export declare const listPlansQuery: z.ZodObject<{
@@ -424,15 +424,15 @@ export declare const createPlanSchema: z.ZodObject<{
         startsAt: z.ZodOptional<z.ZodString>;
         endsAt: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
-        offerType: "fixed" | "free_trial" | "percentage";
+        offerType: "percentage" | "fixed" | "free_trial";
+        value?: number | undefined;
         startsAt?: string | undefined;
         endsAt?: string | undefined;
-        value?: number | undefined;
     }, {
-        offerType: "fixed" | "free_trial" | "percentage";
+        offerType: "percentage" | "fixed" | "free_trial";
+        value?: number | undefined;
         startsAt?: string | undefined;
         endsAt?: string | undefined;
-        value?: number | undefined;
     }>, "many">>;
     specs: z.ZodOptional<z.ZodArray<z.ZodObject<{
         specName: z.ZodString;
@@ -456,10 +456,10 @@ export declare const createPlanSchema: z.ZodObject<{
     duration: string;
     price: number;
     offers?: {
-        offerType: "fixed" | "free_trial" | "percentage";
+        offerType: "percentage" | "fixed" | "free_trial";
+        value?: number | undefined;
         startsAt?: string | undefined;
         endsAt?: string | undefined;
-        value?: number | undefined;
     }[] | undefined;
     specs?: {
         specName: string;
@@ -473,10 +473,10 @@ export declare const createPlanSchema: z.ZodObject<{
     duration: string;
     price: number;
     offers?: {
-        offerType: "fixed" | "free_trial" | "percentage";
+        offerType: "percentage" | "fixed" | "free_trial";
+        value?: number | undefined;
         startsAt?: string | undefined;
         endsAt?: string | undefined;
-        value?: number | undefined;
     }[] | undefined;
     specs?: {
         specName: string;

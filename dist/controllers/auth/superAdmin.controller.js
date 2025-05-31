@@ -330,6 +330,12 @@ const approveAdmin = async (req, res, next) => {
             (0, responseHandler_1.sendErrorResponse)(res, 404, "Admin not found");
             return;
         }
+        await database_config_1.prisma.loginCredential.updateMany({
+            where: { userProfileId: adminDetails.id },
+            data: {
+                status: adminStatus,
+            },
+        });
         const approvedAdmin = await database_config_1.prisma.admin.update({
             where: { id: adminId },
             data: {
