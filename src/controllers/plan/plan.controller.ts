@@ -114,6 +114,13 @@ export const listPlans = async (
         skip,
         take: limit,
         orderBy: { createdAt: "desc" },
+         include: {
+          descriptions: true, 
+          specs:true,
+          offers:true,
+          subscriptions:true,
+        },
+
       }),
     ]);
 
