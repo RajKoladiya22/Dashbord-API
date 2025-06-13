@@ -3,11 +3,11 @@ export declare const signInSchema: z.ZodObject<{
     identifier: z.ZodString;
     password: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    password: string;
     identifier: string;
+    password: string;
 }, {
-    password: string;
     identifier: string;
+    password: string;
 }>;
 export type SignInSchema = z.infer<typeof signInSchema>;
 export declare const signUpSchema: z.ZodObject<{
@@ -22,16 +22,16 @@ export declare const signUpSchema: z.ZodObject<{
     firstName: string;
     lastName: string;
     email: string;
-    password: string;
     companyName: string;
+    password: string;
     address?: any;
     contactNumber?: string | undefined;
 }, {
     firstName: string;
     lastName: string;
     email: string;
-    password: string;
     companyName: string;
+    password: string;
     address?: any;
     contactNumber?: string | undefined;
 }>;
@@ -45,14 +45,14 @@ export declare const createPartnerSchema: z.ZodObject<{
 }, "strip", z.ZodTypeAny, {
     firstName: string;
     email: string;
-    password: string;
     companyName: string;
+    password: string;
     contact_info?: Record<string, any> | undefined;
 }, {
     firstName: string;
     email: string;
-    password: string;
     companyName: string;
+    password: string;
     contact_info?: Record<string, any> | undefined;
 }>;
 export type CreatePartnerInput = z.infer<typeof createPartnerSchema>;
@@ -94,16 +94,14 @@ export declare const createTeamMemberSchema: z.ZodObject<{
         zip?: string | undefined;
     }>>;
 }, "strip", z.ZodTypeAny, {
-    adminId: string;
-    full_name: string;
+    status: string;
     firstName: string;
     lastName: string;
     email: string;
-    password: string;
     role: "team_member" | "sub_admin";
-    status: string;
-    department?: string | undefined;
-    position?: string | undefined;
+    adminId: string;
+    password: string;
+    full_name: string;
     contactInfo?: {
         email?: string | undefined;
         phone?: string | undefined;
@@ -114,16 +112,16 @@ export declare const createTeamMemberSchema: z.ZodObject<{
         state?: string | undefined;
         zip?: string | undefined;
     } | undefined;
+    department?: string | undefined;
+    position?: string | undefined;
 }, {
-    adminId: string;
-    full_name: string;
     firstName: string;
     lastName: string;
     email: string;
-    password: string;
     role: "team_member" | "sub_admin";
-    department?: string | undefined;
-    position?: string | undefined;
+    adminId: string;
+    password: string;
+    full_name: string;
     status?: string | undefined;
     contactInfo?: {
         email?: string | undefined;
@@ -135,6 +133,8 @@ export declare const createTeamMemberSchema: z.ZodObject<{
         state?: string | undefined;
         zip?: string | undefined;
     } | undefined;
+    department?: string | undefined;
+    position?: string | undefined;
 }>;
 export type CreateTeamMemberInput = z.infer<typeof createTeamMemberSchema>;
 export declare const createProductSchema: z.ZodObject<{

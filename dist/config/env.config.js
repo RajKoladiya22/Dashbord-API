@@ -11,6 +11,13 @@ const envConfiguration = () => ({
     apikey: STATIC_TOKEN,
     saltRounds: SALT_ROUNDS,
     jwt: { secret: JWT_SECRET, expiresIn: JWT_EXPIRES_IN },
+    smtp: {
+        service: validate_env_1.validatedEnv.SMTP_SERVICE,
+        host: validate_env_1.validatedEnv.SMTP_HOST,
+        port: validate_env_1.validatedEnv.SMTP_PORT,
+        user: validate_env_1.validatedEnv.SMTP_USER,
+        password: validate_env_1.validatedEnv.SMTP_PASS,
+    },
 });
 exports.envConfiguration = envConfiguration;
 //# sourceMappingURL=env.config.js.map

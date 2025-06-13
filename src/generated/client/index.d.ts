@@ -39,6 +39,11 @@ export type Partner = $Result.DefaultSelection<Prisma.$PartnerPayload>
  */
 export type LoginCredential = $Result.DefaultSelection<Prisma.$LoginCredentialPayload>
 /**
+ * Model LiveChatApp
+ * 
+ */
+export type LiveChatApp = $Result.DefaultSelection<Prisma.$LiveChatAppPayload>
+/**
  * Model Plan
  * 
  */
@@ -351,6 +356,16 @@ export class PrismaClient<
     * ```
     */
   get loginCredential(): Prisma.LoginCredentialDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.liveChatApp`: Exposes CRUD operations for the **LiveChatApp** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more LiveChatApps
+    * const liveChatApps = await prisma.liveChatApp.findMany()
+    * ```
+    */
+  get liveChatApp(): Prisma.LiveChatAppDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.plan`: Exposes CRUD operations for the **Plan** model.
@@ -936,6 +951,7 @@ export namespace Prisma {
     TeamMember: 'TeamMember',
     Partner: 'Partner',
     LoginCredential: 'LoginCredential',
+    LiveChatApp: 'LiveChatApp',
     Plan: 'Plan',
     PlanOffer: 'PlanOffer',
     PlanSpec: 'PlanSpec',
@@ -968,7 +984,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "superAdmin" | "admin" | "teamMember" | "partner" | "loginCredential" | "plan" | "planOffer" | "planSpec" | "planDescription" | "subscription" | "subscriptionPayment" | "subscriptionEvent" | "product" | "productRenewalHistory" | "customer" | "customerProductHistory" | "adminCustomField" | "loginAudit" | "passwordOtp"
+      modelProps: "superAdmin" | "admin" | "teamMember" | "partner" | "loginCredential" | "liveChatApp" | "plan" | "planOffer" | "planSpec" | "planDescription" | "subscription" | "subscriptionPayment" | "subscriptionEvent" | "product" | "productRenewalHistory" | "customer" | "customerProductHistory" | "adminCustomField" | "loginAudit" | "passwordOtp"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1339,6 +1355,80 @@ export namespace Prisma {
           count: {
             args: Prisma.LoginCredentialCountArgs<ExtArgs>
             result: $Utils.Optional<LoginCredentialCountAggregateOutputType> | number
+          }
+        }
+      }
+      LiveChatApp: {
+        payload: Prisma.$LiveChatAppPayload<ExtArgs>
+        fields: Prisma.LiveChatAppFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.LiveChatAppFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LiveChatAppPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.LiveChatAppFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LiveChatAppPayload>
+          }
+          findFirst: {
+            args: Prisma.LiveChatAppFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LiveChatAppPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.LiveChatAppFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LiveChatAppPayload>
+          }
+          findMany: {
+            args: Prisma.LiveChatAppFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LiveChatAppPayload>[]
+          }
+          create: {
+            args: Prisma.LiveChatAppCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LiveChatAppPayload>
+          }
+          createMany: {
+            args: Prisma.LiveChatAppCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.LiveChatAppCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LiveChatAppPayload>[]
+          }
+          delete: {
+            args: Prisma.LiveChatAppDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LiveChatAppPayload>
+          }
+          update: {
+            args: Prisma.LiveChatAppUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LiveChatAppPayload>
+          }
+          deleteMany: {
+            args: Prisma.LiveChatAppDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.LiveChatAppUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.LiveChatAppUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LiveChatAppPayload>[]
+          }
+          upsert: {
+            args: Prisma.LiveChatAppUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LiveChatAppPayload>
+          }
+          aggregate: {
+            args: Prisma.LiveChatAppAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateLiveChatApp>
+          }
+          groupBy: {
+            args: Prisma.LiveChatAppGroupByArgs<ExtArgs>
+            result: $Utils.Optional<LiveChatAppGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.LiveChatAppCountArgs<ExtArgs>
+            result: $Utils.Optional<LiveChatAppCountAggregateOutputType> | number
           }
         }
       }
@@ -2467,6 +2557,7 @@ export namespace Prisma {
     teamMember?: TeamMemberOmit
     partner?: PartnerOmit
     loginCredential?: LoginCredentialOmit
+    liveChatApp?: LiveChatAppOmit
     plan?: PlanOmit
     planOffer?: PlanOfferOmit
     planSpec?: PlanSpecOmit
@@ -2732,10 +2823,14 @@ export namespace Prisma {
 
   export type LoginCredentialCountOutputType = {
     loginAudits: number
+    sentMessages: number
+    receivedMessages: number
   }
 
   export type LoginCredentialCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     loginAudits?: boolean | LoginCredentialCountOutputTypeCountLoginAuditsArgs
+    sentMessages?: boolean | LoginCredentialCountOutputTypeCountSentMessagesArgs
+    receivedMessages?: boolean | LoginCredentialCountOutputTypeCountReceivedMessagesArgs
   }
 
   // Custom InputTypes
@@ -2754,6 +2849,20 @@ export namespace Prisma {
    */
   export type LoginCredentialCountOutputTypeCountLoginAuditsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: LoginAuditWhereInput
+  }
+
+  /**
+   * LoginCredentialCountOutputType without action
+   */
+  export type LoginCredentialCountOutputTypeCountSentMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LiveChatAppWhereInput
+  }
+
+  /**
+   * LoginCredentialCountOutputType without action
+   */
+  export type LoginCredentialCountOutputTypeCountReceivedMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LiveChatAppWhereInput
   }
 
 
@@ -7995,6 +8104,8 @@ export namespace Prisma {
     admin?: boolean | LoginCredential$adminArgs<ExtArgs>
     superadmin?: boolean | LoginCredential$superadminArgs<ExtArgs>
     loginAudits?: boolean | LoginCredential$loginAuditsArgs<ExtArgs>
+    sentMessages?: boolean | LoginCredential$sentMessagesArgs<ExtArgs>
+    receivedMessages?: boolean | LoginCredential$receivedMessagesArgs<ExtArgs>
     _count?: boolean | LoginCredentialCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["loginCredential"]>
 
@@ -8046,6 +8157,8 @@ export namespace Prisma {
     admin?: boolean | LoginCredential$adminArgs<ExtArgs>
     superadmin?: boolean | LoginCredential$superadminArgs<ExtArgs>
     loginAudits?: boolean | LoginCredential$loginAuditsArgs<ExtArgs>
+    sentMessages?: boolean | LoginCredential$sentMessagesArgs<ExtArgs>
+    receivedMessages?: boolean | LoginCredential$receivedMessagesArgs<ExtArgs>
     _count?: boolean | LoginCredentialCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type LoginCredentialIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8063,6 +8176,8 @@ export namespace Prisma {
       admin: Prisma.$AdminPayload<ExtArgs> | null
       superadmin: Prisma.$SuperAdminPayload<ExtArgs> | null
       loginAudits: Prisma.$LoginAuditPayload<ExtArgs>[]
+      sentMessages: Prisma.$LiveChatAppPayload<ExtArgs>[]
+      receivedMessages: Prisma.$LiveChatAppPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -8472,6 +8587,8 @@ export namespace Prisma {
     admin<T extends LoginCredential$adminArgs<ExtArgs> = {}>(args?: Subset<T, LoginCredential$adminArgs<ExtArgs>>): Prisma__AdminClient<$Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     superadmin<T extends LoginCredential$superadminArgs<ExtArgs> = {}>(args?: Subset<T, LoginCredential$superadminArgs<ExtArgs>>): Prisma__SuperAdminClient<$Result.GetResult<Prisma.$SuperAdminPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     loginAudits<T extends LoginCredential$loginAuditsArgs<ExtArgs> = {}>(args?: Subset<T, LoginCredential$loginAuditsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoginAuditPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    sentMessages<T extends LoginCredential$sentMessagesArgs<ExtArgs> = {}>(args?: Subset<T, LoginCredential$sentMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LiveChatAppPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    receivedMessages<T extends LoginCredential$receivedMessagesArgs<ExtArgs> = {}>(args?: Subset<T, LoginCredential$receivedMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LiveChatAppPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8969,6 +9086,54 @@ export namespace Prisma {
   }
 
   /**
+   * LoginCredential.sentMessages
+   */
+  export type LoginCredential$sentMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LiveChatApp
+     */
+    select?: LiveChatAppSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LiveChatApp
+     */
+    omit?: LiveChatAppOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LiveChatAppInclude<ExtArgs> | null
+    where?: LiveChatAppWhereInput
+    orderBy?: LiveChatAppOrderByWithRelationInput | LiveChatAppOrderByWithRelationInput[]
+    cursor?: LiveChatAppWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LiveChatAppScalarFieldEnum | LiveChatAppScalarFieldEnum[]
+  }
+
+  /**
+   * LoginCredential.receivedMessages
+   */
+  export type LoginCredential$receivedMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LiveChatApp
+     */
+    select?: LiveChatAppSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LiveChatApp
+     */
+    omit?: LiveChatAppOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LiveChatAppInclude<ExtArgs> | null
+    where?: LiveChatAppWhereInput
+    orderBy?: LiveChatAppOrderByWithRelationInput | LiveChatAppOrderByWithRelationInput[]
+    cursor?: LiveChatAppWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LiveChatAppScalarFieldEnum | LiveChatAppScalarFieldEnum[]
+  }
+
+  /**
    * LoginCredential without action
    */
   export type LoginCredentialDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8984,6 +9149,1085 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: LoginCredentialInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model LiveChatApp
+   */
+
+  export type AggregateLiveChatApp = {
+    _count: LiveChatAppCountAggregateOutputType | null
+    _min: LiveChatAppMinAggregateOutputType | null
+    _max: LiveChatAppMaxAggregateOutputType | null
+  }
+
+  export type LiveChatAppMinAggregateOutputType = {
+    id: string | null
+    adminId: string | null
+    senderId: string | null
+    receiverId: string | null
+    content: string | null
+    createdAt: Date | null
+  }
+
+  export type LiveChatAppMaxAggregateOutputType = {
+    id: string | null
+    adminId: string | null
+    senderId: string | null
+    receiverId: string | null
+    content: string | null
+    createdAt: Date | null
+  }
+
+  export type LiveChatAppCountAggregateOutputType = {
+    id: number
+    adminId: number
+    senderId: number
+    receiverId: number
+    content: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type LiveChatAppMinAggregateInputType = {
+    id?: true
+    adminId?: true
+    senderId?: true
+    receiverId?: true
+    content?: true
+    createdAt?: true
+  }
+
+  export type LiveChatAppMaxAggregateInputType = {
+    id?: true
+    adminId?: true
+    senderId?: true
+    receiverId?: true
+    content?: true
+    createdAt?: true
+  }
+
+  export type LiveChatAppCountAggregateInputType = {
+    id?: true
+    adminId?: true
+    senderId?: true
+    receiverId?: true
+    content?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type LiveChatAppAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LiveChatApp to aggregate.
+     */
+    where?: LiveChatAppWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LiveChatApps to fetch.
+     */
+    orderBy?: LiveChatAppOrderByWithRelationInput | LiveChatAppOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: LiveChatAppWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LiveChatApps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LiveChatApps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned LiveChatApps
+    **/
+    _count?: true | LiveChatAppCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: LiveChatAppMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: LiveChatAppMaxAggregateInputType
+  }
+
+  export type GetLiveChatAppAggregateType<T extends LiveChatAppAggregateArgs> = {
+        [P in keyof T & keyof AggregateLiveChatApp]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateLiveChatApp[P]>
+      : GetScalarType<T[P], AggregateLiveChatApp[P]>
+  }
+
+
+
+
+  export type LiveChatAppGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LiveChatAppWhereInput
+    orderBy?: LiveChatAppOrderByWithAggregationInput | LiveChatAppOrderByWithAggregationInput[]
+    by: LiveChatAppScalarFieldEnum[] | LiveChatAppScalarFieldEnum
+    having?: LiveChatAppScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: LiveChatAppCountAggregateInputType | true
+    _min?: LiveChatAppMinAggregateInputType
+    _max?: LiveChatAppMaxAggregateInputType
+  }
+
+  export type LiveChatAppGroupByOutputType = {
+    id: string
+    adminId: string
+    senderId: string
+    receiverId: string
+    content: string
+    createdAt: Date
+    _count: LiveChatAppCountAggregateOutputType | null
+    _min: LiveChatAppMinAggregateOutputType | null
+    _max: LiveChatAppMaxAggregateOutputType | null
+  }
+
+  type GetLiveChatAppGroupByPayload<T extends LiveChatAppGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<LiveChatAppGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof LiveChatAppGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], LiveChatAppGroupByOutputType[P]>
+            : GetScalarType<T[P], LiveChatAppGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type LiveChatAppSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    adminId?: boolean
+    senderId?: boolean
+    receiverId?: boolean
+    content?: boolean
+    createdAt?: boolean
+    sender_id?: boolean | LoginCredentialDefaultArgs<ExtArgs>
+    receiver_id?: boolean | LoginCredentialDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["liveChatApp"]>
+
+  export type LiveChatAppSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    adminId?: boolean
+    senderId?: boolean
+    receiverId?: boolean
+    content?: boolean
+    createdAt?: boolean
+    sender_id?: boolean | LoginCredentialDefaultArgs<ExtArgs>
+    receiver_id?: boolean | LoginCredentialDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["liveChatApp"]>
+
+  export type LiveChatAppSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    adminId?: boolean
+    senderId?: boolean
+    receiverId?: boolean
+    content?: boolean
+    createdAt?: boolean
+    sender_id?: boolean | LoginCredentialDefaultArgs<ExtArgs>
+    receiver_id?: boolean | LoginCredentialDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["liveChatApp"]>
+
+  export type LiveChatAppSelectScalar = {
+    id?: boolean
+    adminId?: boolean
+    senderId?: boolean
+    receiverId?: boolean
+    content?: boolean
+    createdAt?: boolean
+  }
+
+  export type LiveChatAppOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "adminId" | "senderId" | "receiverId" | "content" | "createdAt", ExtArgs["result"]["liveChatApp"]>
+  export type LiveChatAppInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    sender_id?: boolean | LoginCredentialDefaultArgs<ExtArgs>
+    receiver_id?: boolean | LoginCredentialDefaultArgs<ExtArgs>
+  }
+  export type LiveChatAppIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    sender_id?: boolean | LoginCredentialDefaultArgs<ExtArgs>
+    receiver_id?: boolean | LoginCredentialDefaultArgs<ExtArgs>
+  }
+  export type LiveChatAppIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    sender_id?: boolean | LoginCredentialDefaultArgs<ExtArgs>
+    receiver_id?: boolean | LoginCredentialDefaultArgs<ExtArgs>
+  }
+
+  export type $LiveChatAppPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "LiveChatApp"
+    objects: {
+      sender_id: Prisma.$LoginCredentialPayload<ExtArgs>
+      receiver_id: Prisma.$LoginCredentialPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      adminId: string
+      senderId: string
+      receiverId: string
+      content: string
+      createdAt: Date
+    }, ExtArgs["result"]["liveChatApp"]>
+    composites: {}
+  }
+
+  type LiveChatAppGetPayload<S extends boolean | null | undefined | LiveChatAppDefaultArgs> = $Result.GetResult<Prisma.$LiveChatAppPayload, S>
+
+  type LiveChatAppCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<LiveChatAppFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: LiveChatAppCountAggregateInputType | true
+    }
+
+  export interface LiveChatAppDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['LiveChatApp'], meta: { name: 'LiveChatApp' } }
+    /**
+     * Find zero or one LiveChatApp that matches the filter.
+     * @param {LiveChatAppFindUniqueArgs} args - Arguments to find a LiveChatApp
+     * @example
+     * // Get one LiveChatApp
+     * const liveChatApp = await prisma.liveChatApp.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends LiveChatAppFindUniqueArgs>(args: SelectSubset<T, LiveChatAppFindUniqueArgs<ExtArgs>>): Prisma__LiveChatAppClient<$Result.GetResult<Prisma.$LiveChatAppPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one LiveChatApp that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {LiveChatAppFindUniqueOrThrowArgs} args - Arguments to find a LiveChatApp
+     * @example
+     * // Get one LiveChatApp
+     * const liveChatApp = await prisma.liveChatApp.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends LiveChatAppFindUniqueOrThrowArgs>(args: SelectSubset<T, LiveChatAppFindUniqueOrThrowArgs<ExtArgs>>): Prisma__LiveChatAppClient<$Result.GetResult<Prisma.$LiveChatAppPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first LiveChatApp that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LiveChatAppFindFirstArgs} args - Arguments to find a LiveChatApp
+     * @example
+     * // Get one LiveChatApp
+     * const liveChatApp = await prisma.liveChatApp.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends LiveChatAppFindFirstArgs>(args?: SelectSubset<T, LiveChatAppFindFirstArgs<ExtArgs>>): Prisma__LiveChatAppClient<$Result.GetResult<Prisma.$LiveChatAppPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first LiveChatApp that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LiveChatAppFindFirstOrThrowArgs} args - Arguments to find a LiveChatApp
+     * @example
+     * // Get one LiveChatApp
+     * const liveChatApp = await prisma.liveChatApp.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends LiveChatAppFindFirstOrThrowArgs>(args?: SelectSubset<T, LiveChatAppFindFirstOrThrowArgs<ExtArgs>>): Prisma__LiveChatAppClient<$Result.GetResult<Prisma.$LiveChatAppPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more LiveChatApps that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LiveChatAppFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all LiveChatApps
+     * const liveChatApps = await prisma.liveChatApp.findMany()
+     * 
+     * // Get first 10 LiveChatApps
+     * const liveChatApps = await prisma.liveChatApp.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const liveChatAppWithIdOnly = await prisma.liveChatApp.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends LiveChatAppFindManyArgs>(args?: SelectSubset<T, LiveChatAppFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LiveChatAppPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a LiveChatApp.
+     * @param {LiveChatAppCreateArgs} args - Arguments to create a LiveChatApp.
+     * @example
+     * // Create one LiveChatApp
+     * const LiveChatApp = await prisma.liveChatApp.create({
+     *   data: {
+     *     // ... data to create a LiveChatApp
+     *   }
+     * })
+     * 
+     */
+    create<T extends LiveChatAppCreateArgs>(args: SelectSubset<T, LiveChatAppCreateArgs<ExtArgs>>): Prisma__LiveChatAppClient<$Result.GetResult<Prisma.$LiveChatAppPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many LiveChatApps.
+     * @param {LiveChatAppCreateManyArgs} args - Arguments to create many LiveChatApps.
+     * @example
+     * // Create many LiveChatApps
+     * const liveChatApp = await prisma.liveChatApp.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends LiveChatAppCreateManyArgs>(args?: SelectSubset<T, LiveChatAppCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many LiveChatApps and returns the data saved in the database.
+     * @param {LiveChatAppCreateManyAndReturnArgs} args - Arguments to create many LiveChatApps.
+     * @example
+     * // Create many LiveChatApps
+     * const liveChatApp = await prisma.liveChatApp.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many LiveChatApps and only return the `id`
+     * const liveChatAppWithIdOnly = await prisma.liveChatApp.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends LiveChatAppCreateManyAndReturnArgs>(args?: SelectSubset<T, LiveChatAppCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LiveChatAppPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a LiveChatApp.
+     * @param {LiveChatAppDeleteArgs} args - Arguments to delete one LiveChatApp.
+     * @example
+     * // Delete one LiveChatApp
+     * const LiveChatApp = await prisma.liveChatApp.delete({
+     *   where: {
+     *     // ... filter to delete one LiveChatApp
+     *   }
+     * })
+     * 
+     */
+    delete<T extends LiveChatAppDeleteArgs>(args: SelectSubset<T, LiveChatAppDeleteArgs<ExtArgs>>): Prisma__LiveChatAppClient<$Result.GetResult<Prisma.$LiveChatAppPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one LiveChatApp.
+     * @param {LiveChatAppUpdateArgs} args - Arguments to update one LiveChatApp.
+     * @example
+     * // Update one LiveChatApp
+     * const liveChatApp = await prisma.liveChatApp.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends LiveChatAppUpdateArgs>(args: SelectSubset<T, LiveChatAppUpdateArgs<ExtArgs>>): Prisma__LiveChatAppClient<$Result.GetResult<Prisma.$LiveChatAppPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more LiveChatApps.
+     * @param {LiveChatAppDeleteManyArgs} args - Arguments to filter LiveChatApps to delete.
+     * @example
+     * // Delete a few LiveChatApps
+     * const { count } = await prisma.liveChatApp.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends LiveChatAppDeleteManyArgs>(args?: SelectSubset<T, LiveChatAppDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LiveChatApps.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LiveChatAppUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many LiveChatApps
+     * const liveChatApp = await prisma.liveChatApp.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends LiveChatAppUpdateManyArgs>(args: SelectSubset<T, LiveChatAppUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LiveChatApps and returns the data updated in the database.
+     * @param {LiveChatAppUpdateManyAndReturnArgs} args - Arguments to update many LiveChatApps.
+     * @example
+     * // Update many LiveChatApps
+     * const liveChatApp = await prisma.liveChatApp.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more LiveChatApps and only return the `id`
+     * const liveChatAppWithIdOnly = await prisma.liveChatApp.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends LiveChatAppUpdateManyAndReturnArgs>(args: SelectSubset<T, LiveChatAppUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LiveChatAppPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one LiveChatApp.
+     * @param {LiveChatAppUpsertArgs} args - Arguments to update or create a LiveChatApp.
+     * @example
+     * // Update or create a LiveChatApp
+     * const liveChatApp = await prisma.liveChatApp.upsert({
+     *   create: {
+     *     // ... data to create a LiveChatApp
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the LiveChatApp we want to update
+     *   }
+     * })
+     */
+    upsert<T extends LiveChatAppUpsertArgs>(args: SelectSubset<T, LiveChatAppUpsertArgs<ExtArgs>>): Prisma__LiveChatAppClient<$Result.GetResult<Prisma.$LiveChatAppPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of LiveChatApps.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LiveChatAppCountArgs} args - Arguments to filter LiveChatApps to count.
+     * @example
+     * // Count the number of LiveChatApps
+     * const count = await prisma.liveChatApp.count({
+     *   where: {
+     *     // ... the filter for the LiveChatApps we want to count
+     *   }
+     * })
+    **/
+    count<T extends LiveChatAppCountArgs>(
+      args?: Subset<T, LiveChatAppCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], LiveChatAppCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a LiveChatApp.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LiveChatAppAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends LiveChatAppAggregateArgs>(args: Subset<T, LiveChatAppAggregateArgs>): Prisma.PrismaPromise<GetLiveChatAppAggregateType<T>>
+
+    /**
+     * Group by LiveChatApp.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LiveChatAppGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends LiveChatAppGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: LiveChatAppGroupByArgs['orderBy'] }
+        : { orderBy?: LiveChatAppGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, LiveChatAppGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLiveChatAppGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the LiveChatApp model
+   */
+  readonly fields: LiveChatAppFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for LiveChatApp.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__LiveChatAppClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    sender_id<T extends LoginCredentialDefaultArgs<ExtArgs> = {}>(args?: Subset<T, LoginCredentialDefaultArgs<ExtArgs>>): Prisma__LoginCredentialClient<$Result.GetResult<Prisma.$LoginCredentialPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    receiver_id<T extends LoginCredentialDefaultArgs<ExtArgs> = {}>(args?: Subset<T, LoginCredentialDefaultArgs<ExtArgs>>): Prisma__LoginCredentialClient<$Result.GetResult<Prisma.$LoginCredentialPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the LiveChatApp model
+   */
+  interface LiveChatAppFieldRefs {
+    readonly id: FieldRef<"LiveChatApp", 'String'>
+    readonly adminId: FieldRef<"LiveChatApp", 'String'>
+    readonly senderId: FieldRef<"LiveChatApp", 'String'>
+    readonly receiverId: FieldRef<"LiveChatApp", 'String'>
+    readonly content: FieldRef<"LiveChatApp", 'String'>
+    readonly createdAt: FieldRef<"LiveChatApp", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * LiveChatApp findUnique
+   */
+  export type LiveChatAppFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LiveChatApp
+     */
+    select?: LiveChatAppSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LiveChatApp
+     */
+    omit?: LiveChatAppOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LiveChatAppInclude<ExtArgs> | null
+    /**
+     * Filter, which LiveChatApp to fetch.
+     */
+    where: LiveChatAppWhereUniqueInput
+  }
+
+  /**
+   * LiveChatApp findUniqueOrThrow
+   */
+  export type LiveChatAppFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LiveChatApp
+     */
+    select?: LiveChatAppSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LiveChatApp
+     */
+    omit?: LiveChatAppOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LiveChatAppInclude<ExtArgs> | null
+    /**
+     * Filter, which LiveChatApp to fetch.
+     */
+    where: LiveChatAppWhereUniqueInput
+  }
+
+  /**
+   * LiveChatApp findFirst
+   */
+  export type LiveChatAppFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LiveChatApp
+     */
+    select?: LiveChatAppSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LiveChatApp
+     */
+    omit?: LiveChatAppOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LiveChatAppInclude<ExtArgs> | null
+    /**
+     * Filter, which LiveChatApp to fetch.
+     */
+    where?: LiveChatAppWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LiveChatApps to fetch.
+     */
+    orderBy?: LiveChatAppOrderByWithRelationInput | LiveChatAppOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LiveChatApps.
+     */
+    cursor?: LiveChatAppWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LiveChatApps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LiveChatApps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LiveChatApps.
+     */
+    distinct?: LiveChatAppScalarFieldEnum | LiveChatAppScalarFieldEnum[]
+  }
+
+  /**
+   * LiveChatApp findFirstOrThrow
+   */
+  export type LiveChatAppFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LiveChatApp
+     */
+    select?: LiveChatAppSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LiveChatApp
+     */
+    omit?: LiveChatAppOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LiveChatAppInclude<ExtArgs> | null
+    /**
+     * Filter, which LiveChatApp to fetch.
+     */
+    where?: LiveChatAppWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LiveChatApps to fetch.
+     */
+    orderBy?: LiveChatAppOrderByWithRelationInput | LiveChatAppOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LiveChatApps.
+     */
+    cursor?: LiveChatAppWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LiveChatApps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LiveChatApps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LiveChatApps.
+     */
+    distinct?: LiveChatAppScalarFieldEnum | LiveChatAppScalarFieldEnum[]
+  }
+
+  /**
+   * LiveChatApp findMany
+   */
+  export type LiveChatAppFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LiveChatApp
+     */
+    select?: LiveChatAppSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LiveChatApp
+     */
+    omit?: LiveChatAppOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LiveChatAppInclude<ExtArgs> | null
+    /**
+     * Filter, which LiveChatApps to fetch.
+     */
+    where?: LiveChatAppWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LiveChatApps to fetch.
+     */
+    orderBy?: LiveChatAppOrderByWithRelationInput | LiveChatAppOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing LiveChatApps.
+     */
+    cursor?: LiveChatAppWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LiveChatApps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LiveChatApps.
+     */
+    skip?: number
+    distinct?: LiveChatAppScalarFieldEnum | LiveChatAppScalarFieldEnum[]
+  }
+
+  /**
+   * LiveChatApp create
+   */
+  export type LiveChatAppCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LiveChatApp
+     */
+    select?: LiveChatAppSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LiveChatApp
+     */
+    omit?: LiveChatAppOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LiveChatAppInclude<ExtArgs> | null
+    /**
+     * The data needed to create a LiveChatApp.
+     */
+    data: XOR<LiveChatAppCreateInput, LiveChatAppUncheckedCreateInput>
+  }
+
+  /**
+   * LiveChatApp createMany
+   */
+  export type LiveChatAppCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many LiveChatApps.
+     */
+    data: LiveChatAppCreateManyInput | LiveChatAppCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * LiveChatApp createManyAndReturn
+   */
+  export type LiveChatAppCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LiveChatApp
+     */
+    select?: LiveChatAppSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the LiveChatApp
+     */
+    omit?: LiveChatAppOmit<ExtArgs> | null
+    /**
+     * The data used to create many LiveChatApps.
+     */
+    data: LiveChatAppCreateManyInput | LiveChatAppCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LiveChatAppIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * LiveChatApp update
+   */
+  export type LiveChatAppUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LiveChatApp
+     */
+    select?: LiveChatAppSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LiveChatApp
+     */
+    omit?: LiveChatAppOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LiveChatAppInclude<ExtArgs> | null
+    /**
+     * The data needed to update a LiveChatApp.
+     */
+    data: XOR<LiveChatAppUpdateInput, LiveChatAppUncheckedUpdateInput>
+    /**
+     * Choose, which LiveChatApp to update.
+     */
+    where: LiveChatAppWhereUniqueInput
+  }
+
+  /**
+   * LiveChatApp updateMany
+   */
+  export type LiveChatAppUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update LiveChatApps.
+     */
+    data: XOR<LiveChatAppUpdateManyMutationInput, LiveChatAppUncheckedUpdateManyInput>
+    /**
+     * Filter which LiveChatApps to update
+     */
+    where?: LiveChatAppWhereInput
+    /**
+     * Limit how many LiveChatApps to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * LiveChatApp updateManyAndReturn
+   */
+  export type LiveChatAppUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LiveChatApp
+     */
+    select?: LiveChatAppSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the LiveChatApp
+     */
+    omit?: LiveChatAppOmit<ExtArgs> | null
+    /**
+     * The data used to update LiveChatApps.
+     */
+    data: XOR<LiveChatAppUpdateManyMutationInput, LiveChatAppUncheckedUpdateManyInput>
+    /**
+     * Filter which LiveChatApps to update
+     */
+    where?: LiveChatAppWhereInput
+    /**
+     * Limit how many LiveChatApps to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LiveChatAppIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * LiveChatApp upsert
+   */
+  export type LiveChatAppUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LiveChatApp
+     */
+    select?: LiveChatAppSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LiveChatApp
+     */
+    omit?: LiveChatAppOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LiveChatAppInclude<ExtArgs> | null
+    /**
+     * The filter to search for the LiveChatApp to update in case it exists.
+     */
+    where: LiveChatAppWhereUniqueInput
+    /**
+     * In case the LiveChatApp found by the `where` argument doesn't exist, create a new LiveChatApp with this data.
+     */
+    create: XOR<LiveChatAppCreateInput, LiveChatAppUncheckedCreateInput>
+    /**
+     * In case the LiveChatApp was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<LiveChatAppUpdateInput, LiveChatAppUncheckedUpdateInput>
+  }
+
+  /**
+   * LiveChatApp delete
+   */
+  export type LiveChatAppDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LiveChatApp
+     */
+    select?: LiveChatAppSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LiveChatApp
+     */
+    omit?: LiveChatAppOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LiveChatAppInclude<ExtArgs> | null
+    /**
+     * Filter which LiveChatApp to delete.
+     */
+    where: LiveChatAppWhereUniqueInput
+  }
+
+  /**
+   * LiveChatApp deleteMany
+   */
+  export type LiveChatAppDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LiveChatApps to delete
+     */
+    where?: LiveChatAppWhereInput
+    /**
+     * Limit how many LiveChatApps to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * LiveChatApp without action
+   */
+  export type LiveChatAppDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LiveChatApp
+     */
+    select?: LiveChatAppSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LiveChatApp
+     */
+    omit?: LiveChatAppOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LiveChatAppInclude<ExtArgs> | null
   }
 
 
@@ -24987,6 +26231,18 @@ export namespace Prisma {
   export type LoginCredentialScalarFieldEnum = (typeof LoginCredentialScalarFieldEnum)[keyof typeof LoginCredentialScalarFieldEnum]
 
 
+  export const LiveChatAppScalarFieldEnum: {
+    id: 'id',
+    adminId: 'adminId',
+    senderId: 'senderId',
+    receiverId: 'receiverId',
+    content: 'content',
+    createdAt: 'createdAt'
+  };
+
+  export type LiveChatAppScalarFieldEnum = (typeof LiveChatAppScalarFieldEnum)[keyof typeof LiveChatAppScalarFieldEnum]
+
+
   export const PlanScalarFieldEnum: {
     id: 'id',
     name: 'name',
@@ -25792,6 +27048,8 @@ export namespace Prisma {
     admin?: XOR<AdminNullableScalarRelationFilter, AdminWhereInput> | null
     superadmin?: XOR<SuperAdminNullableScalarRelationFilter, SuperAdminWhereInput> | null
     loginAudits?: LoginAuditListRelationFilter
+    sentMessages?: LiveChatAppListRelationFilter
+    receivedMessages?: LiveChatAppListRelationFilter
   }
 
   export type LoginCredentialOrderByWithRelationInput = {
@@ -25808,6 +27066,8 @@ export namespace Prisma {
     admin?: AdminOrderByWithRelationInput
     superadmin?: SuperAdminOrderByWithRelationInput
     loginAudits?: LoginAuditOrderByRelationAggregateInput
+    sentMessages?: LiveChatAppOrderByRelationAggregateInput
+    receivedMessages?: LiveChatAppOrderByRelationAggregateInput
   }
 
   export type LoginCredentialWhereUniqueInput = Prisma.AtLeast<{
@@ -25827,6 +27087,8 @@ export namespace Prisma {
     admin?: XOR<AdminNullableScalarRelationFilter, AdminWhereInput> | null
     superadmin?: XOR<SuperAdminNullableScalarRelationFilter, SuperAdminWhereInput> | null
     loginAudits?: LoginAuditListRelationFilter
+    sentMessages?: LiveChatAppListRelationFilter
+    receivedMessages?: LiveChatAppListRelationFilter
   }, "id" | "email">
 
   export type LoginCredentialOrderByWithAggregationInput = {
@@ -25859,6 +27121,69 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"LoginCredential"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"LoginCredential"> | Date | string
     superAdminId?: UuidNullableWithAggregatesFilter<"LoginCredential"> | string | null
+  }
+
+  export type LiveChatAppWhereInput = {
+    AND?: LiveChatAppWhereInput | LiveChatAppWhereInput[]
+    OR?: LiveChatAppWhereInput[]
+    NOT?: LiveChatAppWhereInput | LiveChatAppWhereInput[]
+    id?: UuidFilter<"LiveChatApp"> | string
+    adminId?: UuidFilter<"LiveChatApp"> | string
+    senderId?: UuidFilter<"LiveChatApp"> | string
+    receiverId?: UuidFilter<"LiveChatApp"> | string
+    content?: StringFilter<"LiveChatApp"> | string
+    createdAt?: DateTimeFilter<"LiveChatApp"> | Date | string
+    sender_id?: XOR<LoginCredentialScalarRelationFilter, LoginCredentialWhereInput>
+    receiver_id?: XOR<LoginCredentialScalarRelationFilter, LoginCredentialWhereInput>
+  }
+
+  export type LiveChatAppOrderByWithRelationInput = {
+    id?: SortOrder
+    adminId?: SortOrder
+    senderId?: SortOrder
+    receiverId?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+    sender_id?: LoginCredentialOrderByWithRelationInput
+    receiver_id?: LoginCredentialOrderByWithRelationInput
+  }
+
+  export type LiveChatAppWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: LiveChatAppWhereInput | LiveChatAppWhereInput[]
+    OR?: LiveChatAppWhereInput[]
+    NOT?: LiveChatAppWhereInput | LiveChatAppWhereInput[]
+    adminId?: UuidFilter<"LiveChatApp"> | string
+    senderId?: UuidFilter<"LiveChatApp"> | string
+    receiverId?: UuidFilter<"LiveChatApp"> | string
+    content?: StringFilter<"LiveChatApp"> | string
+    createdAt?: DateTimeFilter<"LiveChatApp"> | Date | string
+    sender_id?: XOR<LoginCredentialScalarRelationFilter, LoginCredentialWhereInput>
+    receiver_id?: XOR<LoginCredentialScalarRelationFilter, LoginCredentialWhereInput>
+  }, "id">
+
+  export type LiveChatAppOrderByWithAggregationInput = {
+    id?: SortOrder
+    adminId?: SortOrder
+    senderId?: SortOrder
+    receiverId?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+    _count?: LiveChatAppCountOrderByAggregateInput
+    _max?: LiveChatAppMaxOrderByAggregateInput
+    _min?: LiveChatAppMinOrderByAggregateInput
+  }
+
+  export type LiveChatAppScalarWhereWithAggregatesInput = {
+    AND?: LiveChatAppScalarWhereWithAggregatesInput | LiveChatAppScalarWhereWithAggregatesInput[]
+    OR?: LiveChatAppScalarWhereWithAggregatesInput[]
+    NOT?: LiveChatAppScalarWhereWithAggregatesInput | LiveChatAppScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"LiveChatApp"> | string
+    adminId?: UuidWithAggregatesFilter<"LiveChatApp"> | string
+    senderId?: UuidWithAggregatesFilter<"LiveChatApp"> | string
+    receiverId?: UuidWithAggregatesFilter<"LiveChatApp"> | string
+    content?: StringWithAggregatesFilter<"LiveChatApp"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"LiveChatApp"> | Date | string
   }
 
   export type PlanWhereInput = {
@@ -27433,6 +28758,8 @@ export namespace Prisma {
     admin?: AdminCreateNestedOneWithoutLoginCredsInput
     superadmin?: SuperAdminCreateNestedOneWithoutLoginCredsInput
     loginAudits?: LoginAuditCreateNestedManyWithoutLoginCredentialInput
+    sentMessages?: LiveChatAppCreateNestedManyWithoutSender_idInput
+    receivedMessages?: LiveChatAppCreateNestedManyWithoutReceiver_idInput
   }
 
   export type LoginCredentialUncheckedCreateInput = {
@@ -27447,6 +28774,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     superAdminId?: string | null
     loginAudits?: LoginAuditUncheckedCreateNestedManyWithoutLoginCredentialInput
+    sentMessages?: LiveChatAppUncheckedCreateNestedManyWithoutSender_idInput
+    receivedMessages?: LiveChatAppUncheckedCreateNestedManyWithoutReceiver_idInput
   }
 
   export type LoginCredentialUpdateInput = {
@@ -27461,6 +28790,8 @@ export namespace Prisma {
     admin?: AdminUpdateOneWithoutLoginCredsNestedInput
     superadmin?: SuperAdminUpdateOneWithoutLoginCredsNestedInput
     loginAudits?: LoginAuditUpdateManyWithoutLoginCredentialNestedInput
+    sentMessages?: LiveChatAppUpdateManyWithoutSender_idNestedInput
+    receivedMessages?: LiveChatAppUpdateManyWithoutReceiver_idNestedInput
   }
 
   export type LoginCredentialUncheckedUpdateInput = {
@@ -27475,6 +28806,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     superAdminId?: NullableStringFieldUpdateOperationsInput | string | null
     loginAudits?: LoginAuditUncheckedUpdateManyWithoutLoginCredentialNestedInput
+    sentMessages?: LiveChatAppUncheckedUpdateManyWithoutSender_idNestedInput
+    receivedMessages?: LiveChatAppUncheckedUpdateManyWithoutReceiver_idNestedInput
   }
 
   export type LoginCredentialCreateManyInput = {
@@ -27512,6 +28845,67 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     superAdminId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type LiveChatAppCreateInput = {
+    id?: string
+    adminId: string
+    content: string
+    createdAt?: Date | string
+    sender_id: LoginCredentialCreateNestedOneWithoutSentMessagesInput
+    receiver_id: LoginCredentialCreateNestedOneWithoutReceivedMessagesInput
+  }
+
+  export type LiveChatAppUncheckedCreateInput = {
+    id?: string
+    adminId: string
+    senderId: string
+    receiverId: string
+    content: string
+    createdAt?: Date | string
+  }
+
+  export type LiveChatAppUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    adminId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sender_id?: LoginCredentialUpdateOneRequiredWithoutSentMessagesNestedInput
+    receiver_id?: LoginCredentialUpdateOneRequiredWithoutReceivedMessagesNestedInput
+  }
+
+  export type LiveChatAppUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    adminId?: StringFieldUpdateOperationsInput | string
+    senderId?: StringFieldUpdateOperationsInput | string
+    receiverId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LiveChatAppCreateManyInput = {
+    id?: string
+    adminId: string
+    senderId: string
+    receiverId: string
+    content: string
+    createdAt?: Date | string
+  }
+
+  export type LiveChatAppUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    adminId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LiveChatAppUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    adminId?: StringFieldUpdateOperationsInput | string
+    senderId?: StringFieldUpdateOperationsInput | string
+    receiverId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PlanCreateInput = {
@@ -29195,7 +30589,17 @@ export namespace Prisma {
     none?: LoginAuditWhereInput
   }
 
+  export type LiveChatAppListRelationFilter = {
+    every?: LiveChatAppWhereInput
+    some?: LiveChatAppWhereInput
+    none?: LiveChatAppWhereInput
+  }
+
   export type LoginAuditOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type LiveChatAppOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -29251,6 +30655,38 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type LoginCredentialScalarRelationFilter = {
+    is?: LoginCredentialWhereInput
+    isNot?: LoginCredentialWhereInput
+  }
+
+  export type LiveChatAppCountOrderByAggregateInput = {
+    id?: SortOrder
+    adminId?: SortOrder
+    senderId?: SortOrder
+    receiverId?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type LiveChatAppMaxOrderByAggregateInput = {
+    id?: SortOrder
+    adminId?: SortOrder
+    senderId?: SortOrder
+    receiverId?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type LiveChatAppMinOrderByAggregateInput = {
+    id?: SortOrder
+    adminId?: SortOrder
+    senderId?: SortOrder
+    receiverId?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type FloatFilter<$PrismaModel = never> = {
@@ -29985,11 +31421,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type LoginCredentialScalarRelationFilter = {
-    is?: LoginCredentialWhereInput
-    isNot?: LoginCredentialWhereInput
-  }
-
   export type LoginAuditCountOrderByAggregateInput = {
     id?: SortOrder
     loginCredentialId?: SortOrder
@@ -30534,11 +31965,39 @@ export namespace Prisma {
     connect?: LoginAuditWhereUniqueInput | LoginAuditWhereUniqueInput[]
   }
 
+  export type LiveChatAppCreateNestedManyWithoutSender_idInput = {
+    create?: XOR<LiveChatAppCreateWithoutSender_idInput, LiveChatAppUncheckedCreateWithoutSender_idInput> | LiveChatAppCreateWithoutSender_idInput[] | LiveChatAppUncheckedCreateWithoutSender_idInput[]
+    connectOrCreate?: LiveChatAppCreateOrConnectWithoutSender_idInput | LiveChatAppCreateOrConnectWithoutSender_idInput[]
+    createMany?: LiveChatAppCreateManySender_idInputEnvelope
+    connect?: LiveChatAppWhereUniqueInput | LiveChatAppWhereUniqueInput[]
+  }
+
+  export type LiveChatAppCreateNestedManyWithoutReceiver_idInput = {
+    create?: XOR<LiveChatAppCreateWithoutReceiver_idInput, LiveChatAppUncheckedCreateWithoutReceiver_idInput> | LiveChatAppCreateWithoutReceiver_idInput[] | LiveChatAppUncheckedCreateWithoutReceiver_idInput[]
+    connectOrCreate?: LiveChatAppCreateOrConnectWithoutReceiver_idInput | LiveChatAppCreateOrConnectWithoutReceiver_idInput[]
+    createMany?: LiveChatAppCreateManyReceiver_idInputEnvelope
+    connect?: LiveChatAppWhereUniqueInput | LiveChatAppWhereUniqueInput[]
+  }
+
   export type LoginAuditUncheckedCreateNestedManyWithoutLoginCredentialInput = {
     create?: XOR<LoginAuditCreateWithoutLoginCredentialInput, LoginAuditUncheckedCreateWithoutLoginCredentialInput> | LoginAuditCreateWithoutLoginCredentialInput[] | LoginAuditUncheckedCreateWithoutLoginCredentialInput[]
     connectOrCreate?: LoginAuditCreateOrConnectWithoutLoginCredentialInput | LoginAuditCreateOrConnectWithoutLoginCredentialInput[]
     createMany?: LoginAuditCreateManyLoginCredentialInputEnvelope
     connect?: LoginAuditWhereUniqueInput | LoginAuditWhereUniqueInput[]
+  }
+
+  export type LiveChatAppUncheckedCreateNestedManyWithoutSender_idInput = {
+    create?: XOR<LiveChatAppCreateWithoutSender_idInput, LiveChatAppUncheckedCreateWithoutSender_idInput> | LiveChatAppCreateWithoutSender_idInput[] | LiveChatAppUncheckedCreateWithoutSender_idInput[]
+    connectOrCreate?: LiveChatAppCreateOrConnectWithoutSender_idInput | LiveChatAppCreateOrConnectWithoutSender_idInput[]
+    createMany?: LiveChatAppCreateManySender_idInputEnvelope
+    connect?: LiveChatAppWhereUniqueInput | LiveChatAppWhereUniqueInput[]
+  }
+
+  export type LiveChatAppUncheckedCreateNestedManyWithoutReceiver_idInput = {
+    create?: XOR<LiveChatAppCreateWithoutReceiver_idInput, LiveChatAppUncheckedCreateWithoutReceiver_idInput> | LiveChatAppCreateWithoutReceiver_idInput[] | LiveChatAppUncheckedCreateWithoutReceiver_idInput[]
+    connectOrCreate?: LiveChatAppCreateOrConnectWithoutReceiver_idInput | LiveChatAppCreateOrConnectWithoutReceiver_idInput[]
+    createMany?: LiveChatAppCreateManyReceiver_idInputEnvelope
+    connect?: LiveChatAppWhereUniqueInput | LiveChatAppWhereUniqueInput[]
   }
 
   export type AdminUpdateOneWithoutLoginCredsNestedInput = {
@@ -30575,6 +32034,34 @@ export namespace Prisma {
     deleteMany?: LoginAuditScalarWhereInput | LoginAuditScalarWhereInput[]
   }
 
+  export type LiveChatAppUpdateManyWithoutSender_idNestedInput = {
+    create?: XOR<LiveChatAppCreateWithoutSender_idInput, LiveChatAppUncheckedCreateWithoutSender_idInput> | LiveChatAppCreateWithoutSender_idInput[] | LiveChatAppUncheckedCreateWithoutSender_idInput[]
+    connectOrCreate?: LiveChatAppCreateOrConnectWithoutSender_idInput | LiveChatAppCreateOrConnectWithoutSender_idInput[]
+    upsert?: LiveChatAppUpsertWithWhereUniqueWithoutSender_idInput | LiveChatAppUpsertWithWhereUniqueWithoutSender_idInput[]
+    createMany?: LiveChatAppCreateManySender_idInputEnvelope
+    set?: LiveChatAppWhereUniqueInput | LiveChatAppWhereUniqueInput[]
+    disconnect?: LiveChatAppWhereUniqueInput | LiveChatAppWhereUniqueInput[]
+    delete?: LiveChatAppWhereUniqueInput | LiveChatAppWhereUniqueInput[]
+    connect?: LiveChatAppWhereUniqueInput | LiveChatAppWhereUniqueInput[]
+    update?: LiveChatAppUpdateWithWhereUniqueWithoutSender_idInput | LiveChatAppUpdateWithWhereUniqueWithoutSender_idInput[]
+    updateMany?: LiveChatAppUpdateManyWithWhereWithoutSender_idInput | LiveChatAppUpdateManyWithWhereWithoutSender_idInput[]
+    deleteMany?: LiveChatAppScalarWhereInput | LiveChatAppScalarWhereInput[]
+  }
+
+  export type LiveChatAppUpdateManyWithoutReceiver_idNestedInput = {
+    create?: XOR<LiveChatAppCreateWithoutReceiver_idInput, LiveChatAppUncheckedCreateWithoutReceiver_idInput> | LiveChatAppCreateWithoutReceiver_idInput[] | LiveChatAppUncheckedCreateWithoutReceiver_idInput[]
+    connectOrCreate?: LiveChatAppCreateOrConnectWithoutReceiver_idInput | LiveChatAppCreateOrConnectWithoutReceiver_idInput[]
+    upsert?: LiveChatAppUpsertWithWhereUniqueWithoutReceiver_idInput | LiveChatAppUpsertWithWhereUniqueWithoutReceiver_idInput[]
+    createMany?: LiveChatAppCreateManyReceiver_idInputEnvelope
+    set?: LiveChatAppWhereUniqueInput | LiveChatAppWhereUniqueInput[]
+    disconnect?: LiveChatAppWhereUniqueInput | LiveChatAppWhereUniqueInput[]
+    delete?: LiveChatAppWhereUniqueInput | LiveChatAppWhereUniqueInput[]
+    connect?: LiveChatAppWhereUniqueInput | LiveChatAppWhereUniqueInput[]
+    update?: LiveChatAppUpdateWithWhereUniqueWithoutReceiver_idInput | LiveChatAppUpdateWithWhereUniqueWithoutReceiver_idInput[]
+    updateMany?: LiveChatAppUpdateManyWithWhereWithoutReceiver_idInput | LiveChatAppUpdateManyWithWhereWithoutReceiver_idInput[]
+    deleteMany?: LiveChatAppScalarWhereInput | LiveChatAppScalarWhereInput[]
+  }
+
   export type LoginAuditUncheckedUpdateManyWithoutLoginCredentialNestedInput = {
     create?: XOR<LoginAuditCreateWithoutLoginCredentialInput, LoginAuditUncheckedCreateWithoutLoginCredentialInput> | LoginAuditCreateWithoutLoginCredentialInput[] | LoginAuditUncheckedCreateWithoutLoginCredentialInput[]
     connectOrCreate?: LoginAuditCreateOrConnectWithoutLoginCredentialInput | LoginAuditCreateOrConnectWithoutLoginCredentialInput[]
@@ -30587,6 +32074,62 @@ export namespace Prisma {
     update?: LoginAuditUpdateWithWhereUniqueWithoutLoginCredentialInput | LoginAuditUpdateWithWhereUniqueWithoutLoginCredentialInput[]
     updateMany?: LoginAuditUpdateManyWithWhereWithoutLoginCredentialInput | LoginAuditUpdateManyWithWhereWithoutLoginCredentialInput[]
     deleteMany?: LoginAuditScalarWhereInput | LoginAuditScalarWhereInput[]
+  }
+
+  export type LiveChatAppUncheckedUpdateManyWithoutSender_idNestedInput = {
+    create?: XOR<LiveChatAppCreateWithoutSender_idInput, LiveChatAppUncheckedCreateWithoutSender_idInput> | LiveChatAppCreateWithoutSender_idInput[] | LiveChatAppUncheckedCreateWithoutSender_idInput[]
+    connectOrCreate?: LiveChatAppCreateOrConnectWithoutSender_idInput | LiveChatAppCreateOrConnectWithoutSender_idInput[]
+    upsert?: LiveChatAppUpsertWithWhereUniqueWithoutSender_idInput | LiveChatAppUpsertWithWhereUniqueWithoutSender_idInput[]
+    createMany?: LiveChatAppCreateManySender_idInputEnvelope
+    set?: LiveChatAppWhereUniqueInput | LiveChatAppWhereUniqueInput[]
+    disconnect?: LiveChatAppWhereUniqueInput | LiveChatAppWhereUniqueInput[]
+    delete?: LiveChatAppWhereUniqueInput | LiveChatAppWhereUniqueInput[]
+    connect?: LiveChatAppWhereUniqueInput | LiveChatAppWhereUniqueInput[]
+    update?: LiveChatAppUpdateWithWhereUniqueWithoutSender_idInput | LiveChatAppUpdateWithWhereUniqueWithoutSender_idInput[]
+    updateMany?: LiveChatAppUpdateManyWithWhereWithoutSender_idInput | LiveChatAppUpdateManyWithWhereWithoutSender_idInput[]
+    deleteMany?: LiveChatAppScalarWhereInput | LiveChatAppScalarWhereInput[]
+  }
+
+  export type LiveChatAppUncheckedUpdateManyWithoutReceiver_idNestedInput = {
+    create?: XOR<LiveChatAppCreateWithoutReceiver_idInput, LiveChatAppUncheckedCreateWithoutReceiver_idInput> | LiveChatAppCreateWithoutReceiver_idInput[] | LiveChatAppUncheckedCreateWithoutReceiver_idInput[]
+    connectOrCreate?: LiveChatAppCreateOrConnectWithoutReceiver_idInput | LiveChatAppCreateOrConnectWithoutReceiver_idInput[]
+    upsert?: LiveChatAppUpsertWithWhereUniqueWithoutReceiver_idInput | LiveChatAppUpsertWithWhereUniqueWithoutReceiver_idInput[]
+    createMany?: LiveChatAppCreateManyReceiver_idInputEnvelope
+    set?: LiveChatAppWhereUniqueInput | LiveChatAppWhereUniqueInput[]
+    disconnect?: LiveChatAppWhereUniqueInput | LiveChatAppWhereUniqueInput[]
+    delete?: LiveChatAppWhereUniqueInput | LiveChatAppWhereUniqueInput[]
+    connect?: LiveChatAppWhereUniqueInput | LiveChatAppWhereUniqueInput[]
+    update?: LiveChatAppUpdateWithWhereUniqueWithoutReceiver_idInput | LiveChatAppUpdateWithWhereUniqueWithoutReceiver_idInput[]
+    updateMany?: LiveChatAppUpdateManyWithWhereWithoutReceiver_idInput | LiveChatAppUpdateManyWithWhereWithoutReceiver_idInput[]
+    deleteMany?: LiveChatAppScalarWhereInput | LiveChatAppScalarWhereInput[]
+  }
+
+  export type LoginCredentialCreateNestedOneWithoutSentMessagesInput = {
+    create?: XOR<LoginCredentialCreateWithoutSentMessagesInput, LoginCredentialUncheckedCreateWithoutSentMessagesInput>
+    connectOrCreate?: LoginCredentialCreateOrConnectWithoutSentMessagesInput
+    connect?: LoginCredentialWhereUniqueInput
+  }
+
+  export type LoginCredentialCreateNestedOneWithoutReceivedMessagesInput = {
+    create?: XOR<LoginCredentialCreateWithoutReceivedMessagesInput, LoginCredentialUncheckedCreateWithoutReceivedMessagesInput>
+    connectOrCreate?: LoginCredentialCreateOrConnectWithoutReceivedMessagesInput
+    connect?: LoginCredentialWhereUniqueInput
+  }
+
+  export type LoginCredentialUpdateOneRequiredWithoutSentMessagesNestedInput = {
+    create?: XOR<LoginCredentialCreateWithoutSentMessagesInput, LoginCredentialUncheckedCreateWithoutSentMessagesInput>
+    connectOrCreate?: LoginCredentialCreateOrConnectWithoutSentMessagesInput
+    upsert?: LoginCredentialUpsertWithoutSentMessagesInput
+    connect?: LoginCredentialWhereUniqueInput
+    update?: XOR<XOR<LoginCredentialUpdateToOneWithWhereWithoutSentMessagesInput, LoginCredentialUpdateWithoutSentMessagesInput>, LoginCredentialUncheckedUpdateWithoutSentMessagesInput>
+  }
+
+  export type LoginCredentialUpdateOneRequiredWithoutReceivedMessagesNestedInput = {
+    create?: XOR<LoginCredentialCreateWithoutReceivedMessagesInput, LoginCredentialUncheckedCreateWithoutReceivedMessagesInput>
+    connectOrCreate?: LoginCredentialCreateOrConnectWithoutReceivedMessagesInput
+    upsert?: LoginCredentialUpsertWithoutReceivedMessagesInput
+    connect?: LoginCredentialWhereUniqueInput
+    update?: XOR<XOR<LoginCredentialUpdateToOneWithWhereWithoutReceivedMessagesInput, LoginCredentialUpdateWithoutReceivedMessagesInput>, LoginCredentialUncheckedUpdateWithoutReceivedMessagesInput>
   }
 
   export type PlanOfferCreateNestedManyWithoutPlanInput = {
@@ -31677,6 +33220,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     admin?: AdminCreateNestedOneWithoutLoginCredsInput
     loginAudits?: LoginAuditCreateNestedManyWithoutLoginCredentialInput
+    sentMessages?: LiveChatAppCreateNestedManyWithoutSender_idInput
+    receivedMessages?: LiveChatAppCreateNestedManyWithoutReceiver_idInput
   }
 
   export type LoginCredentialUncheckedCreateWithoutSuperadminInput = {
@@ -31690,6 +33235,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     loginAudits?: LoginAuditUncheckedCreateNestedManyWithoutLoginCredentialInput
+    sentMessages?: LiveChatAppUncheckedCreateNestedManyWithoutSender_idInput
+    receivedMessages?: LiveChatAppUncheckedCreateNestedManyWithoutReceiver_idInput
   }
 
   export type LoginCredentialCreateOrConnectWithoutSuperadminInput = {
@@ -31995,6 +33542,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     superadmin?: SuperAdminCreateNestedOneWithoutLoginCredsInput
     loginAudits?: LoginAuditCreateNestedManyWithoutLoginCredentialInput
+    sentMessages?: LiveChatAppCreateNestedManyWithoutSender_idInput
+    receivedMessages?: LiveChatAppCreateNestedManyWithoutReceiver_idInput
   }
 
   export type LoginCredentialUncheckedCreateWithoutAdminInput = {
@@ -32008,6 +33557,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     superAdminId?: string | null
     loginAudits?: LoginAuditUncheckedCreateNestedManyWithoutLoginCredentialInput
+    sentMessages?: LiveChatAppUncheckedCreateNestedManyWithoutSender_idInput
+    receivedMessages?: LiveChatAppUncheckedCreateNestedManyWithoutReceiver_idInput
   }
 
   export type LoginCredentialCreateOrConnectWithoutAdminInput = {
@@ -32703,6 +34254,58 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type LiveChatAppCreateWithoutSender_idInput = {
+    id?: string
+    adminId: string
+    content: string
+    createdAt?: Date | string
+    receiver_id: LoginCredentialCreateNestedOneWithoutReceivedMessagesInput
+  }
+
+  export type LiveChatAppUncheckedCreateWithoutSender_idInput = {
+    id?: string
+    adminId: string
+    receiverId: string
+    content: string
+    createdAt?: Date | string
+  }
+
+  export type LiveChatAppCreateOrConnectWithoutSender_idInput = {
+    where: LiveChatAppWhereUniqueInput
+    create: XOR<LiveChatAppCreateWithoutSender_idInput, LiveChatAppUncheckedCreateWithoutSender_idInput>
+  }
+
+  export type LiveChatAppCreateManySender_idInputEnvelope = {
+    data: LiveChatAppCreateManySender_idInput | LiveChatAppCreateManySender_idInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type LiveChatAppCreateWithoutReceiver_idInput = {
+    id?: string
+    adminId: string
+    content: string
+    createdAt?: Date | string
+    sender_id: LoginCredentialCreateNestedOneWithoutSentMessagesInput
+  }
+
+  export type LiveChatAppUncheckedCreateWithoutReceiver_idInput = {
+    id?: string
+    adminId: string
+    senderId: string
+    content: string
+    createdAt?: Date | string
+  }
+
+  export type LiveChatAppCreateOrConnectWithoutReceiver_idInput = {
+    where: LiveChatAppWhereUniqueInput
+    create: XOR<LiveChatAppCreateWithoutReceiver_idInput, LiveChatAppUncheckedCreateWithoutReceiver_idInput>
+  }
+
+  export type LiveChatAppCreateManyReceiver_idInputEnvelope = {
+    data: LiveChatAppCreateManyReceiver_idInput | LiveChatAppCreateManyReceiver_idInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AdminUpsertWithoutLoginCredsInput = {
     update: XOR<AdminUpdateWithoutLoginCredsInput, AdminUncheckedUpdateWithoutLoginCredsInput>
     create: XOR<AdminCreateWithoutLoginCredsInput, AdminUncheckedCreateWithoutLoginCredsInput>
@@ -32822,6 +34425,202 @@ export namespace Prisma {
     ipAddress?: StringFilter<"LoginAudit"> | string
     userAgent?: StringFilter<"LoginAudit"> | string
     createdAt?: DateTimeFilter<"LoginAudit"> | Date | string
+  }
+
+  export type LiveChatAppUpsertWithWhereUniqueWithoutSender_idInput = {
+    where: LiveChatAppWhereUniqueInput
+    update: XOR<LiveChatAppUpdateWithoutSender_idInput, LiveChatAppUncheckedUpdateWithoutSender_idInput>
+    create: XOR<LiveChatAppCreateWithoutSender_idInput, LiveChatAppUncheckedCreateWithoutSender_idInput>
+  }
+
+  export type LiveChatAppUpdateWithWhereUniqueWithoutSender_idInput = {
+    where: LiveChatAppWhereUniqueInput
+    data: XOR<LiveChatAppUpdateWithoutSender_idInput, LiveChatAppUncheckedUpdateWithoutSender_idInput>
+  }
+
+  export type LiveChatAppUpdateManyWithWhereWithoutSender_idInput = {
+    where: LiveChatAppScalarWhereInput
+    data: XOR<LiveChatAppUpdateManyMutationInput, LiveChatAppUncheckedUpdateManyWithoutSender_idInput>
+  }
+
+  export type LiveChatAppScalarWhereInput = {
+    AND?: LiveChatAppScalarWhereInput | LiveChatAppScalarWhereInput[]
+    OR?: LiveChatAppScalarWhereInput[]
+    NOT?: LiveChatAppScalarWhereInput | LiveChatAppScalarWhereInput[]
+    id?: UuidFilter<"LiveChatApp"> | string
+    adminId?: UuidFilter<"LiveChatApp"> | string
+    senderId?: UuidFilter<"LiveChatApp"> | string
+    receiverId?: UuidFilter<"LiveChatApp"> | string
+    content?: StringFilter<"LiveChatApp"> | string
+    createdAt?: DateTimeFilter<"LiveChatApp"> | Date | string
+  }
+
+  export type LiveChatAppUpsertWithWhereUniqueWithoutReceiver_idInput = {
+    where: LiveChatAppWhereUniqueInput
+    update: XOR<LiveChatAppUpdateWithoutReceiver_idInput, LiveChatAppUncheckedUpdateWithoutReceiver_idInput>
+    create: XOR<LiveChatAppCreateWithoutReceiver_idInput, LiveChatAppUncheckedCreateWithoutReceiver_idInput>
+  }
+
+  export type LiveChatAppUpdateWithWhereUniqueWithoutReceiver_idInput = {
+    where: LiveChatAppWhereUniqueInput
+    data: XOR<LiveChatAppUpdateWithoutReceiver_idInput, LiveChatAppUncheckedUpdateWithoutReceiver_idInput>
+  }
+
+  export type LiveChatAppUpdateManyWithWhereWithoutReceiver_idInput = {
+    where: LiveChatAppScalarWhereInput
+    data: XOR<LiveChatAppUpdateManyMutationInput, LiveChatAppUncheckedUpdateManyWithoutReceiver_idInput>
+  }
+
+  export type LoginCredentialCreateWithoutSentMessagesInput = {
+    id?: string
+    role: $Enums.Role
+    email: string
+    passwordHash: string
+    userProfileId: string
+    status?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    admin?: AdminCreateNestedOneWithoutLoginCredsInput
+    superadmin?: SuperAdminCreateNestedOneWithoutLoginCredsInput
+    loginAudits?: LoginAuditCreateNestedManyWithoutLoginCredentialInput
+    receivedMessages?: LiveChatAppCreateNestedManyWithoutReceiver_idInput
+  }
+
+  export type LoginCredentialUncheckedCreateWithoutSentMessagesInput = {
+    id?: string
+    role: $Enums.Role
+    email: string
+    passwordHash: string
+    userProfileId: string
+    adminId?: string | null
+    status?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    superAdminId?: string | null
+    loginAudits?: LoginAuditUncheckedCreateNestedManyWithoutLoginCredentialInput
+    receivedMessages?: LiveChatAppUncheckedCreateNestedManyWithoutReceiver_idInput
+  }
+
+  export type LoginCredentialCreateOrConnectWithoutSentMessagesInput = {
+    where: LoginCredentialWhereUniqueInput
+    create: XOR<LoginCredentialCreateWithoutSentMessagesInput, LoginCredentialUncheckedCreateWithoutSentMessagesInput>
+  }
+
+  export type LoginCredentialCreateWithoutReceivedMessagesInput = {
+    id?: string
+    role: $Enums.Role
+    email: string
+    passwordHash: string
+    userProfileId: string
+    status?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    admin?: AdminCreateNestedOneWithoutLoginCredsInput
+    superadmin?: SuperAdminCreateNestedOneWithoutLoginCredsInput
+    loginAudits?: LoginAuditCreateNestedManyWithoutLoginCredentialInput
+    sentMessages?: LiveChatAppCreateNestedManyWithoutSender_idInput
+  }
+
+  export type LoginCredentialUncheckedCreateWithoutReceivedMessagesInput = {
+    id?: string
+    role: $Enums.Role
+    email: string
+    passwordHash: string
+    userProfileId: string
+    adminId?: string | null
+    status?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    superAdminId?: string | null
+    loginAudits?: LoginAuditUncheckedCreateNestedManyWithoutLoginCredentialInput
+    sentMessages?: LiveChatAppUncheckedCreateNestedManyWithoutSender_idInput
+  }
+
+  export type LoginCredentialCreateOrConnectWithoutReceivedMessagesInput = {
+    where: LoginCredentialWhereUniqueInput
+    create: XOR<LoginCredentialCreateWithoutReceivedMessagesInput, LoginCredentialUncheckedCreateWithoutReceivedMessagesInput>
+  }
+
+  export type LoginCredentialUpsertWithoutSentMessagesInput = {
+    update: XOR<LoginCredentialUpdateWithoutSentMessagesInput, LoginCredentialUncheckedUpdateWithoutSentMessagesInput>
+    create: XOR<LoginCredentialCreateWithoutSentMessagesInput, LoginCredentialUncheckedCreateWithoutSentMessagesInput>
+    where?: LoginCredentialWhereInput
+  }
+
+  export type LoginCredentialUpdateToOneWithWhereWithoutSentMessagesInput = {
+    where?: LoginCredentialWhereInput
+    data: XOR<LoginCredentialUpdateWithoutSentMessagesInput, LoginCredentialUncheckedUpdateWithoutSentMessagesInput>
+  }
+
+  export type LoginCredentialUpdateWithoutSentMessagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    userProfileId?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    admin?: AdminUpdateOneWithoutLoginCredsNestedInput
+    superadmin?: SuperAdminUpdateOneWithoutLoginCredsNestedInput
+    loginAudits?: LoginAuditUpdateManyWithoutLoginCredentialNestedInput
+    receivedMessages?: LiveChatAppUpdateManyWithoutReceiver_idNestedInput
+  }
+
+  export type LoginCredentialUncheckedUpdateWithoutSentMessagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    userProfileId?: StringFieldUpdateOperationsInput | string
+    adminId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    superAdminId?: NullableStringFieldUpdateOperationsInput | string | null
+    loginAudits?: LoginAuditUncheckedUpdateManyWithoutLoginCredentialNestedInput
+    receivedMessages?: LiveChatAppUncheckedUpdateManyWithoutReceiver_idNestedInput
+  }
+
+  export type LoginCredentialUpsertWithoutReceivedMessagesInput = {
+    update: XOR<LoginCredentialUpdateWithoutReceivedMessagesInput, LoginCredentialUncheckedUpdateWithoutReceivedMessagesInput>
+    create: XOR<LoginCredentialCreateWithoutReceivedMessagesInput, LoginCredentialUncheckedCreateWithoutReceivedMessagesInput>
+    where?: LoginCredentialWhereInput
+  }
+
+  export type LoginCredentialUpdateToOneWithWhereWithoutReceivedMessagesInput = {
+    where?: LoginCredentialWhereInput
+    data: XOR<LoginCredentialUpdateWithoutReceivedMessagesInput, LoginCredentialUncheckedUpdateWithoutReceivedMessagesInput>
+  }
+
+  export type LoginCredentialUpdateWithoutReceivedMessagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    userProfileId?: StringFieldUpdateOperationsInput | string
+    status?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    admin?: AdminUpdateOneWithoutLoginCredsNestedInput
+    superadmin?: SuperAdminUpdateOneWithoutLoginCredsNestedInput
+    loginAudits?: LoginAuditUpdateManyWithoutLoginCredentialNestedInput
+    sentMessages?: LiveChatAppUpdateManyWithoutSender_idNestedInput
+  }
+
+  export type LoginCredentialUncheckedUpdateWithoutReceivedMessagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    userProfileId?: StringFieldUpdateOperationsInput | string
+    adminId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    superAdminId?: NullableStringFieldUpdateOperationsInput | string | null
+    loginAudits?: LoginAuditUncheckedUpdateManyWithoutLoginCredentialNestedInput
+    sentMessages?: LiveChatAppUncheckedUpdateManyWithoutSender_idNestedInput
   }
 
   export type PlanOfferCreateWithoutPlanInput = {
@@ -34747,6 +36546,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     admin?: AdminCreateNestedOneWithoutLoginCredsInput
     superadmin?: SuperAdminCreateNestedOneWithoutLoginCredsInput
+    sentMessages?: LiveChatAppCreateNestedManyWithoutSender_idInput
+    receivedMessages?: LiveChatAppCreateNestedManyWithoutReceiver_idInput
   }
 
   export type LoginCredentialUncheckedCreateWithoutLoginAuditsInput = {
@@ -34760,6 +36561,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     superAdminId?: string | null
+    sentMessages?: LiveChatAppUncheckedCreateNestedManyWithoutSender_idInput
+    receivedMessages?: LiveChatAppUncheckedCreateNestedManyWithoutReceiver_idInput
   }
 
   export type LoginCredentialCreateOrConnectWithoutLoginAuditsInput = {
@@ -34789,6 +36592,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     admin?: AdminUpdateOneWithoutLoginCredsNestedInput
     superadmin?: SuperAdminUpdateOneWithoutLoginCredsNestedInput
+    sentMessages?: LiveChatAppUpdateManyWithoutSender_idNestedInput
+    receivedMessages?: LiveChatAppUpdateManyWithoutReceiver_idNestedInput
   }
 
   export type LoginCredentialUncheckedUpdateWithoutLoginAuditsInput = {
@@ -34802,6 +36607,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     superAdminId?: NullableStringFieldUpdateOperationsInput | string | null
+    sentMessages?: LiveChatAppUncheckedUpdateManyWithoutSender_idNestedInput
+    receivedMessages?: LiveChatAppUncheckedUpdateManyWithoutReceiver_idNestedInput
   }
 
   export type LoginCredentialCreateManySuperadminInput = {
@@ -34827,6 +36634,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     admin?: AdminUpdateOneWithoutLoginCredsNestedInput
     loginAudits?: LoginAuditUpdateManyWithoutLoginCredentialNestedInput
+    sentMessages?: LiveChatAppUpdateManyWithoutSender_idNestedInput
+    receivedMessages?: LiveChatAppUpdateManyWithoutReceiver_idNestedInput
   }
 
   export type LoginCredentialUncheckedUpdateWithoutSuperadminInput = {
@@ -34840,6 +36649,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     loginAudits?: LoginAuditUncheckedUpdateManyWithoutLoginCredentialNestedInput
+    sentMessages?: LiveChatAppUncheckedUpdateManyWithoutSender_idNestedInput
+    receivedMessages?: LiveChatAppUncheckedUpdateManyWithoutReceiver_idNestedInput
   }
 
   export type LoginCredentialUncheckedUpdateManyWithoutSuperadminInput = {
@@ -35259,6 +37070,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     superadmin?: SuperAdminUpdateOneWithoutLoginCredsNestedInput
     loginAudits?: LoginAuditUpdateManyWithoutLoginCredentialNestedInput
+    sentMessages?: LiveChatAppUpdateManyWithoutSender_idNestedInput
+    receivedMessages?: LiveChatAppUpdateManyWithoutReceiver_idNestedInput
   }
 
   export type LoginCredentialUncheckedUpdateWithoutAdminInput = {
@@ -35272,6 +37085,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     superAdminId?: NullableStringFieldUpdateOperationsInput | string | null
     loginAudits?: LoginAuditUncheckedUpdateManyWithoutLoginCredentialNestedInput
+    sentMessages?: LiveChatAppUncheckedUpdateManyWithoutSender_idNestedInput
+    receivedMessages?: LiveChatAppUncheckedUpdateManyWithoutReceiver_idNestedInput
   }
 
   export type LoginCredentialUncheckedUpdateManyWithoutAdminInput = {
@@ -35421,6 +37236,22 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type LiveChatAppCreateManySender_idInput = {
+    id?: string
+    adminId: string
+    receiverId: string
+    content: string
+    createdAt?: Date | string
+  }
+
+  export type LiveChatAppCreateManyReceiver_idInput = {
+    id?: string
+    adminId: string
+    senderId: string
+    content: string
+    createdAt?: Date | string
+  }
+
   export type LoginAuditUpdateWithoutLoginCredentialInput = {
     id?: StringFieldUpdateOperationsInput | string
     attemptTime?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35445,6 +37276,54 @@ export namespace Prisma {
     success?: BoolFieldUpdateOperationsInput | boolean
     ipAddress?: StringFieldUpdateOperationsInput | string
     userAgent?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LiveChatAppUpdateWithoutSender_idInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    adminId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    receiver_id?: LoginCredentialUpdateOneRequiredWithoutReceivedMessagesNestedInput
+  }
+
+  export type LiveChatAppUncheckedUpdateWithoutSender_idInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    adminId?: StringFieldUpdateOperationsInput | string
+    receiverId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LiveChatAppUncheckedUpdateManyWithoutSender_idInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    adminId?: StringFieldUpdateOperationsInput | string
+    receiverId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LiveChatAppUpdateWithoutReceiver_idInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    adminId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sender_id?: LoginCredentialUpdateOneRequiredWithoutSentMessagesNestedInput
+  }
+
+  export type LiveChatAppUncheckedUpdateWithoutReceiver_idInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    adminId?: StringFieldUpdateOperationsInput | string
+    senderId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LiveChatAppUncheckedUpdateManyWithoutReceiver_idInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    adminId?: StringFieldUpdateOperationsInput | string
+    senderId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

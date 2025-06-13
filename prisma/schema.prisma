@@ -8,7 +8,7 @@ datasource db {
 
 generator client {
   provider      = "prisma-client-js"
-  output        = "../src/generated/client"
+  // output        = "../src/generated/client"
   binaryTargets = ["native", "windows"]
 }
 
@@ -165,8 +165,28 @@ model LoginCredential {
   superadmin  SuperAdmin?  @relation("SuperAdminCredentials", onDelete: Cascade, fields: [superAdminId], references: [id])
   loginAudits LoginAudit[]
 
+  sentMessages     LiveChatApp[] @relation("Sender")
+  receivedMessages LiveChatApp[] @relation("Receiver")
+
   @@index([adminId])
   @@map("login_credentials")
+}
+
+// ——————————————————————————————————————————
+// LiveChatApp
+// ——————————————————————————————————————————
+model LiveChatApp {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  adminId    String   @map("admin_id") @db.Uuid
+  senderId   String   @map("sender_id") @db.Uuid
+  receiverId String   @map("receiver_id") @db.Uuid
+  content    String   @map("content")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  sender_id   LoginCredential @relation("Sender", fields: [senderId], references: [id])
+  receiver_id LoginCredential @relation("Receiver", fields: [receiverId], references: [id])
+
+  @@map("live_chat_app")
 }
 
 // ——————————————————————————————————————————
@@ -337,31 +357,27 @@ model ProductRenewalHistory {
 // Customer & History
 // ——————————————————————————————————————————
 model Customer {
-  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  adminId           String?   @db.Uuid
-  companyName       String   @map("company_name")
-  contactPerson     String   @map("contact_person")
-  mobileNumber      String   @unique @map("mobile_number")
-  email             String   @unique
-  serialNo          String   @map("serial_no")
-  prime             Boolean  @default(false)
-  blacklisted       Boolean  @default(false)
+  id                String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  adminId           String? @db.Uuid
+  companyName       String  @map("company_name")
+  contactPerson     String  @map("contact_person")
+  mobileNumber      String  @unique @map("mobile_number")
+  email             String  @unique
+  serialNo          String  @map("serial_no")
+  prime             Boolean @default(false)
+  blacklisted       Boolean @default(false)
   remark            String?
   adminCustomFields Json?
   address           Json?
 
+  joiningDate  DateTime @map("joining_date")
+  hasReference Boolean  @default(false) @map("has_reference")
+  partnerId    String?  @map("partner_id") @db.Uuid
+  status       Boolean  @default(true) @map("status")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
-
-
-  
-  joiningDate       DateTime @map("joining_date")
-  hasReference      Boolean  @default(false) @map("has_reference")
-  partnerId         String?  @map("partner_id") @db.Uuid
-  status            Boolean  @default(true) @map("status")
-  createdAt         DateTime @default(now()) @map("created_at")
-  updatedAt         DateTime @updatedAt @map("updated_at")
-
-  admin   Admin?                    @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  admin   Admin?                   @relation(fields: [adminId], references: [id], onDelete: Cascade)
   partner Partner?                 @relation("PartnerCustomers", fields: [partnerId], references: [id])
   history CustomerProductHistory[]
 
@@ -454,4 +470,3 @@ model PasswordOtp {
   @@index([userId, purpose])
   @@map("password_otps")
 }
-

@@ -10,6 +10,7 @@ const requestLogger_1 = require("./core/middleware/logs/requestLogger");
 const errorHandler_1 = require("./core/middleware/logs/errorHandler");
 const v1_1 = __importDefault(require("./routes/v1"));
 const checkStaticToken_1 = require("./core/middleware/key/checkStaticToken");
+require("./core/job/planStatus");
 const app = (0, express_1.default)();
 const corsOptions = {
     origin: ["http://localhost:5173", "https://dashbord-seven-sigma.vercel.app"],

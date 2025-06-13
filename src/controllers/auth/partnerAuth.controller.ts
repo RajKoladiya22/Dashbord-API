@@ -8,11 +8,16 @@ import {
 } from "../../core/utils/httpResponse";
 import { CreatePartnerInput } from "../../core/utils/zod";
 import nodemailer from "nodemailer";
+import { log } from "node:console";
+
+const SMTP_USER = env.SMTP_USER
+const SMTP_PASS = env.SMTP_PASS
+
 const mailtransport = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "magicallydev@gmail.com",
-    pass: "szlm wgaw fkrz pbdc",
+    user: SMTP_USER,
+    pass: SMTP_PASS,
   },
 });
 const SALT_ROUNDS = parseInt(env.SALT_ROUNDS ?? "12", 10);

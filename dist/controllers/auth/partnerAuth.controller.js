@@ -9,11 +9,13 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const database_config_1 = require("../../config/database.config");
 const httpResponse_1 = require("../../core/utils/httpResponse");
 const nodemailer_1 = __importDefault(require("nodemailer"));
+const SMTP_USER = database_config_1.env.SMTP_USER;
+const SMTP_PASS = database_config_1.env.SMTP_PASS;
 const mailtransport = nodemailer_1.default.createTransport({
     service: "gmail",
     auth: {
-        user: "magicallydev@gmail.com",
-        pass: "szlm wgaw fkrz pbdc",
+        user: SMTP_USER,
+        pass: SMTP_PASS,
     },
 });
 const SALT_ROUNDS = parseInt((_a = database_config_1.env.SALT_ROUNDS) !== null && _a !== void 0 ? _a : "12", 10);

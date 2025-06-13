@@ -43,7 +43,7 @@ export interface EnvConfig {
   saltRounds: string;
   jwt: JwtConfig;
   // database: DatabaseConfig;
-  // smtp: SmtpConfig;
+  smtp: SmtpConfig;
   // aws: AwsConfig;
   // admin: AdminConfig;
 }
@@ -87,13 +87,13 @@ export const envConfiguration = (): EnvConfig => ({
   //   databaseName: validatedEnv.DB_NAME,
   // },
 
-  // smtp: {
-  //   service: validatedEnv.SMTP_SERVICE,
-  //   host: validatedEnv.SMTP_HOST,
-  //   port: validatedEnv.SMTP_PORT,
-  //   user: validatedEnv.SMTP_USER,
-  //   password: validatedEnv.SMTP_PASS,
-  // },
+  smtp: {
+    service: validatedEnv.SMTP_SERVICE,
+    host: validatedEnv.SMTP_HOST,
+    port: validatedEnv.SMTP_PORT,
+    user: validatedEnv.SMTP_USER,
+    password: validatedEnv.SMTP_PASS,
+  },
 
   // aws: {
   //   bucketName: validatedEnv.AWS_BUCKET_NAME,

@@ -5,6 +5,7 @@ import { requestLogger } from "./core/middleware/logs/requestLogger";
 import { errorHandler } from "./core/middleware/logs/errorHandler";
 import Router from "./routes/v1";
 import { checkStaticToken } from "./core/middleware/key/checkStaticToken";
+import  "./core/job/planStatus"
 // import path from "path";
 // import fs from "fs";
 

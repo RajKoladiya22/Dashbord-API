@@ -11,7 +11,12 @@ import {
 
 const router = Router();
 
-router.get("/", authenticateUser, authorizeRoles("admin"), listPartners);
+router.get(
+  "/", 
+  authenticateUser, 
+  authorizeRoles("admin"), 
+  listPartners
+);
 router.patch(
   "/:id/status",
   authenticateUser,
