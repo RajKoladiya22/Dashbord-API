@@ -6,6 +6,7 @@ import {
   sendSuccessResponse,
   sendErrorResponse,
 } from "../../core/utils/httpResponse";
+const secret = Symbol("secret") 
 
 const SALT_ROUNDS = parseInt(env.SALT_ROUNDS ?? "12", 10);
 
@@ -36,6 +37,7 @@ export const getProfile = async (
             address: true,
             createdAt: true,
             updatedAt: true,
+          
           },
         });
         break;
@@ -47,10 +49,26 @@ export const getProfile = async (
             firstName: true,
             lastName: true,
             email: true,
+            companyName: true, 
             contactInfo: true,
             address: true,
             createdAt: true,
             updatedAt: true,
+            subscriptions: {
+              select: {
+                status: true,
+                startsAt: true,
+                endsAt: true,
+                plan: {
+                  select: {
+                    id: true,
+                    name: true,
+                    price: true,
+                    duration: true,
+                  },
+                },
+              }
+            }
           },
         });
         break;
@@ -62,10 +80,21 @@ export const getProfile = async (
             firstName: true,
             lastName: true,
             email: true,
+            status: true,
+            companyName: true,
             contactInfo: true,
             address: true,
             createdAt: true,
             updatedAt: true,
+            admin: {
+              select: {
+                firstName: true,
+                lastName: true,
+                email: true,
+                companyName: true,
+                contactInfo: true,
+              }
+            },
           },
         });
         break;
@@ -80,8 +109,20 @@ export const getProfile = async (
             email: true,
             contactInfo: true,
             address: true,
+            department: true,
+            position: true,
+            status: true,
             createdAt: true,
             updatedAt: true,
+            admin: {
+              select: {
+                firstName: true,
+                lastName: true,
+                email: true,
+                companyName: true,
+                contactInfo: true,
+              }
+            },
           },
         });
         break;
@@ -169,7 +210,7 @@ export const updateProfile = async (
           break;
         case "partner":
           updatedProfile = await tx.partner.update({
-            where: { id: user.id,  status: true },
+            where: { id: user.id, status: true },
             data: {
               ...updateData,
               ...(email && { email }),
@@ -180,7 +221,7 @@ export const updateProfile = async (
         case "team_member":
         case "sub_admin":
           updatedProfile = await tx.teamMember.update({
-            where: { id: user.id,  status: true },
+            where: { id: user.id, status: true },
             data: {
               ...updateData,
               ...(email && { email }),
@@ -195,15 +236,15 @@ export const updateProfile = async (
       // 3b) Mirror into loginCredential if email or password changed
       if (email || passwordHash) {
         const cred = await tx.loginCredential.findFirst({
-            where: { userProfileId: user.id, adminId },
-            select: { id: true },
+          where: { userProfileId: user.id, adminId },
+          select: { id: true },
+        });
+        if (cred) {
+          await tx.loginCredential.update({
+            where: { id: cred.id },    // now a unique field
+            data: { ...(email && { email }), ...(passwordHash && { passwordHash }) },
           });
-          if (cred) {
-            await tx.loginCredential.update({
-              where: { id: cred.id },    // now a unique field
-              data: { ...(email && { email }), ...(passwordHash && { passwordHash }) },
-            });
-          }
+        }
       }
 
       return updatedProfile;

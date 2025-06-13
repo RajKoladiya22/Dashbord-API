@@ -26,10 +26,11 @@ export declare const envSchema: z.ZodObject<{
     STATIC_TOKEN: z.ZodString;
     SALT_ROUNDS: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    NODE_ENV: "local" | "development" | "production";
+    SALT_ROUNDS: string;
+    NODE_ENV: "development" | "local" | "production";
+    DATABASE_URL: string;
     HOST: string;
     PORT: number;
-    DATABASE_URL: string;
     DB_HOST: string;
     DB_PORT: number;
     DB_USERNAME: string;
@@ -44,7 +45,6 @@ export declare const envSchema: z.ZodObject<{
     SMTP_PASS: string;
     ADMIN_MAIL: string;
     STATIC_TOKEN: string;
-    SALT_ROUNDS: string;
     AWS_BUCKET_NAME?: string | undefined;
     AWS_REGION?: string | undefined;
     AWS_ACCESS_KEY_ID?: string | undefined;
@@ -52,9 +52,10 @@ export declare const envSchema: z.ZodObject<{
     AWS_ENDPOINT?: string | undefined;
     CDN_ENDPOINT?: string | undefined;
 }, {
-    NODE_ENV: "local" | "development" | "production";
-    HOST: string;
+    SALT_ROUNDS: string;
+    NODE_ENV: "development" | "local" | "production";
     DATABASE_URL: string;
+    HOST: string;
     DB_HOST: string;
     DB_USERNAME: string;
     DB_PASSWORD: string;
@@ -67,7 +68,6 @@ export declare const envSchema: z.ZodObject<{
     SMTP_PASS: string;
     ADMIN_MAIL: string;
     STATIC_TOKEN: string;
-    SALT_ROUNDS: string;
     PORT?: unknown;
     DB_PORT?: unknown;
     SMTP_PORT?: unknown;

@@ -1,6 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import { prisma, env } from "../../config/database.config";
-
+import { log } from "winston";
+import {
+  sendSuccessResponse,
+  sendErrorResponse,
+} from "../../core/utils/responseHandler";
+import { boolean, promise } from "zod";
+import { send } from "node:process";
 interface AdminLink {
   label: string;
   url: string;
@@ -16,6 +22,7 @@ interface AdminWithLinks {
   links: AdminLink[];
 }
 
+
 export const listAllAdmins = async (
   req: Request,
   res: Response,
@@ -24,51 +31,93 @@ export const listAllAdmins = async (
   const user = req.user;
 
   if (!user || user.role !== "super_admin") {
-    res.status(401).json({ message: "Unauthorized" });
+    sendErrorResponse(res, 401, "Unauthorized");
     return;
   }
 
+  // Pagination
+  const page = Math.max(parseInt(req.query.page as string, 10) || 1, 1);
+  const limit = Math.min(Math.max(parseInt(req.query.limit as string, 10) || 10, 1), 100);
+  const skip = (page - 1) * limit;
+
+  // Search
+  const q = (req.query.q as string)?.trim();
+  const searchFilter = q
+    ? {
+        OR: [
+          { firstName: { contains: q, mode: "insensitive" } },
+          { lastName: { contains: q, mode: "insensitive" } },
+          { companyName: { contains: q, mode: "insensitive" } },
+          // { mobileNumber: { contains: q, mode: "insensitive" } },
+        ],
+      }
+    : {};
+
+  // Sorting
+  const allowedSortFields = ["firstName", "lastName", "email", "companyName"];
+  const sortBy = (req.query.sortBy as string) || "companyName";
+  const sortOrder: "asc" | "desc" =
+    (req.query.sortOrder as string)?.toLowerCase() === "asc" ? "asc" : "desc";
+
+  if (!allowedSortFields.includes(sortBy)) {
+    sendErrorResponse(
+      res,
+      400,
+      `Invalid sortBy. Must be one of: ${allowedSortFields.join(", ")}`
+    );
+    return;
+  }
+
+  // Status filter
+  let statusFilter = { status: true };
+  if (req.query.status === "false") {
+    statusFilter.status = false;
+  }
+
+  // Final filter
+  const baseFilter: any = {
+    ...searchFilter,
+    ...statusFilter,
+  };
+
   try {
-    const admins = await prisma.admin.findMany({
-      select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        email: true,
-        status: true,
-        companyName: true,
+    const [total, admins] = await Promise.all([
+      prisma.admin.count({ where: baseFilter }),
+      prisma.admin.findMany({
+        where: baseFilter,
+        skip,
+        take: limit,
+        orderBy: { [sortBy]: sortOrder },
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+          companyName: true,
+          contactInfo: true,
+          status: true,
+        },
+      }),
+    ]);
+
+    sendSuccessResponse(res, 200, "Admins fetched", {
+      admins,
+      meta: {
+        total,
+        page,
+        limit,
+        pages: Math.ceil(total / limit),
       },
     });
-
-    if (!admins || admins.length === 0) {
-      res.status(404).json({ message: "No admin found" });
-      return;
-    }
-
-    const adminDetailsWithLinks: AdminWithLinks[] = admins.map((admin) => {
-      const links: AdminLink[] = [
-        { label: "TeamMembers", url: `/admins/${admin.id}/teammembers` },
-        { label: "Patners", url: `/admins/${admin.id}/patners` },
-        // { label: "Plans", url: `/admins/${admin.id}/permissions` },
-        { label: "Subscription", url: `/admins/${admin.id}/subscription` },
-        { label: "Product", url: `/admins/${admin.id}/products` },
-        { label: "Customers", url: `/admins/${admin.id}/customers` },
-        { label: "CustomerProductHistory", url: `/admins/${admin.id}/customerproducthistory` },
-        { label: "AdminCustomField", url: `/admins/${admin.id}/admincustomfield` },
-      ];
-
-      return {
-        ...admin,
-        links,
-      };
-    });
-
-    res.status(200).json(adminDetailsWithLinks);
-  } catch (err: any) {
-    console.error("Error listing admin details:", err);
-    res.status(500).json({ message: "Server error" });
+  } catch (err) {
+    console.error("listAllAdmins error:", err);
+    sendErrorResponse(res, 500, "Server error");
   }
 };
+
+
+
+
 
 
 export const subAdminDetails = async (
@@ -84,6 +133,11 @@ export const subAdminDetails = async (
     res.status(401).json({ message: "Unauthorized" });
     return;
   }
+  // if(id){
+  //   res.status(400).json({ message: " id",id });
+  // }
+
+  // const page = Math.max(req.query.page as string, 10 );
 
   try {
 
@@ -118,7 +172,7 @@ export const subAdminDetails = async (
     else if (query === "patners") {
       const patners = await prisma.partner.findMany({
         where: {
-          adminId: id,
+          adminId: id
         },
         select: {
           // id: true,
@@ -136,7 +190,7 @@ export const subAdminDetails = async (
           updatedAt: true,
         },
       });
-      if (!patners || patners.length===0) {
+      if (!patners || patners.length === 0) {
         res.status(404).json({ message: "No patners are found" });
       }
       else {
@@ -145,8 +199,9 @@ export const subAdminDetails = async (
             ...team,
             backLink: '/api/v1/auth/details',
           };
-
         });
+        res.status(200).json({ data: adminDetailsWithBackLink });
+
       }
     }
     else if (query === "subscription") {
@@ -155,7 +210,6 @@ export const subAdminDetails = async (
           adminId: id,
         },
         select: {
-          // id: true,
           plan: true,
           planId: true,
           status: true,
@@ -165,12 +219,9 @@ export const subAdminDetails = async (
           cancelledAt: true,
           payments: true,
           events: true,
-          // address: true,
-          // createdAt: true,
-          // updatedAt: true,
         },
       });
-      if (!subscription  || subscription.length===0) {
+      if (!subscription || subscription.length === 0) {
         res.status(404).json({ message: "No subscription are found" });
       }
       else {
@@ -181,6 +232,8 @@ export const subAdminDetails = async (
           };
 
         });
+        res.status(200).json({ data: adminDetailsWithBackLink });
+
       }
     }
     else if (query === "products") {
@@ -204,7 +257,7 @@ export const subAdminDetails = async (
           // updatedAt: true,
         },
       });
-      if (!products  || products.length===0) {
+      if (!products || products.length === 0) {
         res.status(404).json({ message: "No products are found" });
       }
       else {
@@ -215,9 +268,12 @@ export const subAdminDetails = async (
           };
 
         });
+        res.status(200).json({ data: adminDetailsWithBackLink });
       }
     }
     else if (query === "customers") {
+      console.log("->>>>>>>>..cal query");
+
       const customer = await prisma.customer.findMany({
         where: {
           adminId: id,
@@ -238,18 +294,20 @@ export const subAdminDetails = async (
           // updatedAt: true,
         },
       });
-      if (!customer  || customer.length===0) {
+      console.log("-------> cusorm", id, customer);
+
+      if (!customer || customer.length === 0) {
         res.status(404).json({ message: "No customers are found" });
-      }
-      else {
+      } else {
         const adminDetailsWithBackLink = customer.map((team) => {
           return {
             ...team,
             backLink: '/api/v1/auth/details',
           };
-
         });
+        res.status(200).json({ data: adminDetailsWithBackLink });
       }
+
     }
     else if (query === "customerproducthistory") {
       const customerproducthistory = await prisma.customerProductHistory.findMany({
@@ -271,7 +329,7 @@ export const subAdminDetails = async (
 
         },
       });
-      if (!customerproducthistory  || customerproducthistory.length===0) {
+      if (!customerproducthistory || customerproducthistory.length === 0) {
         res.status(404).json({ message: "No customerproducthistory are found" });
       }
       else {
@@ -282,6 +340,8 @@ export const subAdminDetails = async (
           };
 
         });
+        res.status(200).json({ data: adminDetailsWithBackLink });
+
       }
     }
     else if (query === "admincustomfield") {
@@ -304,7 +364,7 @@ export const subAdminDetails = async (
 
         },
       });
-      if (!admincustomfield  || admincustomfield.length===0) {
+      if (!admincustomfield || admincustomfield.length === 0) {
         res.status(404).json({ message: "No admincustomfield are found" });
       }
       else {
@@ -313,7 +373,7 @@ export const subAdminDetails = async (
             ...team,
             backLink: '/api/v1/auth/details',
           };
-
+          res.status(200).json({ data: adminDetailsWithBackLink });
         });
       }
     }
@@ -327,3 +387,67 @@ export const subAdminDetails = async (
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const approveAdmin = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  const user = req.user;
+
+  if (!user || user.role !== "super_admin") {
+    sendErrorResponse(res, 401, "Unauthorized");
+    return;
+  }
+
+  const adminId = req.params.id;
+  const statusRaw = req.body.status;
+
+  let adminStatus: boolean | null = null;
+
+  if (typeof statusRaw === "boolean") {
+    adminStatus = statusRaw;
+  } else if (typeof statusRaw === "string") {
+    if (statusRaw.toLowerCase() === "true") adminStatus = true;
+    else if (statusRaw.toLowerCase() === "false") adminStatus = false;
+  }
+
+  if (adminStatus === null) {
+    sendErrorResponse(res, 400, "Invalid status");
+    return;
+  }
+
+  try {
+    const adminDetails = await prisma.admin.findUnique({ where: { id: adminId } });
+    if (!adminDetails) {
+      sendErrorResponse(res, 404, "Admin not found");
+      return;
+    }
+    await prisma.loginCredential.updateMany({
+      where: { userProfileId: adminDetails.id },
+      data: {
+        status: adminStatus,
+      },
+    })
+    const approvedAdmin = await prisma.admin.update({
+      where: { id: adminId },
+      data: {
+        status: adminStatus,
+      },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        status: true,
+      },
+    });
+
+
+    sendSuccessResponse(res, 200, "Admin Status Updated", approvedAdmin);
+  } catch (err: any) {
+    console.error("Error updating admin status:", err);
+    sendErrorResponse(res, 500, "Server error");
+  }
+};
+

@@ -6,6 +6,8 @@ import {
   sendSuccessResponse,
   sendErrorResponse,
 } from "../../core/utils/httpResponse";
+import nodemailer from "nodemailer";
+
 
 const SALT_ROUNDS = parseInt(env.SALT_ROUNDS ?? "12", 10);
 
@@ -34,10 +36,16 @@ export const resetPassword = async (
   }
 
   try {
-    // 1) Fetch login credentials
+    // 1) Fetch login credentials: No need for adminId if super_admin
     const credential = await prisma.loginCredential.findFirst({
-      where: { userProfileId: userId, adminId,  status: true },
+      where: {
+        userProfileId: userId,
+        // If the user is super_admin, ignore the adminId
+        ...(user.role !== 'super_admin' && { adminId }),
+        status: true
+      },
     });
+
     if (!credential || !credential.passwordHash) {
       sendErrorResponse(res, 404, "Credential not found");
       return;
@@ -46,7 +54,7 @@ export const resetPassword = async (
     // 2) Validate old password
     const isMatch = await bcrypt.compare(oldPassword, credential.passwordHash);
     if (!isMatch) {
-      sendErrorResponse(res, 401, "Incorrect old password");
+      sendErrorResponse(res, 400, "Incorrect old password");
       return;
     }
 
@@ -55,9 +63,13 @@ export const resetPassword = async (
 
     // 4) Transaction: Update login credentials and profile table
     await prisma.$transaction(async (tx) => {
-      // Update loginCredential
+      // Update loginCredential without adminId if super_admin
       await tx.loginCredential.updateMany({
-        where: { userProfileId: userId, adminId },
+        where: {
+          userProfileId: userId,
+          // Again, don't use adminId for super_admin
+          ...(user.role !== 'super_admin' && { adminId }),
+        },
         data: { passwordHash },
       });
 
@@ -98,4 +110,5 @@ export const resetPassword = async (
     console.error("resetPassword error:", err);
     sendErrorResponse(res, 500, "Server error");
   }
+
 };

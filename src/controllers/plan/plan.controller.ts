@@ -28,6 +28,10 @@ export const createPlan = async (
 
   // Validate request body
   const parsed = createPlanSchema.safeParse(req.body);
+  console.log("req.body--->", req.body);
+  console.log("parsed--->", parsed);
+
+
   if (!parsed.success) {
     sendErrorResponse(res, 400, "Invalid input", {
       errors: parsed.error.errors,
@@ -108,19 +112,18 @@ export const listPlans = async (
 
   try {
     const [total, plans] = await Promise.all([
-      prisma.plan.count({ where: { status } }), // count with status filter
+      prisma.plan.count({ where: { status } }),
       prisma.plan.findMany({
         where: { status },
         skip,
         take: limit,
         orderBy: { createdAt: "desc" },
-         include: {
+        include: {
           descriptions: true, 
           specs:true,
           offers:true,
           subscriptions:true,
         },
-
       }),
     ]);
 
@@ -128,6 +131,7 @@ export const listPlans = async (
       plans,
       meta: { total, page, limit, pages: Math.ceil(total / limit) },
     });
+
   } catch (err: any) {
     console.error("listPlans error:", err);
     sendErrorResponse(res, 500, "Server error");
@@ -282,3 +286,81 @@ export const updatePlan = async (
     }
   }
 };
+
+// export const currentPlan = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ): Promise<void> => {
+//   const user = req.user;
+
+//   if (!user || user.role !== "admin") {
+//     sendErrorResponse(res, 401, "Unauthorized");
+//     return;
+//   }
+
+//   try {
+//     const subscriptions = await prisma.subscription.findMany({
+//       where: { adminId: user.adminId },
+//     });
+
+//     const now = new Date();
+
+//     const updatedSubscriptions = await Promise.all(
+//       subscriptions.map(async (sub) => {
+//         let newStatus: SubscriptionStatus;
+
+//         if (sub.cancelledAt) {
+//           newStatus = "CANCELLED";
+//         } else if (isBefore(now, sub.startsAt)) {
+//           newStatus = "PENDING";
+//         } else if (sub.endsAt && isAfter(now, sub.endsAt)) {
+//           newStatus = "EXPIRED";
+//         } else {
+//           newStatus = "ACTIVE";
+//         }
+
+//         // Update only if status changed
+//         if (sub.status !== newStatus) {
+//           sub = await prisma.subscription.update({
+//             where: { id: sub.id },
+//             data: { status: newStatus },
+//           });
+//         }
+
+//         // Calculate time message
+//         let timeMessage: string;
+
+//         if (sub.status === "EXPIRED" && sub.endsAt) {
+//           const daysAgo = differenceInDays(now, sub.endsAt);
+//           timeMessage = `Expired ${daysAgo} day(s) ago`;
+//         } else if (sub.endsAt) {
+//           const remainingDays = differenceInDays(sub.endsAt, now);
+//           timeMessage =
+//             remainingDays > 0
+//               ? `${remainingDays} day(s) remaining`
+//               : isSameDay(sub.endsAt, now)
+//               ? "Expires today"
+//               : "Expired";
+//         } else {
+//           timeMessage = "No expiry date set";
+//         }
+
+//         return {
+//           id: sub.id,
+//           planId: sub.planId,
+//           status: sub.status,
+//           startsAt: sub.startsAt,
+//           endsAt: sub.endsAt,
+//           timeMessage,
+//         };
+//       })
+//     );
+
+//     sendSuccessResponse(res, 200, "Current plan details fetched", {
+//       subscriptions: updatedSubscriptions,
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };

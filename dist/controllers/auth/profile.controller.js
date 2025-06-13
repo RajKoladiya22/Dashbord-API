@@ -8,6 +8,7 @@ exports.updateProfile = exports.getProfile = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const database_config_1 = require("../../config/database.config");
 const httpResponse_1 = require("../../core/utils/httpResponse");
+const secret = Symbol("secret");
 const SALT_ROUNDS = parseInt((_a = database_config_1.env.SALT_ROUNDS) !== null && _a !== void 0 ? _a : "12", 10);
 const getProfile = async (req, res, next) => {
     const user = req.user;
@@ -41,10 +42,26 @@ const getProfile = async (req, res, next) => {
                         firstName: true,
                         lastName: true,
                         email: true,
+                        companyName: true,
                         contactInfo: true,
                         address: true,
                         createdAt: true,
                         updatedAt: true,
+                        subscriptions: {
+                            select: {
+                                status: true,
+                                startsAt: true,
+                                endsAt: true,
+                                plan: {
+                                    select: {
+                                        id: true,
+                                        name: true,
+                                        price: true,
+                                        duration: true,
+                                    },
+                                },
+                            }
+                        }
                     },
                 });
                 break;
@@ -56,10 +73,21 @@ const getProfile = async (req, res, next) => {
                         firstName: true,
                         lastName: true,
                         email: true,
+                        status: true,
+                        companyName: true,
                         contactInfo: true,
                         address: true,
                         createdAt: true,
                         updatedAt: true,
+                        admin: {
+                            select: {
+                                firstName: true,
+                                lastName: true,
+                                email: true,
+                                companyName: true,
+                                contactInfo: true,
+                            }
+                        },
                     },
                 });
                 break;
@@ -74,8 +102,20 @@ const getProfile = async (req, res, next) => {
                         email: true,
                         contactInfo: true,
                         address: true,
+                        department: true,
+                        position: true,
+                        status: true,
                         createdAt: true,
                         updatedAt: true,
+                        admin: {
+                            select: {
+                                firstName: true,
+                                lastName: true,
+                                email: true,
+                                companyName: true,
+                                contactInfo: true,
+                            }
+                        },
                     },
                 });
                 break;

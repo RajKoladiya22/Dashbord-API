@@ -9,51 +9,92 @@ export const listTeamMembers = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+): Promise<void> => {
   const user = req.user;
   if (!user) {
     sendErrorResponse(res, 401, "Unauthorized");
     return;
   }
-  const adminId = user.role === "admin" ? user.id : user.adminId;
-  if (!adminId) {
-    sendErrorResponse(res, 401, "Unauthorized");
+
+  // Pagination
+  const page = Math.max(parseInt(req.query.page as string, 10) || 1, 1);
+  const limit = Math.min(
+    Math.max(parseInt(req.query.limit as string, 10) || 10, 1),
+    100
+  );
+  const skip = (page - 1) * limit;
+
+  // Search
+  const q = (req.query.q as string)?.trim();
+  const searchFilter = q
+    ? {
+        OR: [
+          { firstName: { contains: q, mode: "insensitive" } },
+          { lastName: { contains: q, mode: "insensitive" } },
+          { email: { contains: q, mode: "insensitive" } },
+          { position: { contains: q, mode: "insensitive" } },
+        ],
+      }
+    : {};
+
+  // Sorting
+  const allowedSortFields = ["firstName", "lastName", "email", "position"];
+  const sortBy = (req.query.sortBy as string) || "firstName";
+  const sortOrder =
+    (req.query.sortOrder as string)?.toLowerCase() === "desc" ? "desc" : "asc";
+
+  if (!allowedSortFields.includes(sortBy)) {
+    sendErrorResponse(
+      res,
+      400,
+      `Invalid sortBy. Must be one of: ${allowedSortFields.join(", ")}`
+    );
     return;
   }
 
+  // Optional status filter
+  let statusFilter = { status: true };
+  if (req.query.status === "false") {
+    statusFilter.status = false;
+  }
+
+  // Final filter 
+  const baseFilter: any = { ...searchFilter, ...statusFilter };
+
   try {
-    // parse & validate status query param
-    const statusParam = (req.query.status as string | undefined)?.toLowerCase();
-    const statusFilter =
-      statusParam === "false" ? false : statusParam === "true" ? true : true;
+    const [total, teamMembers] = await Promise.all([
+      prisma.teamMember.count({ where: baseFilter }),
+      prisma.teamMember.findMany({
+        where: baseFilter,
+        skip,
+        take: limit,
+        orderBy: { [sortBy]: sortOrder },
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+          position: true,
+          department: true,
+          role: true,
+          status: true,
+          createdAt: true,
+        },
+      }),
+    ]);
 
-    if (statusParam && typeof statusFilter !== "boolean") {
-      sendErrorResponse(res, 400, "`status` must be boolean"); // 400 Bad Request
-      return;
-    }
-    // console.log("statusFilter----->", statusFilter);
-
-    const teamMembers = await prisma.teamMember.findMany({
-      where: { adminId, status: statusFilter },
-      orderBy: { createdAt: "desc" }, // consistent ordering
-      select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        email: true,
-        department: true,
-        position: true,
-        status: true,
-        createdAt: true,
-        role: true,
+    sendSuccessResponse(res, 200, "Team members fetched", {
+      teamMembers,
+      meta: {
+        total,
+        page,
+        limit,
+        pages: Math.ceil(total / limit),
       },
     });
-
-    sendSuccessResponse(res, 200, "Team members fetched", { teamMembers }); // 200 OK
   } catch (err) {
     console.error("listTeamMembers error:", err);
-    sendErrorResponse(res, 500, "Server error"); // 500 Internal Server Error
-    next(err);
+    sendErrorResponse(res, 500, "Server error");
   }
 };
 

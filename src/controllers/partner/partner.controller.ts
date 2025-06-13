@@ -9,57 +9,100 @@ export const listPartners = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+): Promise<void> => {
   const user = req.user;
   if (!user) {
     sendErrorResponse(res, 401, "Unauthorized");
     return;
   }
+
   const adminId = user.role === "admin" ? user.id : user.adminId;
   if (!adminId) {
     sendErrorResponse(res, 401, "Unauthorized");
     return;
   }
 
-  try {
-    const statusParam = (req.query.status as string | undefined)?.toLowerCase();
-    // console.log("statusParam---->", statusParam);
+  // Pagination
+  const page = Math.max(parseInt(req.query.page as string, 10) || 1, 1);
+  const limit = Math.min(Math.max(parseInt(req.query.limit as string, 10) || 10, 1), 100);
+  const skip = (page - 1) * limit;
 
-    
-    const statusFilter = 
-      statusParam === "false" ? false 
-      : statusParam === "true"  ? true 
-      : true;  
-
-      if (typeof statusFilter !== "boolean") {
-        sendErrorResponse(res, 400, "`status` must be boolean");
-        return;
+  // Search
+  const q = (req.query.q as string)?.trim();
+  const searchFilter = q
+    ? {
+        OR: [
+          { firstName: { contains: q, mode: "insensitive" } },
+          { lastName: { contains: q, mode: "insensitive" } },
+          { email: { contains: q, mode: "insensitive" } },
+          { companyName: { contains: q, mode: "insensitive" } },
+        ],
       }
-      
+    : {};
 
-    const partners = await prisma.partner.findMany({
-      where: { adminId, status: statusFilter }, // filter by parent admin and status
-      orderBy: { createdAt: "desc" },
-      select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        companyName: true,
-        email: true,
-        status: true,
-        contactInfo: true,
-        createdAt: true,
+  // Sorting
+  const allowedSortFields = ["firstName", "lastName", "email", "companyName", "createdAt"];
+  const sortBy = (req.query.sortBy as string) || "createdAt";
+  const sortOrder = (req.query.sortOrder as string)?.toLowerCase() === "asc" ? "asc" : "desc";
+
+  if (!allowedSortFields.includes(sortBy)) {
+    sendErrorResponse(
+      res,
+      400,
+      `Invalid sortBy. Must be one of: ${allowedSortFields.join(", ")}`
+    );
+    return;
+  }
+
+  // Optional status filter
+  let statusFilter = { status: true };
+  if (req.query.status === "false") {
+    statusFilter.status = false;
+  }
+
+  // Final filter
+  const baseFilter: any = {
+    adminId,
+    ...searchFilter,
+    ...statusFilter,
+  };
+
+  try {
+    const [total, partners] = await Promise.all([
+      prisma.partner.count({ where: baseFilter }),
+      prisma.partner.findMany({
+        where: baseFilter,
+        skip,
+        take: limit,
+        orderBy: { [sortBy]: sortOrder },
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          companyName: true,
+          email: true,
+          contactInfo: true,
+          status: true,
+          createdAt: true,
+        },
+      }),
+    ]);
+
+    sendSuccessResponse(res, 200, "Partners fetched", {
+      partners,
+      meta: {
+        total,
+        page,
+        limit,
+        pages: Math.ceil(total / limit),
       },
     });
-    // console.log("partners---->", partners);
-
-    sendSuccessResponse(res, 200, "Partners fetched", { partners });
   } catch (err) {
     console.error("listPartners error:", err);
     sendErrorResponse(res, 500, "Server error");
-    next(err);
   }
 };
+
 
 export const updatePartnerStatus = async (
   req: Request,
@@ -101,6 +144,8 @@ export const updatePartnerStatus = async (
         data: { status },
       }),
     ]);
+    
+
 
     // 4️⃣ Return updated partner
     sendSuccessResponse(res, 200, "Partner status updated", { partners });

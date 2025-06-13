@@ -134,7 +134,7 @@ export const signUpAdmin = async (
 export const signUpSuperAdmin = async (
   req: Request<{}, {}, z.infer<typeof signUpSuperAdminSchema>>,
   res: Response,
-  next: NextFunction
+  next: NextFunction  
 ) => {
   const parsed = signUpSuperAdminSchema.safeParse(req.body);
   if (!parsed.success) {
@@ -220,6 +220,7 @@ export const signIn = async (
         status: true,
       },
     });
+    
     // timing‑safe compare
     const dummyHash = "$2b$12$........................................";
     if (!cred) {

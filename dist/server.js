@@ -9,6 +9,8 @@ const app_1 = __importDefault(require("./app"));
 const database_config_1 = require("./config/database.config");
 const logger_1 = require("./core/middleware/logs/logger");
 const httpResponse_1 = require("./core/utils/httpResponse");
+const http_1 = __importDefault(require("http"));
+const socket_1 = require("./socket.io/socket");
 (0, env_config_1.envConfiguration)();
 const env = validate_env_1.validatedEnv;
 app_1.default.use("/", (req, res) => {
@@ -16,12 +18,14 @@ app_1.default.use("/", (req, res) => {
         timestamp: new Date(),
     });
 });
-const server = app_1.default.listen(env.PORT, () => {
+const httpServer = http_1.default.createServer(app_1.default);
+(0, socket_1.initSocket)(httpServer);
+httpServer.listen(env.PORT, () => {
     logger_1.logger.info(`🚀 Server listening on http://localhost:${env.PORT} - [${env.NODE_ENV}]`);
 });
 process.on("SIGINT", async () => {
     logger_1.logger.info("SIGINT received: closing HTTP server");
-    server.close(async () => {
+    httpServer.close(async () => {
         await (0, database_config_1.shutdownDb)();
         logger_1.logger.info("Database disconnected, exiting.");
         process.exit(0);
