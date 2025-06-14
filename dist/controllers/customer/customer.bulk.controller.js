@@ -100,10 +100,7 @@ const bulkCreateCustomers = async (req, res, next) => {
                         break;
                     }
                 }
-                if (!validDate) {
-                    throw new Error(`Invalid joining date at row ${i + 2}`);
-                }
-                parsedDate = validDate;
+                parsedDate = validDate !== null && validDate !== void 0 ? validDate : new Date();
             }
             return {
                 adminId: adminId,
@@ -112,7 +109,7 @@ const bulkCreateCustomers = async (req, res, next) => {
                 mobileNumber: r.mobileNumber,
                 email: r.email,
                 serialNo: r.serialNo,
-                joiningDate: parsedDate,
+                joiningDate: r.joiningDate ? parsedDate : new Date(),
                 address: r.address,
             };
         });

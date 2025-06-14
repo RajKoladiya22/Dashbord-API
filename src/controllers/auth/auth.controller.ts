@@ -48,7 +48,7 @@ export const signUpAdmin = async (
     const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
 
     const admin = await prisma.$transaction(async (tx) => {
-      // create admin profile
+      // create admin profile 
       const a = await tx.admin.create({
         data: {
           firstName,
@@ -59,6 +59,7 @@ export const signUpAdmin = async (
           contactInfo: { contactNumber },
           address,
           role: "admin", 
+          status: false, 
         },
         select: {
           id: true,
@@ -76,6 +77,7 @@ export const signUpAdmin = async (
           passwordHash,
           userProfileId: a.id,
           adminId: a.id,
+          status: false, // initially set to false, needs approval
         },
       });
 
@@ -103,11 +105,11 @@ export const signUpAdmin = async (
     });
 
     // generate token & cookie
-    const token = generateToken(admin.id, admin.role, admin.id);
-    setAuthCookie(res, token);
+    // const token = generateToken(admin.id, admin.role, admin.id);
+    // setAuthCookie(res, token);
 
     sendSuccessResponse(res, 201, "Admin account created", {
-      token,
+      // token,
       user: {
         id: admin.id,
         email: admin.email,
@@ -234,6 +236,11 @@ export const signIn = async (
       password,
       cred?.passwordHash || dummyHash
     );
+    if(cred.status === false) {
+      sendErrorResponse(res, 401, "Account not activated, Pelease contact support");
+      return;
+    }
+
     if (!cred || !match || cred.status !== true || !cred.userProfileId) {
       sendErrorResponse(res, 401, "Invalid credentials");
       return; 

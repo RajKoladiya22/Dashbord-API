@@ -9,9 +9,14 @@ import {
 } from "../../core/utils/httpResponse";
 import { CreateTeamMemberInput } from "../../core/utils/zod";
 import nodemailer from "nodemailer";
+import { log } from "console";
 
-const SMTP_USER = env.SMTP_USER
-const SMTP_PASS = env.SMTP_PASS
+const SMTP_USER = env.SMTP_USER || "magicallydev@gmail.com";
+const SMTP_PASS = env.SMTP_PASS || "szlm wgaw fkrz pbdc";
+
+if (!SMTP_USER || !SMTP_PASS) {
+  throw new Error("SMTP_USER and SMTP_PASS must be set in environment variables.");
+}
 
 const mailtransport = nodemailer.createTransport({
   service: "gmail",
@@ -167,6 +172,8 @@ export const createTeamMember = async (
         },
       });
 
+      // log("Created team member:", member);
+
       // 3d. mirror into loginCredential
       await tx.loginCredential.create({
         data: {
@@ -177,6 +184,8 @@ export const createTeamMember = async (
           adminId, // who created them
         },
       });
+
+      // log("\n\n Created login credential for:", member);
 
       if (member) {
          const mailOptions = {

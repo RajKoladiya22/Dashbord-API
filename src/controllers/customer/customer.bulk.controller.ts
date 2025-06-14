@@ -255,7 +255,7 @@ export const bulkCreateCustomers = async (
 
     const data = rows.map((r, i) => {
       let parsedDate = new Date();
-
+      
       if (r.joiningDate) {
         const dateStr = r.joiningDate.trim();
         let validDate: Date | null = null;
@@ -267,12 +267,12 @@ export const bulkCreateCustomers = async (
             break;
           }
         }
+        // console.log("\n\n\n Row data:", r);
+        // if (!validDate) {
+        //   throw new Error(`Invalid joining date at row ${i + 2}`);
+        // }
 
-        if (!validDate) {
-          throw new Error(`Invalid joining date at row ${i + 2}`);
-        }
-
-        parsedDate = validDate;
+        parsedDate = validDate ?? new Date();
       }
 
       return {
@@ -282,7 +282,8 @@ export const bulkCreateCustomers = async (
         mobileNumber: r.mobileNumber,
         email: r.email,
         serialNo: r.serialNo,
-        joiningDate: parsedDate,
+        joiningDate: r.joiningDate ? parsedDate : new Date(), // Use parsed date or current date if not provided
+        // joiningDate: parsedDate,
         address: r.address,
       };
     });

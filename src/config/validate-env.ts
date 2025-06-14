@@ -10,7 +10,7 @@ config({ path: `.env.${process.env.NODE_ENV || 'local'}` });
 // 2) Validate and parse
 const parsed = envSchema.safeParse(process.env);
 
-// log('Parsed environment variables:', parsed);
+// log('Parsed environment variables:', parsed); 
 
 if (!parsed.success) {
   console.error('❌ Invalid environment variables:');
@@ -21,7 +21,6 @@ if (!parsed.success) {
 }
 
 // console.log("parsed.data--->", parsed.data);
-
 
 // 3) Export the fully-typed, validated env
 export const validatedEnv = parsed.data;

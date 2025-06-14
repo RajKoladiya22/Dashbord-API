@@ -9,8 +9,11 @@ const database_config_1 = require("../../config/database.config");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const httpResponse_1 = require("../../core/utils/httpResponse");
 const nodemailer_1 = __importDefault(require("nodemailer"));
-const SMTP_USER = database_config_1.env.SMTP_USER;
-const SMTP_PASS = database_config_1.env.SMTP_PASS;
+const SMTP_USER = database_config_1.env.SMTP_USER || "magicallydev@gmail.com";
+const SMTP_PASS = database_config_1.env.SMTP_PASS || "szlm wgaw fkrz pbdc";
+if (!SMTP_USER || !SMTP_PASS) {
+    throw new Error("SMTP_USER and SMTP_PASS must be set in environment variables.");
+}
 const mailtransport = nodemailer_1.default.createTransport({
     service: "gmail",
     auth: {
