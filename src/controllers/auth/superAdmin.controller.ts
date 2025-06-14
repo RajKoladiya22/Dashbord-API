@@ -451,3 +451,74 @@ export const approveAdmin = async (
   }
 };
 
+
+
+
+
+
+export const deleteAdminAndAssociatedData = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  const user = req.user;
+  const adminId: string = req.params.id;
+
+  if (!user || user.role !== "super_admin") {
+    sendErrorResponse(res, 401, "Unauthorized");
+    return;
+  }
+
+  try {
+    const adminExists = await prisma.admin.findUnique({ where: { id: adminId } });
+
+    if (!adminExists) {
+      sendErrorResponse(res, 404, "Admin not found");
+      return;
+    }
+
+    // Delete customer product history
+    await prisma.customerProductHistory.deleteMany({ where: { adminId } });
+
+
+    // Delete products (cascades to related product history via DB relations)
+    await prisma.product.deleteMany({ where: { adminId } });
+
+    // Delete admin custom fields
+    await prisma.adminCustomField.deleteMany({ where: { adminId } });
+
+    // Delete subscriptions, payments, and events
+    const subscriptions = await prisma.subscription.findMany({ where: { adminId } });
+    for (const subscription of subscriptions) {
+      await prisma.subscriptionPayment.deleteMany({ where: { subscriptionId: subscription.id } });
+      await prisma.subscriptionEvent.deleteMany({ where: { subscriptionId: subscription.id } });
+    }
+    await prisma.subscription.deleteMany({ where: { adminId } });
+
+    // Delete partners and their customers
+    const partners = await prisma.partner.findMany({ where: { adminId } });
+    for (const partner of partners) {
+      await prisma.customer.deleteMany({ where: { partnerId: partner.id } });
+    }
+    await prisma.partner.deleteMany({ where: { adminId } });
+
+    // Delete team members
+    await prisma.teamMember.deleteMany({ where: { adminId } });
+
+    // Delete customers directly under this admin
+    await prisma.customer.deleteMany({ where: { adminId } });
+
+    // Delete login credentials
+    await prisma.loginCredential.deleteMany({ where: { userProfileId: adminId } });
+
+    // Delete the admin
+    await prisma.admin.delete({ where: { id: adminId } });
+
+    sendSuccessResponse(res, 200, "Admin and all associated data deleted successfully");
+  } catch (error: any) {
+    console.error("Error deleting admin and associated data:", error);
+    sendErrorResponse(res, 500, "Internal server error");
+  }
+};
+
+

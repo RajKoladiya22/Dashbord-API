@@ -24,5 +24,6 @@ router.get("/admins", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRol
 router.get("/admins/:id/:query", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("super_admin"), superAdmin_controller_1.subAdminDetails);
 router.patch("/role/:id/", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin"), role_controller_1.updateTeamRole);
 router.patch("/admins/status/:id", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("super_admin"), superAdmin_controller_1.approveAdmin);
+router.delete("/admins/delete/:id", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("super_admin"), superAdmin_controller_1.deleteAdminAndAssociatedData);
 exports.default = router;
 //# sourceMappingURL=auth.routes.js.map

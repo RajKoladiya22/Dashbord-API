@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.approveAdmin = exports.subAdminDetails = exports.listAllAdmins = void 0;
+exports.deleteAdminAndAssociatedData = exports.approveAdmin = exports.subAdminDetails = exports.listAllAdmins = void 0;
 const database_config_1 = require("../../config/database.config");
 const responseHandler_1 = require("../../core/utils/responseHandler");
 const listAllAdmins = async (req, res, next) => {
@@ -359,4 +359,43 @@ const approveAdmin = async (req, res, next) => {
     }
 };
 exports.approveAdmin = approveAdmin;
+const deleteAdminAndAssociatedData = async (req, res, next) => {
+    const user = req.user;
+    const adminId = req.params.id;
+    if (!user || user.role !== "super_admin") {
+        (0, responseHandler_1.sendErrorResponse)(res, 401, "Unauthorized");
+        return;
+    }
+    try {
+        const adminExists = await database_config_1.prisma.admin.findUnique({ where: { id: adminId } });
+        if (!adminExists) {
+            (0, responseHandler_1.sendErrorResponse)(res, 404, "Admin not found");
+            return;
+        }
+        await database_config_1.prisma.customerProductHistory.deleteMany({ where: { adminId } });
+        await database_config_1.prisma.product.deleteMany({ where: { adminId } });
+        await database_config_1.prisma.adminCustomField.deleteMany({ where: { adminId } });
+        const subscriptions = await database_config_1.prisma.subscription.findMany({ where: { adminId } });
+        for (const subscription of subscriptions) {
+            await database_config_1.prisma.subscriptionPayment.deleteMany({ where: { subscriptionId: subscription.id } });
+            await database_config_1.prisma.subscriptionEvent.deleteMany({ where: { subscriptionId: subscription.id } });
+        }
+        await database_config_1.prisma.subscription.deleteMany({ where: { adminId } });
+        const partners = await database_config_1.prisma.partner.findMany({ where: { adminId } });
+        for (const partner of partners) {
+            await database_config_1.prisma.customer.deleteMany({ where: { partnerId: partner.id } });
+        }
+        await database_config_1.prisma.partner.deleteMany({ where: { adminId } });
+        await database_config_1.prisma.teamMember.deleteMany({ where: { adminId } });
+        await database_config_1.prisma.customer.deleteMany({ where: { adminId } });
+        await database_config_1.prisma.loginCredential.deleteMany({ where: { userProfileId: adminId } });
+        await database_config_1.prisma.admin.delete({ where: { id: adminId } });
+        (0, responseHandler_1.sendSuccessResponse)(res, 200, "Admin and all associated data deleted successfully");
+    }
+    catch (error) {
+        console.error("Error deleting admin and associated data:", error);
+        (0, responseHandler_1.sendErrorResponse)(res, 500, "Internal server error");
+    }
+};
+exports.deleteAdminAndAssociatedData = deleteAdminAndAssociatedData;
 //# sourceMappingURL=superAdmin.controller.js.map
