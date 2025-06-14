@@ -15,7 +15,7 @@
     "seed": "ts-node prisma/seed.ts",
     "start": "node dist/server.js",
     "start:dev": "cross-env NODE_ENV=development concurrently \"tsc -w\" \"nodemon dist/server.js\"",
-    "start:prod": "cross-env NODE_ENV=production node dist/server.js",
+    "start:prod": "export NODE_ENV=production && pm2 start dist/server.js --name cpmprisma",
     "postinstall": "prisma generate",
     "test": "jest",
     "prisma:gen": "dotenv -e .env.$NODE_ENV -- npx prisma generate",
