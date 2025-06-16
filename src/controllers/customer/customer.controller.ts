@@ -120,7 +120,7 @@ export const createCustomer = async (
               renewPeriod: p.renewPeriod,
               renewal: p.renewal ?? false,
               renewalDate,
-              expiryDate,
+              expiryDate, 
             },
           });
         });

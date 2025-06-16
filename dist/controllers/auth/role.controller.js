@@ -10,6 +10,10 @@ const updateTeamRole = async (req, res, next) => {
         res.status(401).json({ success: false, message: "Unauthorized" });
         return;
     }
+    if (!user || user.role !== "admin") {
+        res.status(403).json({ success: false, message: "Forbidden: Admins only" });
+        return;
+    }
     try {
         const existingMember = await database_config_1.prisma.teamMember.findUnique({
             where: { id: teamMemberId },
