@@ -20,7 +20,8 @@ const signUpAdmin = async (req, res, next) => {
         });
         return;
     }
-    const { firstName, lastName, email, password, contactNumber, companyName, address, } = parsed.data;
+    const { firstName, lastName, email: rawEmail, password, contactNumber, companyName, address, } = parsed.data;
+    const email = rawEmail.trim().toLowerCase();
     try {
         const passwordHash = await bcrypt_1.default.hash(password, SALT_ROUNDS);
         const admin = await database_config_1.prisma.$transaction(async (tx) => {
@@ -102,7 +103,8 @@ const signUpSuperAdmin = async (req, res, next) => {
         });
         return;
     }
-    const { firstName, lastName, email, password, contactNumber, address } = parsed.data;
+    const { firstName, lastName, email: rawEmail, password, contactNumber, address } = parsed.data;
+    const email = rawEmail.trim().toLowerCase();
     try {
         const passwordHash = await bcrypt_1.default.hash(password, SALT_ROUNDS);
         const superAdmin = await database_config_1.prisma.$transaction(async (tx) => {
@@ -153,7 +155,8 @@ const signIn = async (req, res, next) => {
         (0, httpResponse_1.sendErrorResponse)(res, 400, "Email and password are required");
         return;
     }
-    const { identifier: email, password } = parsed.data;
+    const { identifier: rawEmail, password } = parsed.data;
+    const email = rawEmail.trim().toLowerCase();
     try {
         const cred = await database_config_1.prisma.loginCredential.findUnique({
             where: { email },

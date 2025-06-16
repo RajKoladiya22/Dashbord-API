@@ -37,12 +37,14 @@ export const signUpAdmin = async (
   const {
     firstName,
     lastName,
-    email,
+    email: rawEmail,
     password,
     contactNumber,
     companyName,
     address,
   } = parsed.data;
+
+  const email = rawEmail.trim().toLowerCase()
 
   try {
     const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
@@ -145,8 +147,10 @@ export const signUpSuperAdmin = async (
     });
     return;
   }
-  const { firstName, lastName, email, password, contactNumber, address } =
+  const { firstName, lastName, email: rawEmail, password, contactNumber, address } =
     parsed.data;
+  
+  const email = rawEmail.trim().toLowerCase();
 
   try {
     const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
@@ -208,8 +212,10 @@ export const signIn = async (
     sendErrorResponse(res, 400, "Email and password are required");
     return;
   }
-  const { identifier: email, password } = parsed.data;
+  const { identifier: rawEmail, password } = parsed.data;
 
+  const email = rawEmail.trim().toLowerCase(); 
+  
   try {
     // fetch credential row
     const cred = await prisma.loginCredential.findUnique({

@@ -104,6 +104,7 @@ const createProduct = async (req, res, next) => {
                     description: true,
                     productLink: true,
                     tags: true,
+                    status: true,
                     specifications: true,
                     createdAt: true,
                     updatedAt: true,
