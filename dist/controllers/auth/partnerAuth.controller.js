@@ -14,8 +14,8 @@ const SMTP_PASS = database_config_1.env.SMTP_PASS;
 const mailtransport = nodemailer_1.default.createTransport({
     service: "gmail",
     auth: {
-        user: SMTP_USER,
-        pass: SMTP_PASS,
+        user: "magicallydev@gmail.com",
+        pass: "vkdd frwe seja frlb",
     },
 });
 const SALT_ROUNDS = parseInt((_a = database_config_1.env.SALT_ROUNDS) !== null && _a !== void 0 ? _a : "12", 10);

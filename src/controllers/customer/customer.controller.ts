@@ -16,7 +16,7 @@ export const createCustomer = async (
   res: Response,
   next: NextFunction
 ): Promise<void> => {
-  const {
+  let {
     companyName,
     contactPerson,
     mobileNumber,
@@ -41,6 +41,9 @@ export const createCustomer = async (
   }
   const adminId = user.role === "admin" ? user.id : user.adminId!;
   const partnerId = user.role === "partner" ? user.id : incomingPartnerId;
+  if (user.role === "partner"){
+    hasReference = true
+  }
 
   try {
     const result = await prisma.$transaction(async (tx) => {

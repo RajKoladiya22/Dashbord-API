@@ -8,7 +8,7 @@ const zod_1 = require("../../core/utils/zod");
 const client_1 = require("@prisma/client");
 const dateHelpers_1 = require("../../core/utils/helper/dateHelpers");
 const createCustomer = async (req, res, next) => {
-    const { companyName, contactPerson, mobileNumber, email, serialNo, prime = false, blacklisted = false, remark, hasReference = false, partnerId: incomingPartnerId, adminCustomFields, address, joiningDate, products = [], } = req.body;
+    let { companyName, contactPerson, mobileNumber, email, serialNo, prime = false, blacklisted = false, remark, hasReference = false, partnerId: incomingPartnerId, adminCustomFields, address, joiningDate, products = [], } = req.body;
     const user = req.user;
     if (!user) {
         (0, responseHandler_1.sendErrorResponse)(res, 401, "Unauthorized");
@@ -16,6 +16,9 @@ const createCustomer = async (req, res, next) => {
     }
     const adminId = user.role === "admin" ? user.id : user.adminId;
     const partnerId = user.role === "partner" ? user.id : incomingPartnerId;
+    if (user.role === "partner") {
+        hasReference = true;
+    }
     try {
         const result = await database_config_1.prisma.$transaction(async (tx) => {
             const customer = await tx.customer.create({

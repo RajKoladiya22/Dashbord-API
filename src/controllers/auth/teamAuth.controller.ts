@@ -12,7 +12,7 @@ import nodemailer from "nodemailer";
 import { log } from "console";
 
 const SMTP_USER = env.SMTP_USER || "magicallydev@gmail.com";
-const SMTP_PASS = env.SMTP_PASS || "szlm wgaw fkrz pbdc";
+const SMTP_PASS = env.SMTP_PASS || "vkdd frwe seja frlb";
 
 if (!SMTP_USER || !SMTP_PASS) {
   throw new Error("SMTP_USER and SMTP_PASS must be set in environment variables.");
@@ -21,8 +21,10 @@ if (!SMTP_USER || !SMTP_PASS) {
 const mailtransport = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: SMTP_USER,
-    pass: SMTP_PASS,
+    // user: SMTP_USER,
+    // pass: SMTP_PASS,
+    user: "magicallydev@gmail.com",
+    pass: "vkdd frwe seja frlb",
   },
 });
 
@@ -136,7 +138,7 @@ export const createTeamMember = async (
       // 3a. ensure unique email
       const exists = await tx.teamMember.findUnique({
         where: { email: email.toLowerCase() },
-      }); 
+      });
       // 
       const existsAny = await tx.loginCredential.findUnique({
         where: { email: email.toLowerCase() },
@@ -188,7 +190,7 @@ export const createTeamMember = async (
       // log("\n\n Created login credential for:", member);
 
       if (member) {
-         const mailOptions = {
+        const mailOptions = {
           from: "magicallydev@gmail.com",
           to: member.email,
           subject: `Welcome to MagicallyDev, ${member.firstName}!`,
@@ -241,7 +243,7 @@ export const createTeamMember = async (
           } else {
             console.log("Email sent successfully...", info.response);
           }
-        }); 
+        });
       }
 
       return member;
