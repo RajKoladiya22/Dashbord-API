@@ -25,7 +25,7 @@ import {
   updateCustomerProduct,
 } from "../../../controllers/customer/reminder.controller";
 // import { bulkCreateCustomers } from "./controllers/customer/customer.bulk.controller";
-import { bulkCreateCustomers } from "../../../controllers/customer/customer.bulk.controller";
+import { bulkCreateCustomers, bulkVerifyCustomers } from "../../../controllers/customer/customer.bulk.controller";
 import { upload } from "../../../core/middleware/multer/fileUpload";
 
 const router = Router();
@@ -123,6 +123,13 @@ router.get(
 
 router.post(
   "/bulk",
+  upload.single("file"), 
+  authenticateUser,
+  authorizeRoles("admin", "partner", "team_member", "sub_admin"),
+  bulkVerifyCustomers
+);
+router.post(
+  "/bulk-upload",
   upload.single("file"), 
   authenticateUser,
   authorizeRoles("admin", "partner", "team_member", "sub_admin"),

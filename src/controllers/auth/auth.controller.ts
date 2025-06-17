@@ -242,12 +242,17 @@ export const signIn = async (
       password,
       cred?.passwordHash || dummyHash
     );
+    if (!match) {
+      sendErrorResponse(res, 401, "Invalid Password");
+      return; 
+    }
+
     if(cred.status === false) {
       sendErrorResponse(res, 401, "Account not activated, Pelease contact support");
       return;
     }
 
-    if (!cred || !match || cred.status !== true || !cred.userProfileId) {
+    if (!cred  || cred.status !== true || !cred.userProfileId) {
       sendErrorResponse(res, 401, "Invalid credentials");
       return; 
     }

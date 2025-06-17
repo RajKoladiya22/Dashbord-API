@@ -175,11 +175,15 @@ const signIn = async (req, res, next) => {
             return;
         }
         const match = await bcrypt_1.default.compare(password, (cred === null || cred === void 0 ? void 0 : cred.passwordHash) || dummyHash);
+        if (!match) {
+            (0, httpResponse_1.sendErrorResponse)(res, 401, "Invalid Password");
+            return;
+        }
         if (cred.status === false) {
             (0, httpResponse_1.sendErrorResponse)(res, 401, "Account not activated, Pelease contact support");
             return;
         }
-        if (!cred || !match || cred.status !== true || !cred.userProfileId) {
+        if (!cred || cred.status !== true || !cred.userProfileId) {
             (0, httpResponse_1.sendErrorResponse)(res, 401, "Invalid credentials");
             return;
         }

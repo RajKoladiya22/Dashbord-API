@@ -14,6 +14,17 @@ const currentPlan = async (req, res, next) => {
     try {
         const subscriptions = await database_config_1.prisma.subscription.findMany({
             where: { adminId: user.adminId },
+            include: {
+                plan: {
+                    include: {
+                        offers: true,
+                        specs: true,
+                        descriptions: true,
+                    },
+                },
+                payments: true,
+                events: true,
+            },
         });
         const now = new Date();
         const result = await Promise.all(subscriptions.map(async (sub) => {
@@ -34,6 +45,11 @@ const currentPlan = async (req, res, next) => {
                 sub = await database_config_1.prisma.subscription.update({
                     where: { id: sub.id },
                     data: { status: newStatus },
+                    include: {
+                        plan: { include: { offers: true, specs: true, descriptions: true } },
+                        payments: true,
+                        events: true,
+                    },
                 });
             }
             let timeMessage;
@@ -63,6 +79,9 @@ const currentPlan = async (req, res, next) => {
                 startsAt: sub.startsAt,
                 endsAt: sub.endsAt,
                 timeMessage,
+                plan: sub.plan,
+                payments: sub.payments,
+                events: sub.events,
             };
         }));
         (0, responseHandler_1.sendSuccessResponse)(res, 200, "Subscription info fetched", {

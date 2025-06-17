@@ -1,145 +1,3 @@
-/* // src/controllers/customer/customer.bulk.controller.ts
-import { Request, Response, NextFunction } from "express";
-import fs from "fs";
-impor t csv from "csv-parser";
-import ExcelJS from "exceljs";
-import { prisma } from "../../config/database.config";
-import {
-  sendSuccessResponse,
-  sendErrorResponse,
-} from "../../core/utils/responseHandler";
-import { parseISO } from "date-fns";
-import { Readable } from "stream";
-
-interface Row {
-  companyName: string;
-  contactPerson: string;
-  mobileNumber: string;
-  email: string;
-  serialNo: string;
-  joiningDate?: string;
-}
-
-export const bulkCreateCustomers = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  if (!req.file) {
-    sendErrorResponse(res, 400, "No file uploaded");
-    return;
-  }
-
-  const rows: Row[] = [];
-  const ext = req.file.originalname.split(".").pop()?.toLowerCase();
-
-  const user = req.user;
-  if (!user) {
-    sendErrorResponse(res, 401, "Unauthorized");
-    return;
-  }
-  const adminId = user.role === "admin" ? user.id : user.adminId!;
-  // const partnerId = user.role === "partner" ? user.id : incomingPartnerId;
-
-  try {
-    if (ext === "csv") {
-      const stream = Readable.from(req.file.buffer);
-      await new Promise<void>((resolve, reject) => {
-        stream
-          .pipe(csv())
-          .on("data", (row) => rows.push(row))
-          .on("end", () => resolve())
-          .on("error", (err) => reject(err));
-      });
-    } else {
-      // Excel parsing via exceljs 
-      const workbook = new ExcelJS.Workbook();
-      if (ext === "xls") {
-        await workbook.xlsx.load(req.file.buffer);
-      } else {
-        await workbook.xlsx.load(req.file.buffer);
-      }
-      workbook.eachSheet((sheet) => {
-        sheet.eachRow((row, rowNumber) => {
-          if (rowNumber === 1) return; // skip header
-          
-
-          // 1) Guard that values exist and are an array
-          if (!Array.isArray(row.values)) {
-            // e.g. empty row; skip or throw
-            return;
-          }
-          // 2) Now TS knows row.values is CellValue[]
-          const cells = row.values as ExcelJS.CellValue[];
-
-          // 3) Destructure your five columns (skip the leading null)
-          const [companyName, contactPerson, mobileNumber, email, serialNo] =
-            cells.slice(1).map((v) => String(v ?? "").trim());
-
-          rows.push({
-            companyName,
-            contactPerson,
-            mobileNumber,
-            email,
-            serialNo,
-          });
-        });
-      });
-    }
-
-    if (!rows.length) {
-      sendErrorResponse(res, 400, "File contains no data");
-      return;
-    }
-
-    // Validate required fields presence
-    for (const [i, r] of rows.entries()) {
-      if (
-        !r.companyName ||
-        !r.contactPerson ||
-        !r.mobileNumber ||
-        !r.email ||
-        !r.serialNo
-      ) {
-        sendErrorResponse(res, 422, `Missing field at row ${i + 2}`);
-        return;
-      }
-    }
-
-    // Map to Prisma data, parse optional dates
-    const data = rows.map((r) => ({
-      adminId: adminId,
-      companyName: r.companyName,
-      contactPerson: r.contactPerson,
-      mobileNumber: r.mobileNumber,
-      email: r.email,
-      serialNo: r.serialNo,
-      address: {},
-      joiningDate: r.joiningDate ? parseISO(r.joiningDate) : new Date(),
-    }));
-
-    // Bulk insert with createMany inside transaction :contentReference[oaicite:7]{index=7}
-    const result = await prisma.$transaction([
-      prisma.customer.createMany({
-        data,
-        skipDuplicates: false,
-      }),
-    ]);
-
-    sendSuccessResponse(res, 201, "Bulk customers created", {
-      count: result[0].count,
-    });
-  } catch (err: any) {
-    console.error("bulkCreateCustomers error:", err);
-    sendErrorResponse(res, 500, "Failed to process file");
-  } finally {
-    if (req.file && typeof req.file.path === "string") {
-      fs.unlink(req.file.path, (err) => {
-        if (err) console.warn("Failed to delete temp file:", err);
-      });
-    }
-  }
-};*/
 // src/controllers/customer/customer.bulk.controller.ts
 import { Request, Response, NextFunction } from "express";
 import fs from "fs";
@@ -163,12 +21,17 @@ interface Row {
   address: string
 }
 
-export const bulkCreateCustomers = async (
+interface errorMSG {
+  invalid: string[];
+  missing: string[];
+  duplicate: string[];
+}
+
+export const bulkVerifyCustomers = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
-
   if (!req.file) {
     sendErrorResponse(res, 400, "No file uploaded");
     return;
@@ -179,12 +42,16 @@ export const bulkCreateCustomers = async (
     sendErrorResponse(res, 401, "Unauthorized");
     return;
   }
-  const adminId = user.role === "admin" ? user.id : user.adminId!;
 
+  // const adminId = user.role === "admin" ? user.id : user.adminId!;
   const rows: Row[] = [];
   const ext = req.file.originalname.split(".").pop()?.toLowerCase();
+  const errorCust: any[] = [];
+  const problematicEmails = new Set<string>();
 
   try {
+
+    // file is uploaded, now process it
     if (ext === "csv") {
       const stream = Readable.from(req.file.buffer);
       await new Promise<void>((resolve, reject) => {
@@ -197,27 +64,17 @@ export const bulkCreateCustomers = async (
     } else if (ext === "xlsx" || ext === "xls") {
       const workbook = new ExcelJS.Workbook();
       await workbook.xlsx.load(req.file.buffer);
-
       workbook.eachSheet((sheet) => {
         sheet.eachRow((row, rowNumber) => {
           if (rowNumber === 1) return;
-
-          const companyName = row.getCell(1).text?.trim() || "";
-          const contactPerson = row.getCell(2).text?.trim() || "";
-          const mobileNumber = row.getCell(3).text?.trim() || "";
-          const email = row.getCell(4).text?.trim() || "";
-          const serialNo = row.getCell(5).text?.trim() || "";
-          const joiningDate = row.getCell(6).text?.trim() || undefined;
-          const address = row.getCell(7).text?.trim() || "";
-
           rows.push({
-            companyName,
-            contactPerson,
-            mobileNumber,
-            email,
-            serialNo,
-            joiningDate,
-            address
+            companyName: row.getCell(1).text?.trim() || "",
+            contactPerson: row.getCell(2).text?.trim() || "",
+            mobileNumber: row.getCell(3).text?.trim() || "",
+            email: row.getCell(4).text?.trim() || "",
+            serialNo: row.getCell(5).text?.trim() || "",
+            joiningDate: row.getCell(6).text?.trim() || "",
+            address: row.getCell(7).text?.trim() || ""
           });
         });
       });
@@ -225,96 +82,169 @@ export const bulkCreateCustomers = async (
       sendErrorResponse(res, 400, "Unsupported file type");
       return;
     }
-
     if (!rows.length) {
       sendErrorResponse(res, 400, "File contains no data");
       return;
     }
 
-    for (const [i, r] of rows.entries()) {
-      if (
-        !r.companyName ||
-        !r.contactPerson ||
-        !r.mobileNumber ||
-        !r.email ||
-        !r.serialNo
-      ) {
-        sendErrorResponse(res, 422, `Missing field at row ${i + 2}`);
-        return;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const mobileRegex = /^[0-9]{10}$/;
+
+    const allEmails = rows.map((r) => r.email);
+    const fileDuplicates = new Set<string>();
+    const seenInFile = new Set<string>();
+    for (const email of allEmails) {
+      if (seenInFile.has(email)) { 
+        fileDuplicates.add(email); 
       }
+      else { 
+        seenInFile.add(email) 
+      };
     }
 
-    const supportedDateFormats = [
-      "yyyy-MM-dd",
-      "dd/MM/yyyy",
-      "MM/dd/yyyy",
-      "dd-MM-yyyy",
-      "MMM dd, yyyy",
-    ];
+    const existingCustomers = await prisma.customer.findMany({
+      where: { email: { in: [...seenInFile] } },
+      select: { email: true }
+    });
+    const dbEmails = new Set(existingCustomers.map((c) => c.email));
 
+    const data = rows.map((r) => {
+      const errorMsg: errorMSG = { missing: [], invalid: [], duplicate: [] };
+      let parsedDate: Date | null = null;
 
-    const data = rows.map((r, i) => {
-      let parsedDate = new Date();
-      
+      if (!r.companyName) errorMsg.missing.push("Company Name");
+      if (!r.contactPerson) errorMsg.missing.push("Contact Person");
+      if (!r.mobileNumber) errorMsg.missing.push("Mobile Number");
+      if (!r.email) errorMsg.missing.push("Email");
+      if (!r.serialNo) errorMsg.missing.push("Serial No");
+
       if (r.joiningDate) {
-        const dateStr = r.joiningDate.trim();
-        let validDate: Date | null = null;
+        const parsed = new Date(r.joiningDate.trim());
+        if (!isNaN(parsed.getTime())) parsedDate = parsed;
+        else errorMsg.invalid.push(`Joining Date (${r.joiningDate})`);
+      } else {
+        errorMsg.missing.push("Joining Date");
+      }
 
-        for (const format of supportedDateFormats) {
-          const parsed = parse(dateStr, format, new Date());
-          if (!isNaN(parsed.getTime())) {
-            validDate = parsed;
-            break;
-          }
+      if (r.email && !emailRegex.test(r.email)) {
+        errorMsg.invalid.push(`Email (${r.email})`);
+      }
+
+      if (r.mobileNumber && !mobileRegex.test(r.mobileNumber)) {
+        errorMsg.invalid.push(`Mobile Number (${r.mobileNumber})`);
+      }
+
+      if (fileDuplicates.has(r.email)) {
+        errorMsg.duplicate.push("Duplicate email in file");
+      }
+
+      if (dbEmails.has(r.email)) {
+        errorMsg.duplicate.push("Email already exists in database");
+      }
+
+      if (errorMsg.missing.length || errorMsg.invalid.length || errorMsg.duplicate.length) {
+        if (!problematicEmails.has(r.email)) {
+
+          problematicEmails.add(r.email);
+          const messages = [
+            errorMsg.missing.length ? `Missing: ${errorMsg.missing.join(", ")}` : "",
+            errorMsg.invalid.length ? `Invalid: ${errorMsg.invalid.join(", ")}` : "",
+            errorMsg.duplicate.length ? `Duplicate: ${errorMsg.duplicate.join(", ")}` : ""
+          ]
+
+          // errorCust.push({ ...r, errorMsg: messages });
+          errorCust.push({
+            ...r,
+            missingFields: errorMsg.missing,
+            invalidFields: errorMsg.invalid,
+            duplicateReasons: errorMsg.duplicate
+          });
         }
-        // console.log("\n\n\n Row data:", r);
-        // if (!validDate) {
-        //   throw new Error(`Invalid joining date at row ${i + 2}`);
-        // }
-
-        parsedDate = validDate ?? new Date();
       }
 
       return {
-        adminId: adminId,
+        // adminId,
         companyName: r.companyName,
         contactPerson: r.contactPerson,
         mobileNumber: r.mobileNumber,
         email: r.email,
         serialNo: r.serialNo,
-        joiningDate: r.joiningDate ? parsedDate : new Date(), // Use parsed date or current date if not provided
-        // joiningDate: parsedDate,
-        address: r.address,
+        joiningDate: parsedDate,
+        address: r.address
       };
     });
 
-    console.log(data); 
+    const validCustomers = data.filter((d) => !problematicEmails.has(d.email));
 
-    const result = await prisma.$transaction([
-      prisma.customer.createMany({
-        data,
-        skipDuplicates: true,
-      }),
-    ]);
-
-    console.log("-------------------???????",result,"length",result.length)
-
-    if (result.length >= 1 && result[0].count > 0) {
-      sendSuccessResponse(res, 201, "Bulk customers created", {
-        count: result[0].count,
-      });
-    }
-    else {
-      sendErrorResponse(res, 500, "Failed to create customers");
-    }
+    sendSuccessResponse(res, 201, "Data after skipping duplicates", {
+      errorRecords: errorCust,
+      parseData: validCustomers
+    });
   } catch (err: any) {
-    console.error("bulkCreateCustomers error:", err.message || err);
+    console.error("Bulk Verify Customers error:", err.message || err);
     sendErrorResponse(res, 500, err.message || "Failed to process file");
-  } finally {
-    if (req.file && typeof req.file.path === "string") {
-      fs.unlink(req.file.path, (err) => {
-        if (err) console.warn("Failed to delete temp file:", err);
-      });
-    }
   }
-};    
+};
+
+
+export const bulkCreateCustomers = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const customers = req.body;
+
+    const user = req.user;
+  if (!user) {
+    sendErrorResponse(res, 401, "Unauthorized");
+    return;
+  }
+
+    const adminId = user.role === "admin" ? user.id : user.adminId!;
+
+    if (!Array.isArray(customers) || customers.length === 0) {
+      sendErrorResponse(res, 400, "Please provide data");
+      return;
+    }
+
+    const invalidRecords = customers.filter(cust =>
+      !cust.companyName ||
+      !cust.contactPerson ||
+      !cust.mobileNumber ||
+      !cust.email ||
+      !cust.serialNo ||
+      !cust.joiningDate
+    );
+
+    if (invalidRecords.length > 0) {
+      sendErrorResponse(res, 422, "Records are missing required fields", {
+        invalidRecords,
+      });
+      return;
+    }
+
+    const data = customers.map((cust: any) => ({
+      adminId: adminId,
+      companyName: cust.companyName,
+      contactPerson: cust.contactPerson,
+      mobileNumber: cust.mobileNumber,
+      email: cust.email,
+      serialNo: cust.serialNo,
+      joiningDate: new Date(cust.joiningDate),
+      address: cust.address || "",
+    }));
+
+    const result = await prisma.customer.createMany({
+      data,
+      skipDuplicates: true,
+    });
+
+    sendSuccessResponse(res, 201, "Customers created successfully", {
+      createdCount: result.count,
+    });
+  } catch (error: any) {
+    console.error("Bulk Create Customers error:", error.message || error);
+    sendErrorResponse(res, 500, error.message || "Internal server error");
+  }
+};

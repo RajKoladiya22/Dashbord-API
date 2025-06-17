@@ -101,7 +101,7 @@ export const generateToken = (
   };
 
   return jwt.sign(payload, _secret, {
-    expiresIn: "1d",
+    expiresIn: "15d",
     algorithm: "HS256",
   });
 };
@@ -115,6 +115,6 @@ export const setAuthCookie = (res: Response, token: string): void => {
     secure: true,
     sameSite: "none", // ← allow cross‑site
     // maxAge: 3600000, // 1 hour
-    maxAge: 86400000, // 1 day = 24 * 60 * 60 * 1000 milliseconds / 30 days = 30 * 24 * 60 * 60 * 1000 milliseconds
+    maxAge: 15 * 24 * 60 * 60 * 1000, // 1 day = 24 * 60 * 60 * 1000 milliseconds / 30 days = 30 * 24 * 60 * 60 * 1000 milliseconds
   });
 };

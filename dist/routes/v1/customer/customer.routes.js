@@ -22,6 +22,7 @@ router.delete("/delete/:id", jwt_token_1.authenticateUser, (0, jwt_token_1.autho
 router.get("/product/:customerId", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner", "team_member", "sub_admin"), customerProduct_controller_1.getCustomerProductsByCustomerId);
 router.patch("/product/update/:id", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner", "team_member", "sub_admin"), reminder_controller_1.updateCustomerProduct);
 router.get("/reminders", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner", "team_member", "sub_admin"), reminder_controller_1.listRenewalReminders);
-router.post("/bulk", fileUpload_1.upload.single("file"), jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner", "team_member", "sub_admin"), customer_bulk_controller_1.bulkCreateCustomers);
+router.post("/bulk", fileUpload_1.upload.single("file"), jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner", "team_member", "sub_admin"), customer_bulk_controller_1.bulkVerifyCustomers);
+router.post("/bulk-upload", fileUpload_1.upload.single("file"), jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner", "team_member", "sub_admin"), customer_bulk_controller_1.bulkCreateCustomers);
 exports.default = router;
 //# sourceMappingURL=customer.routes.js.map
