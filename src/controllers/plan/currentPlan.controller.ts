@@ -107,7 +107,8 @@ export const currentPlan = async (
       subscriptions: result,
     });
 
-  } catch (error) {
-    next(error);
+  } catch (err:any) {
+    console.error("error:", err);
+    sendErrorResponse(res, err instanceof Error ? 400 : 500, err.message || "Failed fetch data");
   }
 }; 

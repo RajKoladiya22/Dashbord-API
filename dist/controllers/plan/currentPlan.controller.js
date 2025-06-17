@@ -88,8 +88,9 @@ const currentPlan = async (req, res, next) => {
             subscriptions: result,
         });
     }
-    catch (error) {
-        next(error);
+    catch (err) {
+        console.error("error:", err);
+        (0, responseHandler_1.sendErrorResponse)(res, err instanceof Error ? 400 : 500, err.message || "Failed fetch data");
     }
 };
 exports.currentPlan = currentPlan;
