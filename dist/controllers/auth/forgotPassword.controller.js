@@ -27,11 +27,15 @@ const forgotPassword = async (req, res, next) => {
     }
     try {
         const cred = await database_config_1.prisma.loginCredential.findUnique({
-            where: { email, status: true },
-            select: { userProfileId: true, role: true },
+            where: { email, },
+            select: { userProfileId: true, role: true, status: true },
         });
         if (!cred) {
-            (0, httpResponse_1.sendSuccessResponse)(res, 200, "If that account exists, an OTP has been sent");
+            (0, httpResponse_1.sendErrorResponse)(res, 401, "Email is not found");
+            return;
+        }
+        if (!cred.status) {
+            (0, httpResponse_1.sendErrorResponse)(res, 401, "Your Account is not active yet!");
             return;
         }
         const otp = crypto_1.default.randomInt(100000, 999999).toString();

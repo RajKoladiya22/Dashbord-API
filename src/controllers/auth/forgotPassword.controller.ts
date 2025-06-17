@@ -32,13 +32,17 @@ export const forgotPassword = async (
   try {
     // 1) Lookup loginCredential
     const cred = await prisma.loginCredential.findUnique({
-      where: { email, status: true },
-      select: { userProfileId: true, role: true },
+      where: { email,},
+      select: { userProfileId: true, role: true, status: true },
     });
 
     // Always return success to avoid exposing existence of email
     if (!cred) {
-      sendSuccessResponse(res, 200, "If that account exists, an OTP has been sent");
+      sendErrorResponse(res, 401, "Email is not found");
+      return;
+    }
+    if (!cred.status) {
+      sendErrorResponse(res, 401, "Your Account is not active yet!");
       return;
     }
 
