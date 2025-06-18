@@ -141,6 +141,7 @@ export const updateHistorySchema = z.object({
   expiryDate: z.string().optional(),
   renewalDate: z.string().optional(),
   status: z.boolean().optional(),
+  details: z.string().optional()
 });
 export type UpdateHistoryBody = z.infer<typeof updateHistorySchema>;
 

@@ -340,18 +340,21 @@ export declare const updateHistorySchema: z.ZodObject<{
     expiryDate: z.ZodOptional<z.ZodString>;
     renewalDate: z.ZodOptional<z.ZodString>;
     status: z.ZodOptional<z.ZodBoolean>;
+    details: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
     status?: boolean | undefined;
     expiryDate?: string | undefined;
     purchaseDate?: string | undefined;
     renewal?: boolean | undefined;
     renewalDate?: string | undefined;
+    details?: string | undefined;
 }, {
     status?: boolean | undefined;
     expiryDate?: string | undefined;
     purchaseDate?: string | undefined;
     renewal?: boolean | undefined;
     renewalDate?: string | undefined;
+    details?: string | undefined;
 }>;
 export type UpdateHistoryBody = z.infer<typeof updateHistorySchema>;
 export declare const updateCustomFieldSchema: z.ZodObject<{

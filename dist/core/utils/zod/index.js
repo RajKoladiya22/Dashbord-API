@@ -115,6 +115,7 @@ exports.updateHistorySchema = zod_1.z.object({
     expiryDate: zod_1.z.string().optional(),
     renewalDate: zod_1.z.string().optional(),
     status: zod_1.z.boolean().optional(),
+    details: zod_1.z.string().optional()
 });
 exports.updateCustomFieldSchema = zod_1.z.object({
     fieldName: zod_1.z.string().min(1).optional(),

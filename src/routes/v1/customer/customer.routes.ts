@@ -67,13 +67,13 @@ router.get(
 router.post(
   "/add",
   authenticateUser,
-  authorizeRoles("admin", "partner", "sub_admin"),
+  authorizeRoles("admin", "partner", "sub_admin", "team_member"),
   createCustomer
 );
 router.patch(
   "/update/:id",
   authenticateUser,
-  authorizeRoles("admin", "partner", "sub_admin"),
+  authorizeRoles("admin", "partner", "sub_admin", "team_member"),
   updateCustomer
 );
 router.patch(

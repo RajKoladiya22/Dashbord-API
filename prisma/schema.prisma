@@ -400,6 +400,7 @@ model CustomerProductHistory {
   adminId      String      @map("admin_id") @db.Uuid
   productId    String      @map("product_id") @db.Uuid
   purchaseDate DateTime    @map("purchase_date")
+  detail       String?
   renewal      Boolean     @default(false)
   renewPeriod  renewPeriod @default(custom)
   expiryDate   DateTime?   @map("expiry_date")

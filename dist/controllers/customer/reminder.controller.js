@@ -54,12 +54,13 @@ function computeWindow(window, customStart, customEnd) {
 const listRenewalReminders = async (req, res, next) => {
     try {
         const user = req.user;
-        if (!user || !user.adminId) {
+        if (!user || (!user.adminId && user.role !== "admin")) {
             (0, responseHandler_1.sendErrorResponse)(res, 401, "Unauthorized");
             return;
         }
-        const adminId = user.role === "admin" ? user.id : user.adminId;
-        const partnerId = user.role === "partner" ? user.id : undefined;
+        const isAdmin = user.role === "admin";
+        const adminId = isAdmin ? user.id : user.adminId;
+        const partnerId = !isAdmin ? user.id : undefined;
         const { timeWindow = "next15", startDate, endDate, productName, customerSearch, partnerSearch, } = req.query;
         let range;
         try {
@@ -71,79 +72,45 @@ const listRenewalReminders = async (req, res, next) => {
         }
         const where = {
             adminId,
-            expiryDate: {
-                gte: range.start,
-                lte: range.end,
-            },
+            expiryDate: { gte: range.start, lte: range.end },
             status: true,
         };
+        const baseCustomerFilter = [];
         if (partnerId) {
-            where.customer = { is: { partnerId } };
+            baseCustomerFilter.push({ partnerId });
         }
         if (productName) {
             where.product = {
-                productName: {
-                    contains: productName,
-                    mode: "insensitive",
-                },
+                productName: { contains: productName, mode: "insensitive" },
             };
         }
+        const customerAnd = [...baseCustomerFilter];
+        const customerOr = [];
         if (customerSearch) {
-            where.customer = {
-                is: {
-                    OR: [
-                        { companyName: { contains: customerSearch, mode: "insensitive" } },
-                        {
-                            contactPerson: { contains: customerSearch, mode: "insensitive" },
-                        },
-                    ],
-                    ...(partnerSearch
-                        ? {
-                            partner: {
-                                is: {
-                                    OR: [
-                                        {
-                                            companyName: {
-                                                contains: partnerSearch,
-                                                mode: "insensitive",
-                                            },
-                                        },
-                                        {
-                                            firstName: {
-                                                contains: partnerSearch,
-                                                mode: "insensitive",
-                                            },
-                                        },
-                                        {
-                                            lastName: {
-                                                contains: partnerSearch,
-                                                mode: "insensitive",
-                                            },
-                                        },
-                                    ],
-                                },
-                            },
-                        }
-                        : {}),
-                },
-            };
+            customerOr.push({ companyName: { contains: customerSearch, mode: "insensitive" } }, { contactPerson: { contains: customerSearch, mode: "insensitive" } });
         }
-        else if (partnerSearch) {
-            where.customer = {
-                is: {
-                    partner: {
-                        is: {
-                            OR: [
-                                {
-                                    companyName: { contains: partnerSearch, mode: "insensitive" },
-                                },
-                                { firstName: { contains: partnerSearch, mode: "insensitive" } },
-                                { lastName: { contains: partnerSearch, mode: "insensitive" } },
-                            ],
-                        },
+        let partnerSubFilter = {};
+        if (partnerSearch) {
+            partnerSubFilter = {
+                partner: {
+                    is: {
+                        OR: [
+                            { companyName: { contains: partnerSearch, mode: "insensitive" } },
+                            { firstName: { contains: partnerSearch, mode: "insensitive" } },
+                            { lastName: { contains: partnerSearch, mode: "insensitive" } },
+                        ],
                     },
                 },
             };
+        }
+        if (customerOr.length) {
+            customerAnd.push({ OR: customerOr });
+        }
+        if (partnerSearch) {
+            customerAnd.push(partnerSubFilter);
+        }
+        if (customerAnd.length) {
+            where.customer = { is: { AND: customerAnd } };
         }
         const reminders = await database_config_1.prisma.customerProductHistory.findMany({
             where,
@@ -195,12 +162,10 @@ const listRenewalReminders = async (req, res, next) => {
             orderBy: { expiryDate: "asc" },
         });
         (0, responseHandler_1.sendSuccessResponse)(res, 200, "Renewal reminders fetched", { reminders });
-        return;
     }
     catch (err) {
         console.error("listRenewalReminders error:", err);
         (0, responseHandler_1.sendErrorResponse)(res, 500, "Server error");
-        return;
     }
 };
 exports.listRenewalReminders = listRenewalReminders;
@@ -241,6 +206,7 @@ const updateCustomerProduct = async (req, res, next) => {
                 renewal: true,
                 status: true,
                 renewPeriod: true,
+                detail: true
             },
         });
         if (!existing || existing.adminId !== adminId) {
@@ -301,6 +267,7 @@ const updateCustomerProduct = async (req, res, next) => {
                     ? new Date(data.renewalDate)
                     : existing.renewalDate,
                 renewal: data.renewal !== undefined ? data.renewal : existing.renewal,
+                detail: data.details !== undefined ? data.details : existing.detail,
                 status: data.status !== undefined ? data.status : existing.status,
             };
         }

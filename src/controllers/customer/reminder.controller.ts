@@ -73,6 +73,201 @@ function computeWindow(
 // # Custom range
 // curl -X GET "https://localhost:3000/api/v1/reminders?timeWindow=custom&startDate=2025-06-01&endDate=2025-07-01" \
 //   -H "Authorization: Bearer <token>"
+
+// export const listRenewalReminders = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ): Promise<void> => {
+//   try {
+//     // 1) Auth
+//     const user = req.user;
+//     if (!user || !user.adminId) {
+//       sendErrorResponse(res, 401, "Unauthorized");
+//       return;
+//     }
+//     const adminId = user.role === "admin" ? user.id : user.adminId!;
+//     const partnerId = user.role === "partner" ? user.id : undefined;
+
+
+//     // 2) Parse query
+//     const {
+//       timeWindow = "next15",
+//       startDate,
+//       endDate,
+//       productName,
+//       customerSearch, // ← new
+//       partnerSearch, // ← new
+//     } = req.query as Record<string, string>;
+
+//     // console.log("partnerSearch---->", timeWindow);
+
+//     let range;
+//     try {
+//       range = computeWindow(timeWindow, startDate, endDate);
+//     } catch (err: any) {
+//       sendErrorResponse(res, 400, err.message);
+//       return;
+//     }
+//     // console.log("range---->", timeWindow);
+
+//     // 3) Build Prisma filter
+//     const where: any = {
+//       adminId,
+//       expiryDate: {
+//         gte: range.start,
+//         lte: range.end,
+//       },
+//       status: true,
+//     };
+
+//     if (partnerId) {
+//       where.customer = { is: { partnerId } };
+//     }
+
+//     if (productName) {
+//       where.product = {
+//         productName: {
+//           contains: productName,
+//           mode: "insensitive",
+//         },
+//       };
+//     }
+
+//     // ── Customer search ─────────────────────────────────────────────────────
+//     if (customerSearch) {
+//       if (partnerId) {
+//         where.customer = {
+//           is: {
+//             AND: [
+//               { partnerId },
+//               { companyName: { contains: customerSearch, mode: "insensitive" } },
+//               {
+//                 contactPerson: { contains: customerSearch, mode: "insensitive" },
+//               },]
+//           }
+//         };
+//       }
+
+//       where.customer = {
+//         is: {
+//           OR: [
+//             { companyName: { contains: customerSearch, mode: "insensitive" } },
+//             {
+//               contactPerson: { contains: customerSearch, mode: "insensitive" },
+//             },
+//           ],
+//           // ── Partner search nested inside customer ────────────────────────
+//           ...(partnerSearch
+//             ? {
+//               partner: {
+//                 is: {
+//                   OR: [
+//                     {
+//                       companyName: {
+//                         contains: partnerSearch,
+//                         mode: "insensitive",
+//                       },
+//                     },
+//                     {
+//                       firstName: {
+//                         contains: partnerSearch,
+//                         mode: "insensitive",
+//                       },
+//                     },
+//                     {
+//                       lastName: {
+//                         contains: partnerSearch,
+//                         mode: "insensitive",
+//                       },
+//                     },
+//                   ],
+//                 },
+//               },
+//             }
+//             : {}),
+//         },
+//       };
+//     } else if (partnerSearch) {
+//       // If no customerSearch, but partnerSearch exists:
+//       where.customer = {
+//         is: {
+//           partner: {
+//             is: {
+//               OR: [
+//                 {
+//                   companyName: { contains: partnerSearch, mode: "insensitive" },
+//                 },
+//                 { firstName: { contains: partnerSearch, mode: "insensitive" } },
+//                 { lastName: { contains: partnerSearch, mode: "insensitive" } },
+//               ],
+//             },
+//           },
+//         },
+//       };
+//     }
+
+//     // 4) Query
+//     const reminders = await prisma.customerProductHistory.findMany({
+//       where,
+//       include: {
+//         product: {
+//           select: {
+//             id: true,
+//             productName: true,
+//             productPrice: true,
+//             description: true,
+//             specifications: true,
+//             status: true,
+//           },
+//         },
+//         customer: {
+//           select: {
+//             id: true,
+//             companyName: true,
+//             contactPerson: true,
+//             mobileNumber: true,
+//             email: true,
+//             serialNo: true,
+//             adminCustomFields: true,
+//             address: true,
+//             hasReference: true,
+//             status: true,
+//             partner: {
+//               select: {
+//                 companyName: true,
+//                 firstName: true,
+//                 lastName: true,
+//                 contactInfo: true,
+//                 email: true,
+//                 status: true,
+//               },
+//             },
+//           },
+//         },
+//         admin: {
+//           select: {
+//             companyName: true,
+//             contactInfo: true,
+//             firstName: true,
+//             lastName: true,
+//             email: true,
+//           },
+//         },
+//       },
+//       orderBy: { expiryDate: "asc" },
+//     });
+
+//     // 5) Return
+//     sendSuccessResponse(res, 200, "Renewal reminders fetched", { reminders });
+//     return;
+//   } catch (err) {
+//     console.error("listRenewalReminders error:", err);
+//     sendErrorResponse(res, 500, "Server error");
+//     return;
+//   }
+// };
+
 export const listRenewalReminders = async (
   req: Request,
   res: Response,
@@ -81,13 +276,13 @@ export const listRenewalReminders = async (
   try {
     // 1) Auth
     const user = req.user;
-    if (!user || !user.adminId) {
+    if (!user || (!user.adminId && user.role !== "admin")) {
       sendErrorResponse(res, 401, "Unauthorized");
       return;
     }
-    const adminId = user.role === "admin" ? user.id : user.adminId!;
-    const partnerId = user.role === "partner" ? user.id : undefined;
-    
+    const isAdmin = user.role === "admin";
+    const adminId = isAdmin ? user.id : user.adminId!;
+    const partnerId = !isAdmin ? user.id : undefined;
 
     // 2) Parse query
     const {
@@ -95,11 +290,9 @@ export const listRenewalReminders = async (
       startDate,
       endDate,
       productName,
-      customerSearch, // ← new
-      partnerSearch, // ← new
+      customerSearch,
+      partnerSearch,
     } = req.query as Record<string, string>;
-
-    // console.log("partnerSearch---->", timeWindow);
 
     let range;
     try {
@@ -108,92 +301,72 @@ export const listRenewalReminders = async (
       sendErrorResponse(res, 400, err.message);
       return;
     }
-    // console.log("range---->", timeWindow);
 
-    // 3) Build Prisma filter
+    // 3) Build base Prisma filter
+    //    Everyone must match adminId + expiryDate + status
     const where: any = {
       adminId,
-      expiryDate: {
-        gte: range.start,
-        lte: range.end,
-      },
+      expiryDate: { gte: range.start, lte: range.end },
       status: true,
+      // customer-level filter will go here
     };
 
-     if (partnerId) {
-      where.customer = { is: { partnerId } };
+    // If partner, also require customer.partnerId = partnerId
+    const baseCustomerFilter: any[] = [];
+    if (partnerId) {
+      baseCustomerFilter.push({ partnerId });
     }
 
+    // 4) Apply productName filter
     if (productName) {
       where.product = {
-        productName: {
-          contains: productName,
-          mode: "insensitive",
-        },
+        productName: { contains: productName, mode: "insensitive" },
       };
     }
 
-    // ── Customer search ─────────────────────────────────────────────────────
+    // 5) Build customer + partner search filters
+    const customerAnd: any[] = [...baseCustomerFilter];
+    const customerOr: any[] = [];
+
     if (customerSearch) {
-      where.customer = {
-        is: {
-          OR: [
-            { companyName: { contains: customerSearch, mode: "insensitive" } },
-            {
-              contactPerson: { contains: customerSearch, mode: "insensitive" },
-            },
-          ],
-          // ── Partner search nested inside customer ────────────────────────
-          ...(partnerSearch
-            ? {
-                partner: {
-                  is: {
-                    OR: [
-                      {
-                        companyName: {
-                          contains: partnerSearch,
-                          mode: "insensitive",
-                        },
-                      },
-                      {
-                        firstName: {
-                          contains: partnerSearch,
-                          mode: "insensitive",
-                        },
-                      },
-                      {
-                        lastName: {
-                          contains: partnerSearch,
-                          mode: "insensitive",
-                        },
-                      },
-                    ],
-                  },
-                },
-              }
-            : {}),
-        },
-      };
-    } else if (partnerSearch) {
-      // If no customerSearch, but partnerSearch exists:
-      where.customer = {
-        is: {
-          partner: {
-            is: {
-              OR: [
-                {
-                  companyName: { contains: partnerSearch, mode: "insensitive" },
-                },
-                { firstName: { contains: partnerSearch, mode: "insensitive" } },
-                { lastName: { contains: partnerSearch, mode: "insensitive" } },
-              ],
-            },
+      customerOr.push(
+        { companyName: { contains: customerSearch, mode: "insensitive" } },
+        { contactPerson: { contains: customerSearch, mode: "insensitive" } }
+      );
+    }
+
+    // partnerSearch always needs to go under the partner relation of customer
+    let partnerSubFilter: any = {};
+    if (partnerSearch) {
+      partnerSubFilter = {
+        partner: {
+          is: {
+            OR: [
+              { companyName: { contains: partnerSearch, mode: "insensitive" } },
+              { firstName:   { contains: partnerSearch, mode: "insensitive" } },
+              { lastName:    { contains: partnerSearch, mode: "insensitive" } },
+            ],
           },
         },
       };
     }
 
-    // 4) Query
+    // Attach OR filters if any
+    if (customerOr.length) {
+      customerAnd.push({ OR: customerOr });
+    }
+
+    // If partnerSearch, push its filter too
+    if (partnerSearch) {
+      customerAnd.push(partnerSubFilter);
+    }
+
+    // Finally, if any customer-level constraints exist, add them
+    if (customerAnd.length) {
+      where.customer = { is: { AND: customerAnd } };
+    }
+
+    // 6) Fetch from DB
     const reminders = await prisma.customerProductHistory.findMany({
       where,
       include: {
@@ -244,15 +417,14 @@ export const listRenewalReminders = async (
       orderBy: { expiryDate: "asc" },
     });
 
-    // 5) Return
+    // 7) Return
     sendSuccessResponse(res, 200, "Renewal reminders fetched", { reminders });
-    return;
   } catch (err) {
     console.error("listRenewalReminders error:", err);
     sendErrorResponse(res, 500, "Server error");
-    return;
   }
 };
+
 
 export const updateCustomerProduct = async (
   req: Request,
@@ -304,6 +476,7 @@ export const updateCustomerProduct = async (
         renewal: true,
         status: true,
         renewPeriod: true,
+        detail: true
       },
     });
     //console.log("\n\n\nexisting---->", existing, "\n\n\n");
@@ -331,7 +504,7 @@ export const updateCustomerProduct = async (
       const purchase = new Date(existing.renewalDate);
       let renewalDate: Date;
       let expiryDate: Date;
-     // console.log("\n\nexisting.renewPeriod--->", existing.renewPeriod);
+      // console.log("\n\nexisting.renewPeriod--->", existing.renewPeriod);
 
       switch (existing.renewPeriod) {
         case "monthly":
@@ -401,6 +574,7 @@ export const updateCustomerProduct = async (
           ? new Date(data.renewalDate)
           : existing.renewalDate,
         renewal: data.renewal !== undefined ? data.renewal : existing.renewal,
+        detail : data.details !== undefined ? data.details : existing.detail,
         status: data.status !== undefined ? data.status : existing.status,
       };
     }
