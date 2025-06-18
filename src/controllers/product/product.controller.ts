@@ -326,7 +326,7 @@ export const deleteProduct = async (
       sendErrorResponse(res, 500, "Server error");
       return;
     }
-    next(err);
+    // next(err);
   }
 };
 

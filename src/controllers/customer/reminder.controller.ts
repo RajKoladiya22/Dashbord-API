@@ -86,6 +86,8 @@ export const listRenewalReminders = async (
       return;
     }
     const adminId = user.role === "admin" ? user.id : user.adminId!;
+    const partnerId = user.role === "partner" ? user.id : undefined;
+    
 
     // 2) Parse query
     const {
@@ -117,6 +119,11 @@ export const listRenewalReminders = async (
       },
       status: true,
     };
+
+     if (partnerId) {
+      where.customer = { is: { partnerId } };
+    }
+
     if (productName) {
       where.product = {
         productName: {

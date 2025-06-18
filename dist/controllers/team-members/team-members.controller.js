@@ -10,6 +10,11 @@ const listTeamMembers = async (req, res, next) => {
         (0, httpResponse_1.sendErrorResponse)(res, 401, "Unauthorized");
         return;
     }
+    const adminId = user.role === "admin" ? user.id : user.adminId;
+    if (!adminId) {
+        (0, httpResponse_1.sendErrorResponse)(res, 401, "Unauthorized");
+        return;
+    }
     const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
     const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 10, 1), 100);
     const skip = (page - 1) * limit;
@@ -35,7 +40,7 @@ const listTeamMembers = async (req, res, next) => {
     if (req.query.status === "false") {
         statusFilter.status = false;
     }
-    const baseFilter = { ...searchFilter, ...statusFilter };
+    const baseFilter = { ...searchFilter, ...statusFilter, adminId };
     try {
         const [total, teamMembers] = await Promise.all([
             database_config_1.prisma.teamMember.count({ where: baseFilter }),

@@ -59,6 +59,7 @@ const listRenewalReminders = async (req, res, next) => {
             return;
         }
         const adminId = user.role === "admin" ? user.id : user.adminId;
+        const partnerId = user.role === "partner" ? user.id : undefined;
         const { timeWindow = "next15", startDate, endDate, productName, customerSearch, partnerSearch, } = req.query;
         let range;
         try {
@@ -76,6 +77,9 @@ const listRenewalReminders = async (req, res, next) => {
             },
             status: true,
         };
+        if (partnerId) {
+            where.customer = { is: { partnerId } };
+        }
         if (productName) {
             where.product = {
                 productName: {

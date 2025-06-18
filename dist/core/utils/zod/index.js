@@ -91,7 +91,7 @@ exports.updateCustomerSchema = zod_1.z.object({
     serialNo: zod_1.z.string().optional(),
     prime: zod_1.z.boolean().optional(),
     blacklisted: zod_1.z.boolean().optional(),
-    remark: zod_1.z.string().nullable(),
+    remark: zod_1.z.string().optional(),
     hasReference: zod_1.z.boolean().optional(),
     partnerId: zod_1.z.string().uuid().nullable().optional(),
     adminCustomFields: zod_1.z.record(zod_1.z.any()).optional(),

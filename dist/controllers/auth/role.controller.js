@@ -3,15 +3,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateTeamRole = void 0;
 const database_config_1 = require("../../config/database.config");
 const client_1 = require("@prisma/client");
+const httpResponse_1 = require("../../core/utils/httpResponse");
 const updateTeamRole = async (req, res, next) => {
     const teamMemberId = req.params.id;
     const user = req.user;
     if (!user) {
-        res.status(401).json({ success: false, message: "Unauthorized" });
+        (0, httpResponse_1.sendErrorResponse)(res, 403, "Unauthorized");
         return;
     }
     if (!user || user.role !== "admin") {
-        res.status(403).json({ success: false, message: "Forbidden: Admins only" });
+        (0, httpResponse_1.sendErrorResponse)(res, 403, "Forbidden: Admins only");
         return;
     }
     try {
@@ -19,7 +20,7 @@ const updateTeamRole = async (req, res, next) => {
             where: { id: teamMemberId },
         });
         if (!existingMember) {
-            res.status(404).json({ success: false, message: "Team member not found" });
+            (0, httpResponse_1.sendErrorResponse)(res, 404, "Team member not found");
             return;
         }
         let newRole;
@@ -30,27 +31,36 @@ const updateTeamRole = async (req, res, next) => {
             newRole = client_1.Role.team_member;
         }
         else {
-            res.status(400).json({ success: false, message: "Invalid role to toggle" });
+            (0, httpResponse_1.sendErrorResponse)(res, 400, "Invalid role to toggle");
             return;
         }
-        const updatedMember = await database_config_1.prisma.teamMember.update({
-            where: { id: teamMemberId },
-            data: { role: newRole },
+        const loginCredential = await database_config_1.prisma.loginCredential.findFirst({
+            where: { userProfileId: teamMemberId },
         });
-        res.status(200).json({
-            success: true,
-            message: "Role updated successfully",
-            data: updatedMember,
-        });
+        if (!loginCredential) {
+            (0, httpResponse_1.sendErrorResponse)(res, 404, "Login credential not found");
+            return;
+        }
+        const [updatedMember, updatedCredential] = await database_config_1.prisma.$transaction([
+            database_config_1.prisma.teamMember.update({
+                where: { id: teamMemberId },
+                data: { role: newRole },
+            }),
+            database_config_1.prisma.loginCredential.update({
+                where: { id: loginCredential.id },
+                data: { role: newRole },
+            }),
+        ]);
+        (0, httpResponse_1.sendSuccessResponse)(res, 200, "Role updated successfully", updatedMember);
     }
     catch (err) {
         if (err instanceof client_1.Prisma.PrismaClientKnownRequestError) {
             if (err.code === "P2025") {
-                res.status(404).json({ success: false, message: "Team member not found" });
+                (0, httpResponse_1.sendErrorResponse)(res, 404, "Team member not found");
                 return;
             }
             if (err.code === "P2003") {
-                res.status(400).json({ success: false, message: "Invalid scope or foreign key" });
+                (0, httpResponse_1.sendErrorResponse)(res, 400, "Invalid scope or foreign key");
                 return;
             }
         }
@@ -59,7 +69,8 @@ const updateTeamRole = async (req, res, next) => {
             next(err);
         }
         else {
-            res.status(500).json({ success: false, message: "Server error" });
+            console.error("role change error:", err);
+            (0, httpResponse_1.sendErrorResponse)(res, 500, "Server error");
         }
     }
 };

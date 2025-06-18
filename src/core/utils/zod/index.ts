@@ -112,7 +112,7 @@ export const updateCustomerSchema = z.object({
   serialNo: z.string().optional(),
   prime: z.boolean().optional(),
   blacklisted: z.boolean().optional(),
-  remark: z.string().nullable(),
+  remark: z.string().optional(),
   hasReference: z.boolean().optional(),
   partnerId: z.string().uuid().nullable().optional(),
   adminCustomFields: z.record(z.any()).optional(),

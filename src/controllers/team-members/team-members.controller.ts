@@ -15,6 +15,11 @@ export const listTeamMembers = async (
     sendErrorResponse(res, 401, "Unauthorized");
     return;
   }
+  const adminId = user.role === "admin" ? user.id : user.adminId!;
+  if (!adminId) {
+    sendErrorResponse(res, 401, "Unauthorized");
+    return;
+  }
 
   // Pagination
   const page = Math.max(parseInt(req.query.page as string, 10) || 1, 1);
@@ -59,7 +64,7 @@ export const listTeamMembers = async (
   }
 
   // Final filter 
-  const baseFilter: any = { ...searchFilter, ...statusFilter };
+  const baseFilter: any = { ...searchFilter, ...statusFilter, adminId };
 
   try {
     const [total, teamMembers] = await Promise.all([

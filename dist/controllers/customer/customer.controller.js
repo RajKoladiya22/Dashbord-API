@@ -423,7 +423,7 @@ const updateCustomer = async (req, res, next) => {
         });
         const sanitized = {
             ...result.updatedCustomer,
-            ...result.createdHistory,
+            products: [...result.createdHistory],
         };
         (0, responseHandler_1.sendSuccessResponse)(res, 200, "Customer updated", {
             customer: sanitized,
