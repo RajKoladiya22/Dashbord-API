@@ -104,7 +104,7 @@ exports.updateCustomerSchema = zod_1.z.object({
         renewal: zod_1.z.boolean().optional(),
         expiryDate: zod_1.z.string().optional(),
         renewalDate: zod_1.z.string().optional(),
-        details: zod_1.z.string().optional(),
+        detail: zod_1.z.string().optional(),
         renewPeriod: zod_1.z.enum(["monthly", "quarterly", "half_yearly", "yearly", "custom"]).optional(),
     }))
         .optional(),
@@ -115,7 +115,7 @@ exports.updateHistorySchema = zod_1.z.object({
     expiryDate: zod_1.z.string().optional(),
     renewalDate: zod_1.z.string().optional(),
     status: zod_1.z.boolean().optional(),
-    details: zod_1.z.string().optional()
+    detail: zod_1.z.string().optional()
 });
 exports.updateCustomFieldSchema = zod_1.z.object({
     fieldName: zod_1.z.string().min(1).optional(),

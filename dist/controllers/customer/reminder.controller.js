@@ -267,7 +267,7 @@ const updateCustomerProduct = async (req, res, next) => {
                     ? new Date(data.renewalDate)
                     : existing.renewalDate,
                 renewal: data.renewal !== undefined ? data.renewal : existing.renewal,
-                detail: data.details !== undefined ? data.details : existing.detail,
+                detail: data.detail !== undefined ? data.detail : existing.detail,
                 status: data.status !== undefined ? data.status : existing.status,
             };
         }

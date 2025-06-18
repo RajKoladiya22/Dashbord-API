@@ -127,7 +127,7 @@ export const updateCustomerSchema = z.object({
       renewal: z.boolean().optional(),
       expiryDate: z.string().optional(),
       renewalDate: z.string().optional(),
-      details: z.string().optional(),
+      detail: z.string().optional(),
       renewPeriod: z.enum(["monthly", "quarterly", "half_yearly", "yearly", "custom"]).optional(),
     })
   )
@@ -141,7 +141,7 @@ export const updateHistorySchema = z.object({
   expiryDate: z.string().optional(),
   renewalDate: z.string().optional(),
   status: z.boolean().optional(),
-  details: z.string().optional()
+  detail: z.string().optional()
 });
 export type UpdateHistoryBody = z.infer<typeof updateHistorySchema>;
 
