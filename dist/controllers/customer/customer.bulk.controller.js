@@ -86,36 +86,36 @@ const bulkVerifyCustomers = async (req, res, next) => {
             const errorMsg = { missing: [], invalid: [], duplicate: [] };
             let parsedDate = null;
             if (!r.companyName)
-                errorMsg.missing.push("Company Name");
+                errorMsg.missing.push("companyName");
             if (!r.contactPerson)
-                errorMsg.missing.push("Contact Person");
+                errorMsg.missing.push("contactPerson");
             if (!r.mobileNumber)
-                errorMsg.missing.push("Mobile Number");
+                errorMsg.missing.push("mobileNumber");
             if (!r.email)
-                errorMsg.missing.push("Email");
+                errorMsg.missing.push("email");
             if (!r.serialNo)
-                errorMsg.missing.push("Serial No");
+                errorMsg.missing.push("serialNo");
             if (r.joiningDate) {
                 const parsed = new Date(r.joiningDate.trim());
                 if (!isNaN(parsed.getTime()))
                     parsedDate = parsed;
                 else
-                    errorMsg.invalid.push(`Joining Date (${r.joiningDate})`);
+                    errorMsg.invalid.push(`joiningDate`);
             }
             else {
-                errorMsg.missing.push("Joining Date");
+                errorMsg.missing.push("joiningDate");
             }
             if (r.email && !emailRegex.test(r.email)) {
-                errorMsg.invalid.push(`Email (${r.email})`);
+                errorMsg.invalid.push(`email`);
             }
             if (r.mobileNumber && !mobileRegex.test(r.mobileNumber)) {
-                errorMsg.invalid.push(`Mobile Number (${r.mobileNumber})`);
+                errorMsg.invalid.push(`mobileNumber`);
             }
             if (fileDuplicates.has(r.email)) {
                 errorMsg.duplicate.push("Duplicate email in file");
             }
             if (dbEmails.has(r.email)) {
-                errorMsg.duplicate.push("Email already exists in database");
+                errorMsg.duplicate.push("Email already exists in your database");
             }
             if (errorMsg.missing.length || errorMsg.invalid.length || errorMsg.duplicate.length) {
                 if (!problematicEmails.has(r.email)) {
