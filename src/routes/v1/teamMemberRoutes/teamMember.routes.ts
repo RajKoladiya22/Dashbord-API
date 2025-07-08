@@ -8,7 +8,7 @@ import {
 
 const router = Router();
 
-router.get("/", authenticateUser, authorizeRoles("admin"), listTeamMembers);
+router.get("/", authenticateUser, authorizeRoles("admin", "sub_admin"), listTeamMembers);
 router.patch(
   "/:id/status",
   authenticateUser,

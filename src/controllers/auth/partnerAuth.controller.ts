@@ -10,14 +10,20 @@ import { CreatePartnerInput } from "../../core/utils/zod";
 import nodemailer from "nodemailer";
 import { log } from "node:console";
 
-const SMTP_USER = env.SMTP_USER
-const SMTP_PASS = env.SMTP_PASS
+const SMTP_USER = env.SMTP_USER ;
+const SMTP_PASS = env.SMTP_PASS ;
+
+// console.log("\n\n\n SMTP_USER", SMTP_USER);
+// console.log("\n\n\n SMTP_PASS", SMTP_PASS);
+
 
 const mailtransport = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: SMTP_USER,
-    pass: SMTP_PASS,
+    user: "magicallydev@gmail.com",
+    pass: "vkdd frwe seja frlb",
+    // user: SMTP_USER || "magicallydev@gmail.com",
+    // pass: SMTP_PASS || "vkdd frwe seja frlb",
   },
 });
 const SALT_ROUNDS = parseInt(env.SALT_ROUNDS ?? "12", 10);
@@ -185,11 +191,6 @@ export const createPartner = async (
   </div>
   `,
         };
-
-
-
-
-
         mailtransport.sendMail(mailOptions, (error, info) => {
           if (error) {
             console.error("Email sending failed...", error);

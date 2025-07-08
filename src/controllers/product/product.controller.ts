@@ -164,6 +164,7 @@ export const createProduct = async (
           description: true,
           productLink: true,
           tags: true,
+          status: true,
           specifications: true,
           createdAt: true,
           updatedAt: true,
@@ -325,7 +326,7 @@ export const deleteProduct = async (
       sendErrorResponse(res, 500, "Server error");
       return;
     }
-    next(err);
+    // next(err);
   }
 };
 

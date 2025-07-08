@@ -14,7 +14,7 @@ const router = Router();
 router.get(
   "/", 
   authenticateUser, 
-  authorizeRoles("admin"), 
+  authorizeRoles("admin", "sub_admin"), 
   listPartners
 );
 router.patch(

@@ -330,6 +330,7 @@ exports.Prisma.CustomerProductHistoryScalarFieldEnum = {
   adminId: 'adminId',
   productId: 'productId',
   purchaseDate: 'purchaseDate',
+  detail: 'detail',
   renewal: 'renewal',
   renewPeriod: 'renewPeriod',
   expiryDate: 'expiryDate',

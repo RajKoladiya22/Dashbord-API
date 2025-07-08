@@ -21738,6 +21738,7 @@ export namespace Prisma {
     adminId: string | null
     productId: string | null
     purchaseDate: Date | null
+    detail: string | null
     renewal: boolean | null
     renewPeriod: $Enums.renewPeriod | null
     expiryDate: Date | null
@@ -21753,6 +21754,7 @@ export namespace Prisma {
     adminId: string | null
     productId: string | null
     purchaseDate: Date | null
+    detail: string | null
     renewal: boolean | null
     renewPeriod: $Enums.renewPeriod | null
     expiryDate: Date | null
@@ -21768,6 +21770,7 @@ export namespace Prisma {
     adminId: number
     productId: number
     purchaseDate: number
+    detail: number
     renewal: number
     renewPeriod: number
     expiryDate: number
@@ -21785,6 +21788,7 @@ export namespace Prisma {
     adminId?: true
     productId?: true
     purchaseDate?: true
+    detail?: true
     renewal?: true
     renewPeriod?: true
     expiryDate?: true
@@ -21800,6 +21804,7 @@ export namespace Prisma {
     adminId?: true
     productId?: true
     purchaseDate?: true
+    detail?: true
     renewal?: true
     renewPeriod?: true
     expiryDate?: true
@@ -21815,6 +21820,7 @@ export namespace Prisma {
     adminId?: true
     productId?: true
     purchaseDate?: true
+    detail?: true
     renewal?: true
     renewPeriod?: true
     expiryDate?: true
@@ -21903,6 +21909,7 @@ export namespace Prisma {
     adminId: string
     productId: string
     purchaseDate: Date
+    detail: string | null
     renewal: boolean
     renewPeriod: $Enums.renewPeriod
     expiryDate: Date | null
@@ -21935,6 +21942,7 @@ export namespace Prisma {
     adminId?: boolean
     productId?: boolean
     purchaseDate?: boolean
+    detail?: boolean
     renewal?: boolean
     renewPeriod?: boolean
     expiryDate?: boolean
@@ -21955,6 +21963,7 @@ export namespace Prisma {
     adminId?: boolean
     productId?: boolean
     purchaseDate?: boolean
+    detail?: boolean
     renewal?: boolean
     renewPeriod?: boolean
     expiryDate?: boolean
@@ -21973,6 +21982,7 @@ export namespace Prisma {
     adminId?: boolean
     productId?: boolean
     purchaseDate?: boolean
+    detail?: boolean
     renewal?: boolean
     renewPeriod?: boolean
     expiryDate?: boolean
@@ -21991,6 +22001,7 @@ export namespace Prisma {
     adminId?: boolean
     productId?: boolean
     purchaseDate?: boolean
+    detail?: boolean
     renewal?: boolean
     renewPeriod?: boolean
     expiryDate?: boolean
@@ -22000,7 +22011,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type CustomerProductHistoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "customerId" | "adminId" | "productId" | "purchaseDate" | "renewal" | "renewPeriod" | "expiryDate" | "renewalDate" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["customerProductHistory"]>
+  export type CustomerProductHistoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "customerId" | "adminId" | "productId" | "purchaseDate" | "detail" | "renewal" | "renewPeriod" | "expiryDate" | "renewalDate" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["customerProductHistory"]>
   export type CustomerProductHistoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     admin?: boolean | AdminDefaultArgs<ExtArgs>
@@ -22033,6 +22044,7 @@ export namespace Prisma {
       adminId: string
       productId: string
       purchaseDate: Date
+      detail: string | null
       renewal: boolean
       renewPeriod: $Enums.renewPeriod
       expiryDate: Date | null
@@ -22472,6 +22484,7 @@ export namespace Prisma {
     readonly adminId: FieldRef<"CustomerProductHistory", 'String'>
     readonly productId: FieldRef<"CustomerProductHistory", 'String'>
     readonly purchaseDate: FieldRef<"CustomerProductHistory", 'DateTime'>
+    readonly detail: FieldRef<"CustomerProductHistory", 'String'>
     readonly renewal: FieldRef<"CustomerProductHistory", 'Boolean'>
     readonly renewPeriod: FieldRef<"CustomerProductHistory", 'renewPeriod'>
     readonly expiryDate: FieldRef<"CustomerProductHistory", 'DateTime'>
@@ -26400,6 +26413,7 @@ export namespace Prisma {
     adminId: 'adminId',
     productId: 'productId',
     purchaseDate: 'purchaseDate',
+    detail: 'detail',
     renewal: 'renewal',
     renewPeriod: 'renewPeriod',
     expiryDate: 'expiryDate',
@@ -27989,6 +28003,7 @@ export namespace Prisma {
     adminId?: UuidFilter<"CustomerProductHistory"> | string
     productId?: UuidFilter<"CustomerProductHistory"> | string
     purchaseDate?: DateTimeFilter<"CustomerProductHistory"> | Date | string
+    detail?: StringNullableFilter<"CustomerProductHistory"> | string | null
     renewal?: BoolFilter<"CustomerProductHistory"> | boolean
     renewPeriod?: EnumrenewPeriodFilter<"CustomerProductHistory"> | $Enums.renewPeriod
     expiryDate?: DateTimeNullableFilter<"CustomerProductHistory"> | Date | string | null
@@ -28008,6 +28023,7 @@ export namespace Prisma {
     adminId?: SortOrder
     productId?: SortOrder
     purchaseDate?: SortOrder
+    detail?: SortOrderInput | SortOrder
     renewal?: SortOrder
     renewPeriod?: SortOrder
     expiryDate?: SortOrderInput | SortOrder
@@ -28030,6 +28046,7 @@ export namespace Prisma {
     adminId?: UuidFilter<"CustomerProductHistory"> | string
     productId?: UuidFilter<"CustomerProductHistory"> | string
     purchaseDate?: DateTimeFilter<"CustomerProductHistory"> | Date | string
+    detail?: StringNullableFilter<"CustomerProductHistory"> | string | null
     renewal?: BoolFilter<"CustomerProductHistory"> | boolean
     renewPeriod?: EnumrenewPeriodFilter<"CustomerProductHistory"> | $Enums.renewPeriod
     expiryDate?: DateTimeNullableFilter<"CustomerProductHistory"> | Date | string | null
@@ -28049,6 +28066,7 @@ export namespace Prisma {
     adminId?: SortOrder
     productId?: SortOrder
     purchaseDate?: SortOrder
+    detail?: SortOrderInput | SortOrder
     renewal?: SortOrder
     renewPeriod?: SortOrder
     expiryDate?: SortOrderInput | SortOrder
@@ -28070,6 +28088,7 @@ export namespace Prisma {
     adminId?: UuidWithAggregatesFilter<"CustomerProductHistory"> | string
     productId?: UuidWithAggregatesFilter<"CustomerProductHistory"> | string
     purchaseDate?: DateTimeWithAggregatesFilter<"CustomerProductHistory"> | Date | string
+    detail?: StringNullableWithAggregatesFilter<"CustomerProductHistory"> | string | null
     renewal?: BoolWithAggregatesFilter<"CustomerProductHistory"> | boolean
     renewPeriod?: EnumrenewPeriodWithAggregatesFilter<"CustomerProductHistory"> | $Enums.renewPeriod
     expiryDate?: DateTimeNullableWithAggregatesFilter<"CustomerProductHistory"> | Date | string | null
@@ -29782,6 +29801,7 @@ export namespace Prisma {
   export type CustomerProductHistoryCreateInput = {
     id?: string
     purchaseDate: Date | string
+    detail?: string | null
     renewal?: boolean
     renewPeriod?: $Enums.renewPeriod
     expiryDate?: Date | string | null
@@ -29801,6 +29821,7 @@ export namespace Prisma {
     adminId: string
     productId: string
     purchaseDate: Date | string
+    detail?: string | null
     renewal?: boolean
     renewPeriod?: $Enums.renewPeriod
     expiryDate?: Date | string | null
@@ -29814,6 +29835,7 @@ export namespace Prisma {
   export type CustomerProductHistoryUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    detail?: NullableStringFieldUpdateOperationsInput | string | null
     renewal?: BoolFieldUpdateOperationsInput | boolean
     renewPeriod?: EnumrenewPeriodFieldUpdateOperationsInput | $Enums.renewPeriod
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -29833,6 +29855,7 @@ export namespace Prisma {
     adminId?: StringFieldUpdateOperationsInput | string
     productId?: StringFieldUpdateOperationsInput | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    detail?: NullableStringFieldUpdateOperationsInput | string | null
     renewal?: BoolFieldUpdateOperationsInput | boolean
     renewPeriod?: EnumrenewPeriodFieldUpdateOperationsInput | $Enums.renewPeriod
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -29849,6 +29872,7 @@ export namespace Prisma {
     adminId: string
     productId: string
     purchaseDate: Date | string
+    detail?: string | null
     renewal?: boolean
     renewPeriod?: $Enums.renewPeriod
     expiryDate?: Date | string | null
@@ -29861,6 +29885,7 @@ export namespace Prisma {
   export type CustomerProductHistoryUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    detail?: NullableStringFieldUpdateOperationsInput | string | null
     renewal?: BoolFieldUpdateOperationsInput | boolean
     renewPeriod?: EnumrenewPeriodFieldUpdateOperationsInput | $Enums.renewPeriod
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -29876,6 +29901,7 @@ export namespace Prisma {
     adminId?: StringFieldUpdateOperationsInput | string
     productId?: StringFieldUpdateOperationsInput | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    detail?: NullableStringFieldUpdateOperationsInput | string | null
     renewal?: BoolFieldUpdateOperationsInput | boolean
     renewPeriod?: EnumrenewPeriodFieldUpdateOperationsInput | $Enums.renewPeriod
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -31335,6 +31361,7 @@ export namespace Prisma {
     adminId?: SortOrder
     productId?: SortOrder
     purchaseDate?: SortOrder
+    detail?: SortOrder
     renewal?: SortOrder
     renewPeriod?: SortOrder
     expiryDate?: SortOrder
@@ -31350,6 +31377,7 @@ export namespace Prisma {
     adminId?: SortOrder
     productId?: SortOrder
     purchaseDate?: SortOrder
+    detail?: SortOrder
     renewal?: SortOrder
     renewPeriod?: SortOrder
     expiryDate?: SortOrder
@@ -31365,6 +31393,7 @@ export namespace Prisma {
     adminId?: SortOrder
     productId?: SortOrder
     purchaseDate?: SortOrder
+    detail?: SortOrder
     renewal?: SortOrder
     renewPeriod?: SortOrder
     expiryDate?: SortOrder
@@ -33574,6 +33603,7 @@ export namespace Prisma {
   export type CustomerProductHistoryCreateWithoutAdminInput = {
     id?: string
     purchaseDate: Date | string
+    detail?: string | null
     renewal?: boolean
     renewPeriod?: $Enums.renewPeriod
     expiryDate?: Date | string | null
@@ -33591,6 +33621,7 @@ export namespace Prisma {
     customerId: string
     productId: string
     purchaseDate: Date | string
+    detail?: string | null
     renewal?: boolean
     renewPeriod?: $Enums.renewPeriod
     expiryDate?: Date | string | null
@@ -33861,6 +33892,7 @@ export namespace Prisma {
     adminId?: UuidFilter<"CustomerProductHistory"> | string
     productId?: UuidFilter<"CustomerProductHistory"> | string
     purchaseDate?: DateTimeFilter<"CustomerProductHistory"> | Date | string
+    detail?: StringNullableFilter<"CustomerProductHistory"> | string | null
     renewal?: BoolFilter<"CustomerProductHistory"> | boolean
     renewPeriod?: EnumrenewPeriodFilter<"CustomerProductHistory"> | $Enums.renewPeriod
     expiryDate?: DateTimeNullableFilter<"CustomerProductHistory"> | Date | string | null
@@ -35537,6 +35569,7 @@ export namespace Prisma {
   export type CustomerProductHistoryCreateWithoutProductInput = {
     id?: string
     purchaseDate: Date | string
+    detail?: string | null
     renewal?: boolean
     renewPeriod?: $Enums.renewPeriod
     expiryDate?: Date | string | null
@@ -35554,6 +35587,7 @@ export namespace Prisma {
     customerId: string
     adminId: string
     purchaseDate: Date | string
+    detail?: string | null
     renewal?: boolean
     renewPeriod?: $Enums.renewPeriod
     expiryDate?: Date | string | null
@@ -35708,6 +35742,7 @@ export namespace Prisma {
   export type CustomerProductHistoryCreateWithoutRenewalsInput = {
     id?: string
     purchaseDate: Date | string
+    detail?: string | null
     renewal?: boolean
     renewPeriod?: $Enums.renewPeriod
     expiryDate?: Date | string | null
@@ -35726,6 +35761,7 @@ export namespace Prisma {
     adminId: string
     productId: string
     purchaseDate: Date | string
+    detail?: string | null
     renewal?: boolean
     renewPeriod?: $Enums.renewPeriod
     expiryDate?: Date | string | null
@@ -35791,6 +35827,7 @@ export namespace Prisma {
   export type CustomerProductHistoryUpdateWithoutRenewalsInput = {
     id?: StringFieldUpdateOperationsInput | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    detail?: NullableStringFieldUpdateOperationsInput | string | null
     renewal?: BoolFieldUpdateOperationsInput | boolean
     renewPeriod?: EnumrenewPeriodFieldUpdateOperationsInput | $Enums.renewPeriod
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -35809,6 +35846,7 @@ export namespace Prisma {
     adminId?: StringFieldUpdateOperationsInput | string
     productId?: StringFieldUpdateOperationsInput | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    detail?: NullableStringFieldUpdateOperationsInput | string | null
     renewal?: BoolFieldUpdateOperationsInput | boolean
     renewPeriod?: EnumrenewPeriodFieldUpdateOperationsInput | $Enums.renewPeriod
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -35950,6 +35988,7 @@ export namespace Prisma {
   export type CustomerProductHistoryCreateWithoutCustomerInput = {
     id?: string
     purchaseDate: Date | string
+    detail?: string | null
     renewal?: boolean
     renewPeriod?: $Enums.renewPeriod
     expiryDate?: Date | string | null
@@ -35967,6 +36006,7 @@ export namespace Prisma {
     adminId: string
     productId: string
     purchaseDate: Date | string
+    detail?: string | null
     renewal?: boolean
     renewPeriod?: $Enums.renewPeriod
     expiryDate?: Date | string | null
@@ -36771,6 +36811,7 @@ export namespace Prisma {
     customerId: string
     productId: string
     purchaseDate: Date | string
+    detail?: string | null
     renewal?: boolean
     renewPeriod?: $Enums.renewPeriod
     expiryDate?: Date | string | null
@@ -37104,6 +37145,7 @@ export namespace Prisma {
   export type CustomerProductHistoryUpdateWithoutAdminInput = {
     id?: StringFieldUpdateOperationsInput | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    detail?: NullableStringFieldUpdateOperationsInput | string | null
     renewal?: BoolFieldUpdateOperationsInput | boolean
     renewPeriod?: EnumrenewPeriodFieldUpdateOperationsInput | $Enums.renewPeriod
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -37121,6 +37163,7 @@ export namespace Prisma {
     customerId?: StringFieldUpdateOperationsInput | string
     productId?: StringFieldUpdateOperationsInput | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    detail?: NullableStringFieldUpdateOperationsInput | string | null
     renewal?: BoolFieldUpdateOperationsInput | boolean
     renewPeriod?: EnumrenewPeriodFieldUpdateOperationsInput | $Enums.renewPeriod
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -37136,6 +37179,7 @@ export namespace Prisma {
     customerId?: StringFieldUpdateOperationsInput | string
     productId?: StringFieldUpdateOperationsInput | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    detail?: NullableStringFieldUpdateOperationsInput | string | null
     renewal?: BoolFieldUpdateOperationsInput | boolean
     renewPeriod?: EnumrenewPeriodFieldUpdateOperationsInput | $Enums.renewPeriod
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -37568,6 +37612,7 @@ export namespace Prisma {
     customerId: string
     adminId: string
     purchaseDate: Date | string
+    detail?: string | null
     renewal?: boolean
     renewPeriod?: $Enums.renewPeriod
     expiryDate?: Date | string | null
@@ -37590,6 +37635,7 @@ export namespace Prisma {
   export type CustomerProductHistoryUpdateWithoutProductInput = {
     id?: StringFieldUpdateOperationsInput | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    detail?: NullableStringFieldUpdateOperationsInput | string | null
     renewal?: BoolFieldUpdateOperationsInput | boolean
     renewPeriod?: EnumrenewPeriodFieldUpdateOperationsInput | $Enums.renewPeriod
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -37607,6 +37653,7 @@ export namespace Prisma {
     customerId?: StringFieldUpdateOperationsInput | string
     adminId?: StringFieldUpdateOperationsInput | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    detail?: NullableStringFieldUpdateOperationsInput | string | null
     renewal?: BoolFieldUpdateOperationsInput | boolean
     renewPeriod?: EnumrenewPeriodFieldUpdateOperationsInput | $Enums.renewPeriod
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -37622,6 +37669,7 @@ export namespace Prisma {
     customerId?: StringFieldUpdateOperationsInput | string
     adminId?: StringFieldUpdateOperationsInput | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    detail?: NullableStringFieldUpdateOperationsInput | string | null
     renewal?: BoolFieldUpdateOperationsInput | boolean
     renewPeriod?: EnumrenewPeriodFieldUpdateOperationsInput | $Enums.renewPeriod
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -37666,6 +37714,7 @@ export namespace Prisma {
     adminId: string
     productId: string
     purchaseDate: Date | string
+    detail?: string | null
     renewal?: boolean
     renewPeriod?: $Enums.renewPeriod
     expiryDate?: Date | string | null
@@ -37678,6 +37727,7 @@ export namespace Prisma {
   export type CustomerProductHistoryUpdateWithoutCustomerInput = {
     id?: StringFieldUpdateOperationsInput | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    detail?: NullableStringFieldUpdateOperationsInput | string | null
     renewal?: BoolFieldUpdateOperationsInput | boolean
     renewPeriod?: EnumrenewPeriodFieldUpdateOperationsInput | $Enums.renewPeriod
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -37695,6 +37745,7 @@ export namespace Prisma {
     adminId?: StringFieldUpdateOperationsInput | string
     productId?: StringFieldUpdateOperationsInput | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    detail?: NullableStringFieldUpdateOperationsInput | string | null
     renewal?: BoolFieldUpdateOperationsInput | boolean
     renewPeriod?: EnumrenewPeriodFieldUpdateOperationsInput | $Enums.renewPeriod
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -37710,6 +37761,7 @@ export namespace Prisma {
     adminId?: StringFieldUpdateOperationsInput | string
     productId?: StringFieldUpdateOperationsInput | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    detail?: NullableStringFieldUpdateOperationsInput | string | null
     renewal?: BoolFieldUpdateOperationsInput | boolean
     renewPeriod?: EnumrenewPeriodFieldUpdateOperationsInput | $Enums.renewPeriod
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

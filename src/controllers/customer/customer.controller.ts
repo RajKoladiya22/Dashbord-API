@@ -16,7 +16,7 @@ export const createCustomer = async (
   res: Response,
   next: NextFunction
 ): Promise<void> => {
-  const {
+  let {
     companyName,
     contactPerson,
     mobileNumber,
@@ -41,6 +41,9 @@ export const createCustomer = async (
   }
   const adminId = user.role === "admin" ? user.id : user.adminId!;
   const partnerId = user.role === "partner" ? user.id : incomingPartnerId;
+  if (user.role === "partner"){
+    hasReference = true
+  }
 
   try {
     const result = await prisma.$transaction(async (tx) => {
@@ -116,8 +119,9 @@ export const createCustomer = async (
               status: true,
               renewPeriod: p.renewPeriod,
               renewal: p.renewal ?? false,
+              detail: p.detail,
               renewalDate,
-              expiryDate,
+              expiryDate, 
             },
           });
         });
@@ -311,6 +315,7 @@ export const listCustomers = async (
         expiryDate: h.expiryDate,
         renewalDate: h.renewalDate,
         renewal: h.renewal,
+        detail: h.detail,
         status: h.status,
         history: h.renewals ?? null,
       })),
@@ -342,7 +347,7 @@ export const updateCustomer = async (
   // 2) Validate request body
   const parsed = updateCustomerSchema.safeParse(req.body);
   // console.log("customerId---->", customerId);
-  // console.log("parsed---->", parsed);
+  // console.log("parsed---->", parsed.error);
 
   if (!parsed.success) {
     console.error("Validation failed with errors: ", parsed.error.errors);
@@ -457,6 +462,7 @@ export const updateCustomer = async (
 
       // 5) If any new products provided, append them to CustomerProductHistory
       let createdHistory: Array<any> = [];
+      // console.log("\n\n product----->", product)
       if (Array.isArray(product) && product.length > 0) {
         createdHistory = await Promise.all(
           product.map((p) => {
@@ -498,6 +504,7 @@ export const updateCustomer = async (
                 purchaseDate: purchase,
                 status: true,
                 renewPeriod: period,
+                detail: p.detail,
                 renewal: p.renewal ?? false,
                 renewalDate,
                 expiryDate,
@@ -514,10 +521,13 @@ export const updateCustomer = async (
 
     const sanitized = {
       ...result.updatedCustomer,
-      ...result.createdHistory,
+      products : [...result.createdHistory],
     };
 
-    // console.log("result.updatedCustomer----->", sanitized)
+
+
+    // console.log("\v \n\n result----->", result)
+    // console.log("\v \n\n sanitized----->", sanitized)
 
     // 6) Respond with both updated customer and any new history entries
     sendSuccessResponse(res, 200, "Customer updated", {
@@ -875,6 +885,7 @@ export const editCustomerProduct = async (
         purchaseDate: h.purchaseDate,
         expiryDate: h.expiryDate,
         renewalDate: h.renewalDate,
+        detail: h.detail,
         renewal: h.renewal,
         status: h.status,
         history: h.renewals ?? null,

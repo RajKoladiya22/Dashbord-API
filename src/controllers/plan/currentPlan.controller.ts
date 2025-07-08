@@ -29,6 +29,17 @@ export const currentPlan = async (
   try {
     const subscriptions = await prisma.subscription.findMany({
       where: { adminId: user.adminId },
+      include: {
+        plan: {
+          include: {
+            offers: true,
+            specs: true,
+            descriptions: true,
+          },
+        },
+        payments: true,
+        events: true,
+      },
     });
 
     const now = new Date();
@@ -51,6 +62,11 @@ export const currentPlan = async (
           sub = await prisma.subscription.update({
             where: { id: sub.id },
             data: { status: newStatus },
+            include: {
+              plan: { include: { offers: true, specs: true, descriptions: true } },
+              payments: true,
+              events: true,
+            },
           });
         }
 
@@ -80,6 +96,9 @@ export const currentPlan = async (
           startsAt: sub.startsAt,
           endsAt: sub.endsAt,
           timeMessage,
+          plan: sub.plan,
+          payments: sub.payments,
+          events: sub.events,
         };
       })
     );
@@ -88,7 +107,8 @@ export const currentPlan = async (
       subscriptions: result,
     });
 
-  } catch (error) {
-    next(error);
+  } catch (err:any) {
+    console.error("error:", err);
+    sendErrorResponse(res, err instanceof Error ? 400 : 500, err.message || "Failed fetch data");
   }
-};
+}; 

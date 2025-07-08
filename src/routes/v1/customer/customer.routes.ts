@@ -25,7 +25,7 @@ import {
   updateCustomerProduct,
 } from "../../../controllers/customer/reminder.controller";
 // import { bulkCreateCustomers } from "./controllers/customer/customer.bulk.controller";
-import { bulkCreateCustomers } from "../../../controllers/customer/customer.bulk.controller";
+import { bulkCreateCustomers, bulkVerifyCustomers } from "../../../controllers/customer/customer.bulk.controller";
 import { upload } from "../../../core/middleware/multer/fileUpload";
 
 const router = Router();
@@ -34,25 +34,25 @@ const router = Router();
 router.get(
   "/customfield",
   authenticateUser,
-  authorizeRoles("admin", "partner", "team_member"),
+  authorizeRoles("admin", "partner", "team_member", "sub_admin"),
   listAdminCustomFields
 );
 router.post(
   "/customfield",
   authenticateUser,
-  authorizeRoles("admin"),
+  authorizeRoles("admin", "sub_admin"),
   createAdminCustomField
 );
 router.put(
   "/customfield/:id",
   authenticateUser,
-  authorizeRoles("admin"),
+  authorizeRoles("admin", "sub_admin"),
   updateAdminCustomField
 );
 router.delete(
   "/customfield/:id",
   authenticateUser,
-  authorizeRoles("admin"),
+  authorizeRoles("admin", "sub_admin"),
   deleteAdminCustomField
 );
 
@@ -61,37 +61,37 @@ router.delete(
 router.get(
   "/list",
   authenticateUser,
-  authorizeRoles("admin", "partner", "team_member"),
+  authorizeRoles("admin", "partner", "team_member", "sub_admin"),
   listCustomers
 );
 router.post(
   "/add",
   authenticateUser,
-  authorizeRoles("admin", "partner"),
+  authorizeRoles("admin", "partner", "sub_admin", "team_member"),
   createCustomer
 );
 router.patch(
   "/update/:id",
   authenticateUser,
-  authorizeRoles("admin", "partner"),
+  authorizeRoles("admin", "partner", "sub_admin", "team_member"),
   updateCustomer
 );
 router.patch(
   "/status/:id",
   authenticateUser,
-  authorizeRoles("admin", "partner", "team_member"),
+  authorizeRoles("admin", "partner", "team_member", "sub_admin"),
   setCustomerStatus
 );
 router.patch(
   "/product/update/:customerId/:ProductId",
   authenticateUser,
-  authorizeRoles("admin", "partner", "team_member"),
+  authorizeRoles("admin", "partner", "team_member", "sub_admin"),
   editCustomerProduct
 );
 router.delete(
   "/delete/:id",
   authenticateUser,
-  authorizeRoles("admin", "partner", "team_member"),
+  authorizeRoles("admin", "partner", "sub_admin"),
   deleteCustomer
 );
 
@@ -100,14 +100,14 @@ router.delete(
 router.get(
   "/product/:customerId",
   authenticateUser,
-  authorizeRoles("admin", "partner", "team_member"),
+  authorizeRoles("admin", "partner", "team_member", "sub_admin"),
   getCustomerProductsByCustomerId
 );
 
 router.patch(
   "/product/update/:id",
   authenticateUser,
-  authorizeRoles("admin", "partner", "team_member"),
+  authorizeRoles("admin", "partner", "team_member", "sub_admin"),
   updateCustomerProduct
 );
 
@@ -116,7 +116,7 @@ router.patch(
 router.get(
   "/reminders",
   authenticateUser,
-  authorizeRoles("admin", "partner", "team_member"),
+  authorizeRoles("admin", "partner", "team_member", "sub_admin"),
   listRenewalReminders
 );
 //  ── BULK UPLOAD ───────────────────────────────────────────────────────────────
@@ -125,7 +125,14 @@ router.post(
   "/bulk",
   upload.single("file"), 
   authenticateUser,
-  authorizeRoles("admin", "partner", "team_member"),
+  authorizeRoles("admin", "partner", "team_member", "sub_admin"),
+  bulkVerifyCustomers
+);
+router.post(
+  "/bulk-upload",
+  upload.single("file"), 
+  authenticateUser,
+  authorizeRoles("admin", "partner", "team_member", "sub_admin"),
   bulkCreateCustomers
 );
 

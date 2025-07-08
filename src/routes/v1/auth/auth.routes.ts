@@ -15,7 +15,7 @@ import {
   updateProfile,
   getProfile,
 } from "../../../controllers/auth/profile.controller";
-import { forgotPassword } from "../../../controllers/auth/forgotPassword.controller";
+import { forgotPassword, UpdatePassword } from "../../../controllers/auth/forgotPassword.controller";
 import { resetPassword } from "../../../controllers/auth/resetPassword.controller";
 import { listAllAdmins,subAdminDetails,approveAdmin, deleteAdminAndAssociatedData } from "../../../controllers/auth/superAdmin.controller";
 import { updateTeamRole } from "../../../controllers/auth/role.controller";
@@ -40,6 +40,9 @@ router.get(
   getProfile
 );
 router.post("/forgot-password", forgotPassword);
+router.post("/update-password", UpdatePassword);
+
+
 router.post(
   "/reset-password",
   authenticateUser,
