@@ -402,7 +402,7 @@ export const approveAdmin = async (
 
   const adminId = req.params.id;
   const statusRaw = req.body.status;
-
+  console.log("\n\n ", req.body) 
   let adminStatus: boolean | null = null;
 
   if (typeof statusRaw === "boolean") {
