@@ -10,7 +10,7 @@ export type SignInSchema = z.infer<typeof signInSchema>;
 export const signUpSchema = z.object({
   firstName: z.string().min(1),
   lastName: z.string().min(1),
-  email: z.string().email(),  
+  email: z.string().email(),
   password: z.string().min(8),
   contactNumber: z.string().optional(),
   companyName: z.string().min(1),
@@ -120,18 +120,20 @@ export const updateCustomerSchema = z.object({
   joiningDate: z.string().optional(),
   // **New**: products to append to history
   product: z
-  .array(
-    z.object({
-      productId: z.string().uuid(),
-      purchaseDate: z.string(),
-      renewal: z.boolean().optional(),
-      expiryDate: z.string().optional(),
-      renewalDate: z.string().optional(),
-      detail: z.string().optional(),
-      renewPeriod: z.enum(["monthly", "quarterly", "half_yearly", "yearly", "custom"]).optional(),
-    })
-  )
-  .optional(),
+    .array(
+      z.object({
+        productId: z.string().uuid(),
+        purchaseDate: z.string(),
+        renewal: z.boolean().optional(),
+        expiryDate: z.string().optional(),
+        renewalDate: z.string().optional(),
+        detail: z.string().optional(),
+        renewPeriod: z
+          .enum(["monthly", "quarterly", "half_yearly", "yearly", "custom"])
+          .optional(),
+      })
+    )
+    .optional(),
 });
 export type UpdateCustomerBody = z.infer<typeof updateCustomerSchema>;
 
@@ -141,7 +143,7 @@ export const updateHistorySchema = z.object({
   expiryDate: z.string().optional(),
   renewalDate: z.string().optional(),
   status: z.boolean().optional(),
-  detail: z.string().optional()
+  detail: z.string().optional(),
 });
 export type UpdateHistoryBody = z.infer<typeof updateHistorySchema>;
 
@@ -161,9 +163,11 @@ export const createCustomFieldSchema = z.object({
   isMultiSelect: z.boolean().optional(),
 });
 
-
 export const listPlansQuery = z.object({
-  status: z.string().optional().transform(s => s === "false" ? false : true),
+  status: z
+    .string()
+    .optional()
+    .transform((s) => (s === "false" ? false : true)),
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(100).default(10),
 });
@@ -171,7 +175,6 @@ export type ListPlansQuery_ = z.infer<typeof listPlansQuery>;
 
 export const statusSchema = z.object({ status: z.boolean() });
 export type StatusBody = z.infer<typeof statusSchema>;
-
 
 export const createPlanSchema = z.object({
   name: z.string().min(1, "Plan name is required"),
@@ -205,4 +208,17 @@ export const createPlanSchema = z.object({
 });
 export type CreatePlanBody = z.infer<typeof createPlanSchema>;
 
-
+export const feedbackSchema = z
+  .object({
+    rating: z.string(),
+    feedback: z.string().trim(),
+  })
+  .refine(
+    (data) =>
+      (typeof data.rating === "string" && data.rating.length > 0) ||
+      (typeof data.feedback === "string" && data.feedback.trim().length > 0),
+    {
+      message: "Please Provide Your Feedback!",
+    }
+  );
+export type FeedbackSchema_ = z.infer<typeof feedbackSchema>;

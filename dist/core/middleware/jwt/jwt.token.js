@@ -75,7 +75,7 @@ const generateToken = (userId, role, adminId) => {
         ...(adminId && { adminId }),
     };
     return jsonwebtoken_1.default.sign(payload, _secret, {
-        expiresIn: "1d",
+        expiresIn: "15d",
         algorithm: "HS256",
     });
 };
@@ -85,7 +85,7 @@ const setAuthCookie = (res, token) => {
         httpOnly: true,
         secure: true,
         sameSite: "none",
-        maxAge: 86400000,
+        maxAge: 15 * 24 * 60 * 60 * 1000,
     });
 };
 exports.setAuthCookie = setAuthCookie;

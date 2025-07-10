@@ -21,7 +21,6 @@ app.use("/", (req, res) => {
 
 const httpServer = http.createServer(app);
 
-
 initSocket(httpServer);
 
 // const server = app.listen(env.PORT, () => {

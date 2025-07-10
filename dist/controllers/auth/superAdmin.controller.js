@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteAdminAndAssociatedData = exports.approveAdmin = exports.subAdminDetails = exports.listAllAdmins = void 0;
 const database_config_1 = require("../../config/database.config");
-const winston_1 = require("winston");
 const responseHandler_1 = require("../../core/utils/responseHandler");
 const listAllAdmins = async (req, res, next) => {
     var _a, _b;
@@ -313,7 +312,7 @@ const approveAdmin = async (req, res, next) => {
     }
     const adminId = req.params.id;
     const statusRaw = req.body.status;
-    winston_1.log;
+    console.log("\n\n ", req.body);
     let adminStatus = null;
     if (typeof statusRaw === "boolean") {
         adminStatus = statusRaw;
