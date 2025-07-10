@@ -104,6 +104,7 @@ const createProduct = async (req, res, next) => {
                     description: true,
                     productLink: true,
                     tags: true,
+                    status: true,
                     specifications: true,
                     createdAt: true,
                     updatedAt: true,
@@ -231,7 +232,6 @@ const deleteProduct = async (req, res, next) => {
             (0, responseHandler_1.sendErrorResponse)(res, 500, "Server error");
             return;
         }
-        next(err);
     }
 };
 exports.deleteProduct = deleteProduct;

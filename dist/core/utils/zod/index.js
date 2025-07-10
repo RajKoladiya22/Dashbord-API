@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createPlanSchema = exports.statusSchema = exports.listPlansQuery = exports.createCustomFieldSchema = exports.updateCustomFieldSchema = exports.updateHistorySchema = exports.updateCustomerSchema = exports.createCustomerSchema = exports.signUpSuperAdminSchema = exports.createProductSchema = exports.createTeamMemberSchema = exports.createPartnerSchema = exports.signUpSchema = exports.signInSchema = void 0;
+exports.feedbackSchema = exports.createPlanSchema = exports.statusSchema = exports.listPlansQuery = exports.createCustomFieldSchema = exports.updateCustomFieldSchema = exports.updateHistorySchema = exports.updateCustomerSchema = exports.createCustomerSchema = exports.signUpSuperAdminSchema = exports.createProductSchema = exports.createTeamMemberSchema = exports.createPartnerSchema = exports.signUpSchema = exports.signInSchema = void 0;
 const zod_1 = require("zod");
 exports.signInSchema = zod_1.z.object({
     identifier: zod_1.z.string().email(),
@@ -91,7 +91,7 @@ exports.updateCustomerSchema = zod_1.z.object({
     serialNo: zod_1.z.string().optional(),
     prime: zod_1.z.boolean().optional(),
     blacklisted: zod_1.z.boolean().optional(),
-    remark: zod_1.z.string().nullable(),
+    remark: zod_1.z.string().optional(),
     hasReference: zod_1.z.boolean().optional(),
     partnerId: zod_1.z.string().uuid().nullable().optional(),
     adminCustomFields: zod_1.z.record(zod_1.z.any()).optional(),
@@ -104,8 +104,10 @@ exports.updateCustomerSchema = zod_1.z.object({
         renewal: zod_1.z.boolean().optional(),
         expiryDate: zod_1.z.string().optional(),
         renewalDate: zod_1.z.string().optional(),
-        details: zod_1.z.string().optional(),
-        renewPeriod: zod_1.z.enum(["monthly", "quarterly", "half_yearly", "yearly", "custom"]).optional(),
+        detail: zod_1.z.string().optional(),
+        renewPeriod: zod_1.z
+            .enum(["monthly", "quarterly", "half_yearly", "yearly", "custom"])
+            .optional(),
     }))
         .optional(),
 });
@@ -115,6 +117,7 @@ exports.updateHistorySchema = zod_1.z.object({
     expiryDate: zod_1.z.string().optional(),
     renewalDate: zod_1.z.string().optional(),
     status: zod_1.z.boolean().optional(),
+    detail: zod_1.z.string().optional(),
 });
 exports.updateCustomFieldSchema = zod_1.z.object({
     fieldName: zod_1.z.string().min(1).optional(),
@@ -131,7 +134,10 @@ exports.createCustomFieldSchema = zod_1.z.object({
     isMultiSelect: zod_1.z.boolean().optional(),
 });
 exports.listPlansQuery = zod_1.z.object({
-    status: zod_1.z.string().optional().transform(s => s === "false" ? false : true),
+    status: zod_1.z
+        .string()
+        .optional()
+        .transform((s) => (s === "false" ? false : true)),
     page: zod_1.z.coerce.number().int().min(1).default(1),
     limit: zod_1.z.coerce.number().int().min(1).max(100).default(10),
 });
@@ -159,5 +165,14 @@ exports.createPlanSchema = zod_1.z.object({
         content: zod_1.z.string().min(1),
     }))
         .optional(),
+});
+exports.feedbackSchema = zod_1.z
+    .object({
+    rating: zod_1.z.string(),
+    feedback: zod_1.z.string().trim(),
+})
+    .refine((data) => (typeof data.rating === "string" && data.rating.length > 0) ||
+    (typeof data.feedback === "string" && data.feedback.trim().length > 0), {
+    message: "Please Provide Your Feedback!",
 });
 //# sourceMappingURL=index.js.map

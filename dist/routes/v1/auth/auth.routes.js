@@ -17,6 +17,7 @@ router.post("/signin", auth_controller_1.signIn);
 router.patch("/profile", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("super_admin", "admin", "partner", "team_member"), profile_controller_1.updateProfile);
 router.get("/profile", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("super_admin", "admin", "partner", "team_member"), profile_controller_1.getProfile);
 router.post("/forgot-password", forgotPassword_controller_1.forgotPassword);
+router.post("/update-password", forgotPassword_controller_1.UpdatePassword);
 router.post("/reset-password", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("super_admin", "admin", "partner", "team_member"), resetPassword_controller_1.resetPassword);
 router.post("/partner", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin"), partnerAuth_controller_1.createPartner);
 router.post("/team", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin"), teamAuth_controller_1.createTeamMember);

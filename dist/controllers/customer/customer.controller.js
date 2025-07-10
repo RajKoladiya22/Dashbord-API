@@ -8,7 +8,7 @@ const zod_1 = require("../../core/utils/zod");
 const client_1 = require("@prisma/client");
 const dateHelpers_1 = require("../../core/utils/helper/dateHelpers");
 const createCustomer = async (req, res, next) => {
-    const { companyName, contactPerson, mobileNumber, email, serialNo, prime = false, blacklisted = false, remark, hasReference = false, partnerId: incomingPartnerId, adminCustomFields, address, joiningDate, products = [], } = req.body;
+    let { companyName, contactPerson, mobileNumber, email, serialNo, prime = false, blacklisted = false, remark, hasReference = false, partnerId: incomingPartnerId, adminCustomFields, address, joiningDate, products = [], } = req.body;
     const user = req.user;
     if (!user) {
         (0, responseHandler_1.sendErrorResponse)(res, 401, "Unauthorized");
@@ -16,6 +16,9 @@ const createCustomer = async (req, res, next) => {
     }
     const adminId = user.role === "admin" ? user.id : user.adminId;
     const partnerId = user.role === "partner" ? user.id : incomingPartnerId;
+    if (user.role === "partner") {
+        hasReference = true;
+    }
     try {
         const result = await database_config_1.prisma.$transaction(async (tx) => {
             const customer = await tx.customer.create({
@@ -80,6 +83,7 @@ const createCustomer = async (req, res, next) => {
                             status: true,
                             renewPeriod: p.renewPeriod,
                             renewal: (_a = p.renewal) !== null && _a !== void 0 ? _a : false,
+                            detail: p.detail,
                             renewalDate,
                             expiryDate,
                         },
@@ -244,6 +248,7 @@ const listCustomers = async (req, res, next) => {
                     expiryDate: h.expiryDate,
                     renewalDate: h.renewalDate,
                     renewal: h.renewal,
+                    detail: h.detail,
                     status: h.status,
                     history: (_a = h.renewals) !== null && _a !== void 0 ? _a : null,
                 });
@@ -409,6 +414,7 @@ const updateCustomer = async (req, res, next) => {
                             purchaseDate: purchase,
                             status: true,
                             renewPeriod: period,
+                            detail: p.detail,
                             renewal: (_b = p.renewal) !== null && _b !== void 0 ? _b : false,
                             renewalDate,
                             expiryDate,
@@ -420,7 +426,7 @@ const updateCustomer = async (req, res, next) => {
         });
         const sanitized = {
             ...result.updatedCustomer,
-            ...result.createdHistory,
+            products: [...result.createdHistory],
         };
         (0, responseHandler_1.sendSuccessResponse)(res, 200, "Customer updated", {
             customer: sanitized,
@@ -720,6 +726,7 @@ const editCustomerProduct = async (req, res, next) => {
                     purchaseDate: h.purchaseDate,
                     expiryDate: h.expiryDate,
                     renewalDate: h.renewalDate,
+                    detail: h.detail,
                     renewal: h.renewal,
                     status: h.status,
                     history: (_a = h.renewals) !== null && _a !== void 0 ? _a : null,
