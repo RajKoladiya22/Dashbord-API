@@ -9,7 +9,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint \"src/**/*.ts\" --fix",
     "prisma:generate": "prisma generate",
-    "migration:generate": "npx prisma migrate dev --name init_13_06",
+    "migration:generate": "npx prisma migrate dev --name init_11_07",
     "migration:deploy": "npx prisma migrate deploy",
     "migration:reset": "prisma migrate reset --force",
     "seed": "ts-node prisma/seed.ts",
@@ -27,8 +27,7 @@
   "dependencies": {
     "@prisma/client": "^6.7.0",
     "@types/jest": "^29.5.14",
-    "bcrypt": "^5.1.1",
-    "bcryptjs": "^3.0.2",
+    "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
@@ -54,7 +53,7 @@
     "zod": "^3.24.3"
   },
   "devDependencies": {
-    "@types/bcryptjs": "^3.0.0",
+    "@types/bcrypt": "^5.0.2",
     "@types/cookie-parser": "^1.4.8",
     "@types/express": "^5.0.1",
     "@types/jest": "^29.5.14",

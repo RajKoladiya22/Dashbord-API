@@ -13,7 +13,7 @@ const currentPlan = async (req, res, next) => {
     }
     try {
         const subscriptions = await database_config_1.prisma.subscription.findMany({
-            where: { adminId: user.adminId },
+            where: { adminId: user.adminId, status: "active" },
             include: {
                 plan: {
                     include: {
@@ -46,7 +46,9 @@ const currentPlan = async (req, res, next) => {
                     where: { id: sub.id },
                     data: { status: newStatus },
                     include: {
-                        plan: { include: { offers: true, specs: true, descriptions: true } },
+                        plan: {
+                            include: { offers: true, specs: true, descriptions: true },
+                        },
                         payments: true,
                         events: true,
                     },
@@ -78,6 +80,8 @@ const currentPlan = async (req, res, next) => {
                 status: sub.status,
                 startsAt: sub.startsAt,
                 endsAt: sub.endsAt,
+                renewedAt: sub.renewedAt,
+                cancelledAt: sub.cancelledAt,
                 timeMessage,
                 plan: sub.plan,
                 payments: sub.payments,

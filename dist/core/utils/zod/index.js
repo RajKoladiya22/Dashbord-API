@@ -166,13 +166,8 @@ exports.createPlanSchema = zod_1.z.object({
     }))
         .optional(),
 });
-exports.feedbackSchema = zod_1.z
-    .object({
-    rating: zod_1.z.string(),
-    feedback: zod_1.z.string().trim(),
-})
-    .refine((data) => (typeof data.rating === "string" && data.rating.length > 0) ||
-    (typeof data.feedback === "string" && data.feedback.trim().length > 0), {
-    message: "Please Provide Your Feedback!",
+exports.feedbackSchema = zod_1.z.object({
+    rating: zod_1.z.string().optional(),
+    feedback: zod_1.z.string().trim().optional(),
 });
 //# sourceMappingURL=index.js.map

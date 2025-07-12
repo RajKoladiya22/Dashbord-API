@@ -44,13 +44,13 @@ export const signUpAdmin = async (
     address,
   } = parsed.data;
 
-  const email = rawEmail.trim().toLowerCase()
+  const email = rawEmail.trim().toLowerCase();
 
   try {
     const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
 
     const admin = await prisma.$transaction(async (tx) => {
-      // create admin profile 
+      // create admin profile
       const a = await tx.admin.create({
         data: {
           firstName,
@@ -60,8 +60,8 @@ export const signUpAdmin = async (
           companyName,
           contactInfo: { contactNumber },
           address,
-          role: "admin", 
-          status: false, 
+          role: "admin",
+          status: false,
         },
         select: {
           id: true,
@@ -138,7 +138,7 @@ export const signUpAdmin = async (
 export const signUpSuperAdmin = async (
   req: Request<{}, {}, z.infer<typeof signUpSuperAdminSchema>>,
   res: Response,
-  next: NextFunction  
+  next: NextFunction
 ) => {
   const parsed = signUpSuperAdminSchema.safeParse(req.body);
   if (!parsed.success) {
@@ -147,9 +147,15 @@ export const signUpSuperAdmin = async (
     });
     return;
   }
-  const { firstName, lastName, email: rawEmail, password, contactNumber, address } =
-    parsed.data;
-  
+  const {
+    firstName,
+    lastName,
+    email: rawEmail,
+    password,
+    contactNumber,
+    address,
+  } = parsed.data;
+
   const email = rawEmail.trim().toLowerCase();
 
   try {
@@ -214,8 +220,8 @@ export const signIn = async (
   }
   const { identifier: rawEmail, password } = parsed.data;
 
-  const email = rawEmail.trim().toLowerCase(); 
-  
+  const email = rawEmail.trim().toLowerCase();
+
   try {
     // fetch credential row
     const cred = await prisma.loginCredential.findUnique({
@@ -228,7 +234,7 @@ export const signIn = async (
         status: true,
       },
     });
-    
+
     // timing‑safe compare
     const dummyHash = "$2b$12$........................................";
     if (!cred) {
@@ -244,17 +250,21 @@ export const signIn = async (
     );
     if (!match) {
       sendErrorResponse(res, 401, "Invalid Password");
-      return; 
-    }
-
-    if(cred.status === false) {
-      sendErrorResponse(res, 401, "Account not activated, Pelease contact support");
       return;
     }
 
-    if (!cred  || cred.status !== true || !cred.userProfileId) {
+    if (cred.status === false) {
+      sendErrorResponse(
+        res,
+        401,
+        "Account not activated, Pelease contact support"
+      );
+      return;
+    }
+
+    if (!cred || cred.status !== true || !cred.userProfileId) {
       sendErrorResponse(res, 401, "Invalid credentials");
-      return; 
+      return;
     }
 
     const now = new Date();
@@ -308,7 +318,6 @@ export const signIn = async (
         sendErrorResponse(res, 403, "Unsupported role");
         return;
     }
-
 
     // console.log("profile---->", profile)
     if (!profile) {

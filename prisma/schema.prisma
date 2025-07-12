@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = "postgresql://postgres:1234@localhost:5432/cpm_orm"
 }
 
 generator client {
@@ -479,8 +479,8 @@ model PasswordOtp {
 model Feedback {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId    String   @db.Uuid
-  rating    String
-  feedback  String
+  rating    String?
+  feedback  String?
   createdAt DateTime @default(now()) @map("created_at")
 
   user LoginCredential @relation(fields: [userId], references: [userProfileId], onDelete: Cascade)

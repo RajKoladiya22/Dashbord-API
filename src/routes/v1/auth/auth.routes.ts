@@ -15,9 +15,17 @@ import {
   updateProfile,
   getProfile,
 } from "../../../controllers/auth/profile.controller";
-import { forgotPassword, UpdatePassword } from "../../../controllers/auth/forgotPassword.controller";
+import {
+  forgotPassword,
+  UpdatePassword,
+} from "../../../controllers/auth/forgotPassword.controller";
 import { resetPassword } from "../../../controllers/auth/resetPassword.controller";
-import { listAllAdmins,subAdminDetails,approveAdmin, deleteAdminAndAssociatedData } from "../../../controllers/auth/superAdmin.controller";
+import {
+  listAllAdmins,
+  subAdminDetails,
+  approveAdmin,
+  deleteAdminAndAssociatedData,
+} from "../../../controllers/auth/superAdmin.controller";
 import { updateTeamRole } from "../../../controllers/auth/role.controller";
 const router = Router();
 
@@ -33,6 +41,7 @@ router.patch(
   authorizeRoles("super_admin", "admin", "partner", "team_member"),
   updateProfile
 );
+
 router.get(
   "/profile",
   authenticateUser,
@@ -41,7 +50,6 @@ router.get(
 );
 router.post("/forgot-password", forgotPassword);
 router.post("/update-password", UpdatePassword);
-
 
 router.post(
   "/reset-password",
@@ -98,7 +106,5 @@ router.delete(
   authorizeRoles("super_admin"),
   deleteAdminAndAssociatedData
 );
-
-
 
 export default router;

@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = "postgresql://postgres:1234@localhost:5432/cpm_orm"
 }
 
 generator client {
@@ -154,7 +154,7 @@ model LoginCredential {
   role          Role
   email         String   @unique
   passwordHash  String   @map("password_hash")
-  userProfileId String   @map("user_profile_id") @db.Uuid
+  userProfileId String   @unique @map("user_profile_id") @db.Uuid
   adminId       String?  @map("admin_id") @db.Uuid
   status        Boolean  @default(true)
   createdAt     DateTime @default(now()) @map("created_at")
@@ -167,6 +167,7 @@ model LoginCredential {
 
   sentMessages     LiveChatApp[] @relation("Sender")
   receivedMessages LiveChatApp[] @relation("Receiver")
+  Feedback         Feedback[]
 
   @@index([adminId])
   @@map("login_credentials")
@@ -400,12 +401,12 @@ model CustomerProductHistory {
   adminId      String      @map("admin_id") @db.Uuid
   productId    String      @map("product_id") @db.Uuid
   purchaseDate DateTime    @map("purchase_date")
-  detail       String?
   renewal      Boolean     @default(false)
   renewPeriod  renewPeriod @default(custom)
   expiryDate   DateTime?   @map("expiry_date")
   renewalDate  DateTime?   @map("renewal_date")
   status       Boolean     @default(true) @map("status")
+  detail       String?
   createdAt    DateTime    @default(now()) @map("created_at")
   updatedAt    DateTime    @updatedAt @map("updated_at")
 
@@ -470,4 +471,19 @@ model PasswordOtp {
 
   @@index([userId, purpose])
   @@map("password_otps")
+}
+
+// ——————————————————————————————————————————
+// Feedback
+// ——————————————————————————————————————————
+model Feedback {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String   @db.Uuid
+  rating    String
+  feedback  String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user LoginCredential @relation(fields: [userId], references: [userProfileId], onDelete: Cascade)
+
+  @@map("feedback")
 }

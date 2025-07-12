@@ -7,12 +7,11 @@ import {
 } from "../../core/utils/responseHandler";
 import { SubscriptionStatus } from "@prisma/client";
 
-import {
-  isBefore,
-  isAfter,
-  isSameDay,
-  differenceInDays,
-} from "date-fns";
+import { isBefore, isAfter, isSameDay, differenceInDays } from "date-fns";
+// import isBefore from "date-fns/isBefore";
+// import isAfter from "date-fns/isAfter";
+// import isSameDay from "date-fns/isSameDay";
+// import { differenceInDays } from "date-fns";
 
 export const currentPlan = async (
   req: Request,
@@ -23,12 +22,12 @@ export const currentPlan = async (
 
   if (!user || user.role !== "admin") {
     sendErrorResponse(res, 401, "Unauthorized");
-    return
+    return;
   }
 
   try {
     const subscriptions = await prisma.subscription.findMany({
-      where: { adminId: user.adminId },
+      where: { adminId: user.adminId, status: "active" },
       include: {
         plan: {
           include: {
@@ -63,7 +62,9 @@ export const currentPlan = async (
             where: { id: sub.id },
             data: { status: newStatus },
             include: {
-              plan: { include: { offers: true, specs: true, descriptions: true } },
+              plan: {
+                include: { offers: true, specs: true, descriptions: true },
+              },
               payments: true,
               events: true,
             },
@@ -75,8 +76,7 @@ export const currentPlan = async (
         if (sub.status === SubscriptionStatus.expired && sub.endsAt) {
           const daysAgo = differenceInDays(now, sub.endsAt);
           timeMessage = `Expired ${daysAgo} day's ago`;
-        }
-        else if (sub.endsAt) {
+        } else if (sub.endsAt) {
           const remainingDays = differenceInDays(sub.endsAt, now);
           if (remainingDays > 0) {
             timeMessage = `${remainingDays} day's remaining`;
@@ -95,6 +95,8 @@ export const currentPlan = async (
           status: sub.status,
           startsAt: sub.startsAt,
           endsAt: sub.endsAt,
+          renewedAt: sub.renewedAt,
+          cancelledAt: sub.cancelledAt,
           timeMessage,
           plan: sub.plan,
           payments: sub.payments,
@@ -106,9 +108,12 @@ export const currentPlan = async (
     sendSuccessResponse(res, 200, "Subscription info fetched", {
       subscriptions: result,
     });
-
-  } catch (err:any) {
+  } catch (err: any) {
     console.error("error:", err);
-    sendErrorResponse(res, err instanceof Error ? 400 : 500, err.message || "Failed fetch data");
+    sendErrorResponse(
+      res,
+      err instanceof Error ? 400 : 500,
+      err.message || "Failed fetch data"
+    );
   }
-}; 
+};
