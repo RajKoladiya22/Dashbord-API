@@ -330,12 +330,12 @@ exports.Prisma.CustomerProductHistoryScalarFieldEnum = {
   adminId: 'adminId',
   productId: 'productId',
   purchaseDate: 'purchaseDate',
-  detail: 'detail',
   renewal: 'renewal',
   renewPeriod: 'renewPeriod',
   expiryDate: 'expiryDate',
   renewalDate: 'renewalDate',
   status: 'status',
+  detail: 'detail',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -369,6 +369,14 @@ exports.Prisma.PasswordOtpScalarFieldEnum = {
   otp: 'otp',
   purpose: 'purpose',
   used: 'used',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.FeedbackScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  rating: 'rating',
+  feedback: 'feedback',
   createdAt: 'createdAt'
 };
 
@@ -456,7 +464,8 @@ exports.Prisma.ModelName = {
   CustomerProductHistory: 'CustomerProductHistory',
   AdminCustomField: 'AdminCustomField',
   LoginAudit: 'LoginAudit',
-  PasswordOtp: 'PasswordOtp'
+  PasswordOtp: 'PasswordOtp',
+  Feedback: 'Feedback'
 };
 
 /**

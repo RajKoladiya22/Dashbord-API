@@ -103,7 +103,7 @@ const signUpSuperAdmin = async (req, res, next) => {
         });
         return;
     }
-    const { firstName, lastName, email: rawEmail, password, contactNumber, address } = parsed.data;
+    const { firstName, lastName, email: rawEmail, password, contactNumber, address, } = parsed.data;
     const email = rawEmail.trim().toLowerCase();
     try {
         const passwordHash = await bcrypt_1.default.hash(password, SALT_ROUNDS);

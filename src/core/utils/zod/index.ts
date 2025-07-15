@@ -208,17 +208,8 @@ export const createPlanSchema = z.object({
 });
 export type CreatePlanBody = z.infer<typeof createPlanSchema>;
 
-export const feedbackSchema = z
-  .object({
-    rating: z.string(),
-    feedback: z.string().trim(),
-  })
-  .refine(
-    (data) =>
-      (typeof data.rating === "string" && data.rating.length > 0) ||
-      (typeof data.feedback === "string" && data.feedback.trim().length > 0),
-    {
-      message: "Please Provide Your Feedback!",
-    }
-  );
+export const feedbackSchema = z.object({
+  rating: z.string().optional(),
+  feedback: z.string().trim().optional(),
+});
 export type FeedbackSchema_ = z.infer<typeof feedbackSchema>;

@@ -6,7 +6,7 @@ import {
   sendSuccessResponse,
   sendErrorResponse,
 } from "../../core/utils/httpResponse";
-const secret = Symbol("secret") 
+const secret = Symbol("secret");
 
 const SALT_ROUNDS = parseInt(env.SALT_ROUNDS ?? "12", 10);
 
@@ -17,7 +17,7 @@ export const getProfile = async (
 ): Promise<void> => {
   const user = req.user;
   if (!user) {
-    sendErrorResponse(res, 401, 'Unauthorized');
+    sendErrorResponse(res, 401, "Unauthorized");
     return;
   }
 
@@ -25,7 +25,7 @@ export const getProfile = async (
     let profile;
 
     switch (user.role) {
-      case 'super_admin':
+      case "super_admin":
         profile = await prisma.superAdmin.findUnique({
           where: { id: user.id },
           select: {
@@ -37,11 +37,10 @@ export const getProfile = async (
             address: true,
             createdAt: true,
             updatedAt: true,
-          
           },
         });
         break;
-      case 'admin':
+      case "admin":
         profile = await prisma.admin.findUnique({
           where: { id: user.id },
           select: {
@@ -49,16 +48,19 @@ export const getProfile = async (
             firstName: true,
             lastName: true,
             email: true,
-            companyName: true, 
+            companyName: true,
             contactInfo: true,
             address: true,
             createdAt: true,
             updatedAt: true,
             subscriptions: {
               select: {
+                id: true,
                 status: true,
                 startsAt: true,
                 endsAt: true,
+                renewedAt: true,
+                cancelledAt: true,
                 plan: {
                   select: {
                     id: true,
@@ -67,12 +69,12 @@ export const getProfile = async (
                     duration: true,
                   },
                 },
-              }
-            }
+              },
+            },
           },
         });
         break;
-      case 'partner':
+      case "partner":
         profile = await prisma.partner.findUnique({
           where: { id: user.id },
           select: {
@@ -93,13 +95,13 @@ export const getProfile = async (
                 email: true,
                 companyName: true,
                 contactInfo: true,
-              }
+              },
             },
           },
         });
         break;
-      case 'team_member':
-      case 'sub_admin':
+      case "team_member":
+      case "sub_admin":
         profile = await prisma.teamMember.findUnique({
           where: { id: user.id },
           select: {
@@ -121,25 +123,27 @@ export const getProfile = async (
                 email: true,
                 companyName: true,
                 contactInfo: true,
-              }
+              },
             },
           },
         });
         break;
       default:
-        sendErrorResponse(res, 400, 'Invalid user role');
+        sendErrorResponse(res, 400, "Invalid user role");
         return;
     }
 
     if (!profile) {
-      sendErrorResponse(res, 404, 'Profile not found');
+      sendErrorResponse(res, 404, "Profile not found");
       return;
     }
 
-    sendSuccessResponse(res, 200, 'Profile retrieved successfully', { profile });
+    sendSuccessResponse(res, 200, "Profile retrieved successfully", {
+      profile,
+    });
   } catch (err: any) {
-    console.error('getProfile error:', err);
-    sendErrorResponse(res, 500, 'Server error');
+    console.error("getProfile error:", err);
+    sendErrorResponse(res, 500, "Server error");
   }
 };
 
@@ -241,8 +245,11 @@ export const updateProfile = async (
         });
         if (cred) {
           await tx.loginCredential.update({
-            where: { id: cred.id },    // now a unique field
-            data: { ...(email && { email }), ...(passwordHash && { passwordHash }) },
+            where: { id: cred.id }, // now a unique field
+            data: {
+              ...(email && { email }),
+              ...(passwordHash && { passwordHash }),
+            },
           });
         }
       }

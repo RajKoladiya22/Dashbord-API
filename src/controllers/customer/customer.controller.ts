@@ -3,6 +3,7 @@
 import { Request, Response, NextFunction } from "express";
 import { prisma } from "../../config/database.config";
 import { parseISO } from "date-fns";
+// import parseISO from "date-fns/parseISO";
 import {
   sendSuccessResponse,
   sendErrorResponse,
@@ -41,8 +42,8 @@ export const createCustomer = async (
   }
   const adminId = user.role === "admin" ? user.id : user.adminId!;
   const partnerId = user.role === "partner" ? user.id : incomingPartnerId;
-  if (user.role === "partner"){
-    hasReference = true
+  if (user.role === "partner") {
+    hasReference = true;
   }
 
   try {
@@ -121,7 +122,7 @@ export const createCustomer = async (
               renewal: p.renewal ?? false,
               detail: p.detail,
               renewalDate,
-              expiryDate, 
+              expiryDate,
             },
           });
         });
@@ -196,7 +197,7 @@ export const listCustomers = async (
         ],
       }
     : {};
-      
+
   // Sorting
   const allowedSortFields = [
     "companyName",
@@ -367,9 +368,14 @@ export const updateCustomer = async (
   const adminId = user.role === "admin" ? user.id : user.adminId!;
 
   // ----------------------
-   if(!await prisma.customer.findFirst({where:{id:customerId,adminId:user.adminId}})){ // Check if customer exists
-     sendErrorResponse(res, 404, "Customer not found");
-     return
+  if (
+    !(await prisma.customer.findFirst({
+      where: { id: customerId, adminId: user.adminId },
+    }))
+  ) {
+    // Check if customer exists
+    sendErrorResponse(res, 404, "Customer not found");
+    return;
   }
 
   try {
@@ -521,10 +527,8 @@ export const updateCustomer = async (
 
     const sanitized = {
       ...result.updatedCustomer,
-      products : [...result.createdHistory],
+      products: [...result.createdHistory],
     };
-
-
 
     // console.log("\v \n\n result----->", result)
     // console.log("\v \n\n sanitized----->", sanitized)
@@ -724,7 +728,6 @@ export const editCustomerProduct = async (
 
   const user = req.user as { id: string; role: string; adminId?: string };
 
-
   if (!user) {
     sendErrorResponse(res, 401, "Unauthorized");
     return;
@@ -763,7 +766,7 @@ export const editCustomerProduct = async (
 
     if (purchaseDate) {
       purchase = parseISO(purchaseDate);
-      if (isNaN(purchase.getTime())) {
+      if (purchase !== undefined && isNaN(purchase.getTime())) {
         sendErrorResponse(res, 400, "Invalid purchaseDate format");
         return;
       }
@@ -910,4 +913,3 @@ export const editCustomerProduct = async (
     else sendErrorResponse(res, 500, "Server error");
   }
 };
-

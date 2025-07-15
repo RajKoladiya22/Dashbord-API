@@ -13,13 +13,13 @@ const SALT_ROUNDS = parseInt((_a = database_config_1.env.SALT_ROUNDS) !== null &
 const getProfile = async (req, res, next) => {
     const user = req.user;
     if (!user) {
-        (0, httpResponse_1.sendErrorResponse)(res, 401, 'Unauthorized');
+        (0, httpResponse_1.sendErrorResponse)(res, 401, "Unauthorized");
         return;
     }
     try {
         let profile;
         switch (user.role) {
-            case 'super_admin':
+            case "super_admin":
                 profile = await database_config_1.prisma.superAdmin.findUnique({
                     where: { id: user.id },
                     select: {
@@ -34,7 +34,7 @@ const getProfile = async (req, res, next) => {
                     },
                 });
                 break;
-            case 'admin':
+            case "admin":
                 profile = await database_config_1.prisma.admin.findUnique({
                     where: { id: user.id },
                     select: {
@@ -49,9 +49,12 @@ const getProfile = async (req, res, next) => {
                         updatedAt: true,
                         subscriptions: {
                             select: {
+                                id: true,
                                 status: true,
                                 startsAt: true,
                                 endsAt: true,
+                                renewedAt: true,
+                                cancelledAt: true,
                                 plan: {
                                     select: {
                                         id: true,
@@ -60,12 +63,12 @@ const getProfile = async (req, res, next) => {
                                         duration: true,
                                     },
                                 },
-                            }
-                        }
+                            },
+                        },
                     },
                 });
                 break;
-            case 'partner':
+            case "partner":
                 profile = await database_config_1.prisma.partner.findUnique({
                     where: { id: user.id },
                     select: {
@@ -86,13 +89,13 @@ const getProfile = async (req, res, next) => {
                                 email: true,
                                 companyName: true,
                                 contactInfo: true,
-                            }
+                            },
                         },
                     },
                 });
                 break;
-            case 'team_member':
-            case 'sub_admin':
+            case "team_member":
+            case "sub_admin":
                 profile = await database_config_1.prisma.teamMember.findUnique({
                     where: { id: user.id },
                     select: {
@@ -114,24 +117,26 @@ const getProfile = async (req, res, next) => {
                                 email: true,
                                 companyName: true,
                                 contactInfo: true,
-                            }
+                            },
                         },
                     },
                 });
                 break;
             default:
-                (0, httpResponse_1.sendErrorResponse)(res, 400, 'Invalid user role');
+                (0, httpResponse_1.sendErrorResponse)(res, 400, "Invalid user role");
                 return;
         }
         if (!profile) {
-            (0, httpResponse_1.sendErrorResponse)(res, 404, 'Profile not found');
+            (0, httpResponse_1.sendErrorResponse)(res, 404, "Profile not found");
             return;
         }
-        (0, httpResponse_1.sendSuccessResponse)(res, 200, 'Profile retrieved successfully', { profile });
+        (0, httpResponse_1.sendSuccessResponse)(res, 200, "Profile retrieved successfully", {
+            profile,
+        });
     }
     catch (err) {
-        console.error('getProfile error:', err);
-        (0, httpResponse_1.sendErrorResponse)(res, 500, 'Server error');
+        console.error("getProfile error:", err);
+        (0, httpResponse_1.sendErrorResponse)(res, 500, "Server error");
     }
 };
 exports.getProfile = getProfile;
@@ -209,7 +214,10 @@ const updateProfile = async (req, res, next) => {
                 if (cred) {
                     await tx.loginCredential.update({
                         where: { id: cred.id },
-                        data: { ...(email && { email }), ...(passwordHash && { passwordHash }) },
+                        data: {
+                            ...(email && { email }),
+                            ...(passwordHash && { passwordHash }),
+                        },
                     });
                 }
             }

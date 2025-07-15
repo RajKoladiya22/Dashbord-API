@@ -22,7 +22,6 @@ interface AdminWithLinks {
   links: AdminLink[];
 }
 
-
 export const listAllAdmins = async (
   req: Request,
   res: Response,
@@ -37,7 +36,10 @@ export const listAllAdmins = async (
 
   // Pagination
   const page = Math.max(parseInt(req.query.page as string, 10) || 1, 1);
-  const limit = Math.min(Math.max(parseInt(req.query.limit as string, 10) || 10, 1), 100);
+  const limit = Math.min(
+    Math.max(parseInt(req.query.limit as string, 10) || 10, 1),
+    100
+  );
   const skip = (page - 1) * limit;
 
   // Search
@@ -96,9 +98,34 @@ export const listAllAdmins = async (
           companyName: true,
           contactInfo: true,
           status: true,
+          subscriptions: {
+            select: {
+              id: true,
+              status: true,
+              startsAt: true,
+              endsAt: true,
+              renewedAt: true,
+              cancelledAt: true,
+              plan: {
+                select: {
+                  id: true,
+                  name: true,
+                  duration: true,
+                  price: true,
+                  offers: true,
+                  specs: true,
+                  descriptions: true,
+                },
+              },
+            },
+          },
         },
       }),
     ]);
+    // console.log(admins);
+    // admins.map((a) => {
+    //   console.log(a.subscriptions);
+    // })
 
     sendSuccessResponse(res, 200, "Admins fetched", {
       admins,
@@ -114,11 +141,6 @@ export const listAllAdmins = async (
     sendErrorResponse(res, 500, "Server error");
   }
 };
-
-
-
-
-
 
 export const subAdminDetails = async (
   req: Request,
@@ -140,7 +162,6 @@ export const subAdminDetails = async (
   // const page = Math.max(req.query.page as string, 10 );
 
   try {
-
     if (query === "teammembers") {
       const teammembers = await prisma.teamMember.findMany({
         where: { adminId: id },
@@ -168,11 +189,10 @@ export const subAdminDetails = async (
       }));
       res.status(200).json(adminDetailsWithBackLink);
       return;
-    }
-    else if (query === "patners") {
+    } else if (query === "patners") {
       const patners = await prisma.partner.findMany({
         where: {
-          adminId: id
+          adminId: id,
         },
         select: {
           // id: true,
@@ -192,19 +212,16 @@ export const subAdminDetails = async (
       });
       if (!patners || patners.length === 0) {
         res.status(404).json({ message: "No patners are found" });
-      }
-      else {
+      } else {
         const adminDetailsWithBackLink = patners.map((team) => {
           return {
             ...team,
-            backLink: '/api/v1/auth/details',
+            backLink: "/api/v1/auth/details",
           };
         });
         res.status(200).json({ data: adminDetailsWithBackLink });
-
       }
-    }
-    else if (query === "subscription") {
+    } else if (query === "subscription") {
       const subscription = await prisma.subscription.findMany({
         where: {
           adminId: id,
@@ -223,20 +240,16 @@ export const subAdminDetails = async (
       });
       if (!subscription || subscription.length === 0) {
         res.status(404).json({ message: "No subscription are found" });
-      }
-      else {
+      } else {
         const adminDetailsWithBackLink = subscription.map((team) => {
           return {
             ...team,
-            backLink: '/api/v1/auth/details',
+            backLink: "/api/v1/auth/details",
           };
-
         });
         res.status(200).json({ data: adminDetailsWithBackLink });
-
       }
-    }
-    else if (query === "products") {
+    } else if (query === "products") {
       const products = await prisma.product.findMany({
         where: {
           adminId: id,
@@ -259,19 +272,16 @@ export const subAdminDetails = async (
       });
       if (!products || products.length === 0) {
         res.status(404).json({ message: "No products are found" });
-      }
-      else {
+      } else {
         const adminDetailsWithBackLink = products.map((team) => {
           return {
             ...team,
-            backLink: '/api/v1/auth/details',
+            backLink: "/api/v1/auth/details",
           };
-
         });
         res.status(200).json({ data: adminDetailsWithBackLink });
       }
-    }
-    else if (query === "customers") {
+    } else if (query === "customers") {
       console.log("->>>>>>>>..cal query");
 
       const customer = await prisma.customer.findMany({
@@ -302,49 +312,45 @@ export const subAdminDetails = async (
         const adminDetailsWithBackLink = customer.map((team) => {
           return {
             ...team,
-            backLink: '/api/v1/auth/details',
+            backLink: "/api/v1/auth/details",
           };
         });
         res.status(200).json({ data: adminDetailsWithBackLink });
       }
-
-    }
-    else if (query === "customerproducthistory") {
-      const customerproducthistory = await prisma.customerProductHistory.findMany({
-        where: {
-          adminId: id,
-        },
-        select: {
-          // id: true,
-          customerId: true,
-          adminId: true,
-          productId: true,
-          purchaseDate: true,
-          renewPeriod: true,
-          expiryDate: true,
-          renewalDate: true,
-          customer: true,
-          product: true,
-          // joiningDate: true,
-
-        },
-      });
+    } else if (query === "customerproducthistory") {
+      const customerproducthistory =
+        await prisma.customerProductHistory.findMany({
+          where: {
+            adminId: id,
+          },
+          select: {
+            // id: true,
+            customerId: true,
+            adminId: true,
+            productId: true,
+            purchaseDate: true,
+            renewPeriod: true,
+            expiryDate: true,
+            renewalDate: true,
+            customer: true,
+            product: true,
+            // joiningDate: true,
+          },
+        });
       if (!customerproducthistory || customerproducthistory.length === 0) {
-        res.status(404).json({ message: "No customerproducthistory are found" });
-      }
-      else {
+        res
+          .status(404)
+          .json({ message: "No customerproducthistory are found" });
+      } else {
         const adminDetailsWithBackLink = customerproducthistory.map((team) => {
           return {
             ...team,
-            backLink: '/api/v1/auth/details',
+            backLink: "/api/v1/auth/details",
           };
-
         });
         res.status(200).json({ data: adminDetailsWithBackLink });
-
       }
-    }
-    else if (query === "admincustomfield") {
+    } else if (query === "admincustomfield") {
       const admincustomfield = await prisma.adminCustomField.findMany({
         where: {
           adminId: id,
@@ -361,28 +367,23 @@ export const subAdminDetails = async (
           createdAt: true,
           // product: true,
           // joiningDate: true,
-
         },
       });
       if (!admincustomfield || admincustomfield.length === 0) {
         res.status(404).json({ message: "No admincustomfield are found" });
-      }
-      else {
+      } else {
         const adminDetailsWithBackLink = admincustomfield.map((team) => {
           return {
             ...team,
-            backLink: '/api/v1/auth/details',
+            backLink: "/api/v1/auth/details",
           };
           res.status(200).json({ data: adminDetailsWithBackLink });
         });
       }
-    }
-    else {
+    } else {
       res.status(404).json({ message: "No Details found" });
     }
-
-  }
-  catch (err: any) {
+  } catch (err: any) {
     console.error("Error listing admin details:", err);
     res.status(500).json({ message: "Server error" });
   }
@@ -402,7 +403,7 @@ export const approveAdmin = async (
 
   const adminId = req.params.id;
   const statusRaw = req.body.status;
-  console.log("\n\n ", req.body) 
+  console.log("\n\n ", req.body);
   let adminStatus: boolean | null = null;
 
   if (typeof statusRaw === "boolean") {
@@ -418,7 +419,9 @@ export const approveAdmin = async (
   }
 
   try {
-    const adminDetails = await prisma.admin.findUnique({ where: { id: adminId } });
+    const adminDetails = await prisma.admin.findUnique({
+      where: { id: adminId },
+    });
     if (!adminDetails) {
       sendErrorResponse(res, 404, "Admin not found");
       return;
@@ -428,7 +431,7 @@ export const approveAdmin = async (
       data: {
         status: adminStatus,
       },
-    })
+    });
     const approvedAdmin = await prisma.admin.update({
       where: { id: adminId },
       data: {
@@ -443,18 +446,12 @@ export const approveAdmin = async (
       },
     });
 
-
     sendSuccessResponse(res, 200, "Admin Status Updated", approvedAdmin);
   } catch (err: any) {
     console.error("Error updating admin status:", err);
     sendErrorResponse(res, 500, "Server error");
   }
 };
-
-
-
-
-
 
 export const deleteAdminAndAssociatedData = async (
   req: Request,
@@ -470,7 +467,9 @@ export const deleteAdminAndAssociatedData = async (
   }
 
   try {
-    const adminExists = await prisma.admin.findUnique({ where: { id: adminId } });
+    const adminExists = await prisma.admin.findUnique({
+      where: { id: adminId },
+    });
 
     if (!adminExists) {
       sendErrorResponse(res, 404, "Admin not found");
@@ -480,7 +479,6 @@ export const deleteAdminAndAssociatedData = async (
     // Delete customer product history
     await prisma.customerProductHistory.deleteMany({ where: { adminId } });
 
-
     // Delete products (cascades to related product history via DB relations)
     await prisma.product.deleteMany({ where: { adminId } });
 
@@ -488,10 +486,16 @@ export const deleteAdminAndAssociatedData = async (
     await prisma.adminCustomField.deleteMany({ where: { adminId } });
 
     // Delete subscriptions, payments, and events
-    const subscriptions = await prisma.subscription.findMany({ where: { adminId } });
+    const subscriptions = await prisma.subscription.findMany({
+      where: { adminId },
+    });
     for (const subscription of subscriptions) {
-      await prisma.subscriptionPayment.deleteMany({ where: { subscriptionId: subscription.id } });
-      await prisma.subscriptionEvent.deleteMany({ where: { subscriptionId: subscription.id } });
+      await prisma.subscriptionPayment.deleteMany({
+        where: { subscriptionId: subscription.id },
+      });
+      await prisma.subscriptionEvent.deleteMany({
+        where: { subscriptionId: subscription.id },
+      });
     }
     await prisma.subscription.deleteMany({ where: { adminId } });
 
@@ -509,16 +513,20 @@ export const deleteAdminAndAssociatedData = async (
     await prisma.customer.deleteMany({ where: { adminId } });
 
     // Delete login credentials
-    await prisma.loginCredential.deleteMany({ where: { userProfileId: adminId } });
+    await prisma.loginCredential.deleteMany({
+      where: { userProfileId: adminId },
+    });
 
     // Delete the admin
     await prisma.admin.delete({ where: { id: adminId } });
 
-    sendSuccessResponse(res, 200, "Admin and all associated data deleted successfully");
+    sendSuccessResponse(
+      res,
+      200,
+      "Admin and all associated data deleted successfully"
+    );
   } catch (error: any) {
     console.error("Error deleting admin and associated data:", error);
     sendErrorResponse(res, 500, "Internal server error");
   }
 };
-
-

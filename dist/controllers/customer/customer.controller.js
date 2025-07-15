@@ -287,7 +287,9 @@ const updateCustomer = async (req, res, next) => {
         return;
     }
     const adminId = user.role === "admin" ? user.id : user.adminId;
-    if (!await database_config_1.prisma.customer.findFirst({ where: { id: customerId, adminId: user.adminId } })) {
+    if (!(await database_config_1.prisma.customer.findFirst({
+        where: { id: customerId, adminId: user.adminId },
+    }))) {
         (0, responseHandler_1.sendErrorResponse)(res, 404, "Customer not found");
         return;
     }
@@ -610,7 +612,7 @@ const editCustomerProduct = async (req, res, next) => {
         let newExpiryDate;
         if (purchaseDate) {
             purchase = (0, date_fns_1.parseISO)(purchaseDate);
-            if (isNaN(purchase.getTime())) {
+            if (purchase !== undefined && isNaN(purchase.getTime())) {
                 (0, responseHandler_1.sendErrorResponse)(res, 400, "Invalid purchaseDate format");
                 return;
             }
