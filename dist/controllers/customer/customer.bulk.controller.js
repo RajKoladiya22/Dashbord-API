@@ -93,8 +93,6 @@ const bulkVerifyCustomers = async (req, res, next) => {
                 errorMsg.missing.push("mobileNumber");
             if (!r.email)
                 errorMsg.missing.push("email");
-            if (!r.serialNo)
-                errorMsg.missing.push("serialNo");
             if (r.joiningDate) {
                 const parsed = new Date(r.joiningDate.trim());
                 if (!isNaN(parsed.getTime()))
@@ -164,7 +162,6 @@ const bulkCreateCustomers = async (req, res, next) => {
             !cust.contactPerson ||
             !cust.mobileNumber ||
             !cust.email ||
-            !cust.serialNo ||
             !cust.joiningDate);
         if (invalidRecords.length > 0) {
             (0, responseHandler_1.sendErrorResponse)(res, 422, "Records are missing required fields", {

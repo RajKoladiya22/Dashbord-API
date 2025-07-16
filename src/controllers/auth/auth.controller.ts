@@ -269,22 +269,6 @@ export const signIn = async (
 
     const now = new Date();
 
-    // for non‑super_admin, check subscription
-    if (cred.role !== "super_admin") {
-      const sub = await prisma.subscription.findFirst({
-        where: {
-          adminId: cred.adminId!,
-          status: "active",
-          endsAt: { gt: now },
-        },
-        orderBy: { endsAt: "desc" },
-      });
-      if (!sub) {
-        sendErrorResponse(res, 403, "No active subscription");
-        return;
-      }
-    }
-
     // console.log("cred----->", cred)
     // fetch profile by role
     let profile: any = null;
@@ -333,6 +317,47 @@ export const signIn = async (
     );
     setAuthCookie(res, token);
 
+    // fetch the last subscription
+    const lastPlan = await prisma.subscription.findFirst({
+      where: {
+        adminId: cred.adminId!,
+        status: {
+          notIn: ["active", "free_trial"]
+        },
+        endsAt: { lt: now },
+      },
+      orderBy: { endsAt: "desc" },
+      select: {
+        status: true,
+      }
+    });
+
+    // for non‑super_admin, check subscription
+    if (cred.role !== "super_admin") {
+      const sub = await prisma.subscription.findFirst({
+        where: {
+          adminId: cred.adminId!,
+          status: "active",
+          endsAt: { gt: now },
+        },
+        orderBy: { endsAt: "desc" },
+      });
+      if (!sub) {
+        sendSuccessResponse(res, 200, "No active subscription", {
+          token,
+          user: {
+            id: profile.id,
+            email,
+            role: cred.role,
+            firstName: profile.firstName,
+            lastName: profile.lastName,
+          },
+          planStatus: lastPlan?.status
+        });
+        return;
+      }
+    }
+
     // respond
     sendSuccessResponse(res, 200, "Logged in", {
       token,
@@ -343,6 +368,7 @@ export const signIn = async (
         firstName: profile.firstName,
         lastName: profile.lastName,
       },
+      planStatus: lastPlan?.status
     });
     return;
   } catch (err) {

@@ -490,15 +490,9 @@ export declare const createPlanSchema: z.ZodObject<{
     }[] | undefined;
 }>;
 export type CreatePlanBody = z.infer<typeof createPlanSchema>;
-<<<<<<< HEAD
 export declare const feedbackSchema: z.ZodObject<{
     rating: z.ZodOptional<z.ZodString>;
     feedback: z.ZodOptional<z.ZodString>;
-=======
-export declare const addFeedbackSchema: z.ZodEffects<z.ZodObject<{
-    rating: z.ZodString;
-    feedback: z.ZodString;
->>>>>>> 615b86a (Error solve in Bulk Customer Controller)
 }, "strip", z.ZodTypeAny, {
     feedback?: string | undefined;
     rating?: string | undefined;
@@ -506,4 +500,4 @@ export declare const addFeedbackSchema: z.ZodEffects<z.ZodObject<{
     feedback?: string | undefined;
     rating?: string | undefined;
 }>;
-export type AddFeedbackSchema_ = z.infer<typeof addFeedbackSchema>;
+export type FeedbackSchema_ = z.infer<typeof feedbackSchema>;
