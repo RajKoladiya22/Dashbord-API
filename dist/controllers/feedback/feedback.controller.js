@@ -15,12 +15,16 @@ const addFeedback = async (req, res, next) => {
         (0, responseHandler_1.sendErrorResponse)(res, 401, "Unauthorized");
         return;
     }
+<<<<<<< HEAD
     if ((!req.body.rating && !req.body.feedback) ||
         (req.body.rating === undefined && req.body.feedback === undefined)) {
         (0, responseHandler_1.sendErrorResponse)(res, 400, "Please provide your feedback!");
         return;
     }
     const parsed = zod_1.feedbackSchema.safeParse(req.body);
+=======
+    const parsed = zod_1.addFeedbackSchema.safeParse(req.body);
+>>>>>>> 615b86a (Error solve in Bulk Customer Controller)
     if (!parsed.success) {
         (0, responseHandler_1.sendErrorResponse)(res, 400, "Invalid input", {
             errors: parsed.error.errors,
@@ -62,6 +66,7 @@ exports.addFeedback = addFeedback;
 const listFeedbacks = async (req, res, next) => {
     var _a;
     const user = req.user;
+<<<<<<< HEAD
     if (!user || user.role !== "super_admin") {
         (0, responseHandler_1.sendErrorResponse)(res, 401, "Unauthorized");
         return;
@@ -72,6 +77,17 @@ const listFeedbacks = async (req, res, next) => {
             database_config_1.prisma.feedback.count(),
             database_config_1.prisma.feedback.findMany({
                 orderBy: { createdAt: "desc" },
+=======
+    if (!user) {
+        (0, responseHandler_1.sendErrorResponse)(res, 401, "Unauthorized");
+        return;
+    }
+    const q = (_a = req.query.q) === null || _a === void 0 ? void 0 : _a.trim();
+    try {
+        const [total, feedback] = await database_config_1.prisma.$transaction([
+            database_config_1.prisma.feedback.count(),
+            database_config_1.prisma.feedback.findMany({
+>>>>>>> 615b86a (Error solve in Bulk Customer Controller)
                 select: {
                     id: true,
                     rating: true,
@@ -87,6 +103,7 @@ const listFeedbacks = async (req, res, next) => {
                 },
             }),
         ]);
+<<<<<<< HEAD
         const feedbackRes = [];
         let userProfile = {};
         await Promise.all(feedbacks.map(async (fb) => {
@@ -130,6 +147,10 @@ const listFeedbacks = async (req, res, next) => {
             feedbacks: feedbackRes,
             meta: { total },
         });
+=======
+        console.log(total);
+        console.log(feedback);
+>>>>>>> 615b86a (Error solve in Bulk Customer Controller)
     }
     catch (err) {
         console.error("listFeedbacks error:", err);

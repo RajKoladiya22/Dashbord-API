@@ -47,7 +47,7 @@
     "nodemailer": "^7.0.3",
     "socket.io": "^4.8.1",
     "socketio": "^1.0.0",
-    "vercel": "^41.7.0",
+    "vercel": "^44.4.1",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0",
     "zod": "^3.24.3"
