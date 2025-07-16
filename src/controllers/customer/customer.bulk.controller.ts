@@ -82,6 +82,8 @@ export const bulkVerifyCustomers = async (
       sendErrorResponse(res, 400, "Unsupported file type");
       return;
     }
+
+    // console.log("Total rows ---> ", rows.length);
     if (!rows.length) {
       sendErrorResponse(res, 400, "File contains no data");
       return;
@@ -94,11 +96,11 @@ export const bulkVerifyCustomers = async (
     const fileDuplicates = new Set<string>();
     const seenInFile = new Set<string>();
     for (const email of allEmails) {
-      if (seenInFile.has(email)) { 
-        fileDuplicates.add(email); 
+      if (seenInFile.has(email)) {
+        fileDuplicates.add(email);
       }
-      else { 
-        seenInFile.add(email) 
+      else {
+        seenInFile.add(email)
       };
     }
 
@@ -142,25 +144,27 @@ export const bulkVerifyCustomers = async (
         errorMsg.duplicate.push("Email already exists in your database");
       }
 
+      // console.log("Invalid customers 1 ---> ", errorCust.length);
       if (errorMsg.missing.length || errorMsg.invalid.length || errorMsg.duplicate.length) {
-        if (!problematicEmails.has(r.email)) {
+        // if (!problematicEmails.has(r.email)) {
 
-          problematicEmails.add(r.email);
-          const messages = [
-            errorMsg.missing.length ? `Missing: ${errorMsg.missing.join(", ")}` : "",
-            errorMsg.invalid.length ? `Invalid: ${errorMsg.invalid.join(", ")}` : "",
-            errorMsg.duplicate.length ? `Duplicate: ${errorMsg.duplicate.join(", ")}` : ""
-          ]
+        //   problematicEmails.add(r.email);
+        //   const messages = [
+        //     errorMsg.missing.length ? `Missing: ${errorMsg.missing.join(", ")}` : "",
+        //     errorMsg.invalid.length ? `Invalid: ${errorMsg.invalid.join(", ")}` : "",
+        //     errorMsg.duplicate.length ? `Duplicate: ${errorMsg.duplicate.join(", ")}` : ""
+        //   ]
 
-          // errorCust.push({ ...r, errorMsg: messages });
-          errorCust.push({
-            ...r,
-            missingFields: errorMsg.missing,
-            invalidFields: errorMsg.invalid,
-            duplicateReasons: errorMsg.duplicate
-          });
-        }
+        // errorCust.push({ ...r, errorMsg: messages });
+        errorCust.push({
+          ...r,
+          missingFields: errorMsg.missing,
+          invalidFields: errorMsg.invalid,
+          duplicateReasons: errorMsg.duplicate
+        });
+        // }
       }
+      // console.log("Invalid customers 2 ---> ", errorCust.length);
 
       return {
         // adminId,
@@ -173,8 +177,12 @@ export const bulkVerifyCustomers = async (
         address: r.address
       };
     });
+    // console.log("errorCust data 3 --->", errorCust.length);
+    // console.log("problematicEmails ---> ", problematicEmails);
 
-    const validCustomers = data.filter((d) => !problematicEmails.has(d.email));
+    // const validCustomers = data.filter((d) => !problematicEmails.has(d.email));
+    const validCustomers = data.filter((d) => !errorCust.find((ed) => ed.email === d.email));
+    // console.log("validCustomers data ---> ", validCustomers.length);
 
     sendSuccessResponse(res, 201, "Data after skipping duplicates", {
       errorRecords: errorCust,
@@ -196,10 +204,10 @@ export const bulkCreateCustomers = async (
     const customers = req.body;
 
     const user = req.user;
-  if (!user) {
-    sendErrorResponse(res, 401, "Unauthorized");
-    return;
-  }
+    if (!user) {
+      sendErrorResponse(res, 401, "Unauthorized");
+      return;
+    }
 
     const adminId = user.role === "admin" ? user.id : user.adminId!;
 

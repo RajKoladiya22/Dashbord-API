@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 {"version":3,"file":"feedback.route.js","sourceRoot":"","sources":["../../../../src/routes/v1/feedback/feedback.route.ts"],"names":[],"mappings":";;AAAA,sEAGgD;AAChD,qCAAiC;AACjC,2FAG2D;AAE3D,MAAM,MAAM,GAAG,IAAA,gBAAM,GAAE,CAAC;AAExB,MAAM,CAAC,IAAI,CACT,GAAG,EACH,4BAAgB,EAChB,IAAA,0BAAc,EAAC,OAAO,EAAE,SAAS,EAAE,aAAa,EAAE,WAAW,CAAC,EAC9D,iCAAW,CACZ,CAAC;AACF,MAAM,CAAC,GAAG,CAAC,GAAG,EAAE,4BAAgB,EAAE,IAAA,0BAAc,EAAC,aAAa,CAAC,EAAE,mCAAa,CAAC,CAAC;AAEhF,kBAAe,MAAM,CAAC"}
+=======
+{"version":3,"file":"feedback.route.js","sourceRoot":"","sources":["../../../../src/routes/v1/feedback/feedback.route.ts"],"names":[],"mappings":";;AAAA,sEAA0F;AAC1F,qCAAiC;AACjC,2FAA+F;AAE/F,MAAM,MAAM,GAAG,IAAA,gBAAM,GAAE,CAAC;AAExB,MAAM,CAAC,IAAI,CAAC,GAAG,EAAE,4BAAgB,EAAC,IAAA,0BAAc,EAAC,OAAO,EAAE,SAAS,EAAE,aAAa,EAAE,WAAW,CAAC,EAAE,iCAAW,CAAC,CAAC;AAC/G,MAAM,CAAC,GAAG,CAAC,GAAG,EAAE,4BAAgB,EAAC,IAAA,0BAAc,EAAC,aAAa,CAAC,EAAE,mCAAa,CAAC,CAAC;AAE/E,kBAAe,MAAM,CAAC"}
+>>>>>>> 615b86a (Error solve in Bulk Customer Controller)

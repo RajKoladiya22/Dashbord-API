@@ -118,20 +118,12 @@ const bulkVerifyCustomers = async (req, res, next) => {
                 errorMsg.duplicate.push("Email already exists in your database");
             }
             if (errorMsg.missing.length || errorMsg.invalid.length || errorMsg.duplicate.length) {
-                if (!problematicEmails.has(r.email)) {
-                    problematicEmails.add(r.email);
-                    const messages = [
-                        errorMsg.missing.length ? `Missing: ${errorMsg.missing.join(", ")}` : "",
-                        errorMsg.invalid.length ? `Invalid: ${errorMsg.invalid.join(", ")}` : "",
-                        errorMsg.duplicate.length ? `Duplicate: ${errorMsg.duplicate.join(", ")}` : ""
-                    ];
-                    errorCust.push({
-                        ...r,
-                        missingFields: errorMsg.missing,
-                        invalidFields: errorMsg.invalid,
-                        duplicateReasons: errorMsg.duplicate
-                    });
-                }
+                errorCust.push({
+                    ...r,
+                    missingFields: errorMsg.missing,
+                    invalidFields: errorMsg.invalid,
+                    duplicateReasons: errorMsg.duplicate
+                });
             }
             return {
                 companyName: r.companyName,
@@ -143,7 +135,7 @@ const bulkVerifyCustomers = async (req, res, next) => {
                 address: r.address
             };
         });
-        const validCustomers = data.filter((d) => !problematicEmails.has(d.email));
+        const validCustomers = data.filter((d) => !errorCust.find((ed) => ed.email === d.email));
         (0, responseHandler_1.sendSuccessResponse)(res, 201, "Data after skipping duplicates", {
             errorRecords: errorCust,
             parseData: validCustomers

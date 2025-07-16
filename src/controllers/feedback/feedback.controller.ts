@@ -3,11 +3,11 @@ import {
   sendErrorResponse,
   sendSuccessResponse,
 } from "../../core/utils/responseHandler";
-import { feedbackSchema, FeedbackSchema_ } from "../../core/utils/zod";
+import { addFeedbackSchema, AddFeedbackSchema_ } from "../../core/utils/zod";
 import { Request, Response, NextFunction } from "express";
 
 export const addFeedback = async (
-  req: Request<{}, {}, FeedbackSchema_>,
+  req: Request<{}, {}, AddFeedbackSchema_>,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
@@ -36,7 +36,7 @@ export const addFeedback = async (
   }
 
   // Validate request body
-  const parsed = feedbackSchema.safeParse(req.body);
+  const parsed = addFeedbackSchema.safeParse(req.body);
 
   if (!parsed.success) {
     sendErrorResponse(res, 400, "Invalid input", {
@@ -86,22 +86,37 @@ export const listFeedbacks = async (
   next: NextFunction
 ): Promise<void> => {
   const user = req.user;
+<<<<<<< HEAD
   if (!user || user.role !== "super_admin") {
+=======
+  if (!user) {
+>>>>>>> 615b86a (Error solve in Bulk Customer Controller)
     sendErrorResponse(res, 401, "Unauthorized");
     return;
   }
 
   // Search
+<<<<<<< HEAD
   const q = (req.query.q as string)?.trim().toLowerCase();
+=======
+  const q = (req.query.q as string)?.trim();
+>>>>>>> 615b86a (Error solve in Bulk Customer Controller)
 
   try {
     // if (q) const userName: any = { contains: q, mode: "insensitive" };
     // Fetch total & items in parallel
+<<<<<<< HEAD
     const [total, feedbacks] = await prisma.$transaction([
       prisma.feedback.count(),
       prisma.feedback.findMany({
         // where: {  },
         orderBy: { createdAt: "desc" },
+=======
+    const [total, feedback] = await prisma.$transaction([
+      prisma.feedback.count(),
+      prisma.feedback.findMany({
+        // where: {  },
+>>>>>>> 615b86a (Error solve in Bulk Customer Controller)
         select: {
           id: true,
           rating: true,
@@ -117,6 +132,7 @@ export const listFeedbacks = async (
         },
       }),
     ]);
+<<<<<<< HEAD
     // console.log(total);
     // console.log(feedbacks);
 
@@ -171,6 +187,10 @@ export const listFeedbacks = async (
       feedbacks: feedbackRes,
       meta: { total },
     });
+=======
+    console.log(total);
+    console.log(feedback);
+>>>>>>> 615b86a (Error solve in Bulk Customer Controller)
   } catch (err) {
     console.error("listFeedbacks error:", err);
     sendErrorResponse(res, 500, "Server error");
