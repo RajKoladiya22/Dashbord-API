@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addFeedbackSchema = exports.createPlanSchema = exports.statusSchema = exports.listPlansQuery = exports.createCustomFieldSchema = exports.updateCustomFieldSchema = exports.updateHistorySchema = exports.updateCustomerSchema = exports.createCustomerSchema = exports.signUpSuperAdminSchema = exports.createProductSchema = exports.createTeamMemberSchema = exports.createPartnerSchema = exports.signUpSchema = exports.signInSchema = void 0;
+exports.feedbackSchema = exports.createPlanSchema = exports.statusSchema = exports.listPlansQuery = exports.createCustomFieldSchema = exports.updateCustomFieldSchema = exports.updateHistorySchema = exports.updateCustomerSchema = exports.createCustomerSchema = exports.signUpSuperAdminSchema = exports.createProductSchema = exports.createTeamMemberSchema = exports.createPartnerSchema = exports.signUpSchema = exports.signInSchema = void 0;
 const zod_1 = require("zod");
 exports.signInSchema = zod_1.z.object({
     identifier: zod_1.z.string().email(),
@@ -166,19 +166,8 @@ exports.createPlanSchema = zod_1.z.object({
     }))
         .optional(),
 });
-<<<<<<< HEAD
 exports.feedbackSchema = zod_1.z.object({
     rating: zod_1.z.string().optional(),
     feedback: zod_1.z.string().trim().optional(),
-=======
-exports.addFeedbackSchema = zod_1.z
-    .object({
-    rating: zod_1.z.string(),
-    feedback: zod_1.z.string().trim(),
-})
-    .refine((data) => (typeof data.rating === "string" && data.rating.length > 0) ||
-    (typeof data.feedback === "string" && data.feedback.trim().length > 0), {
-    message: "Please Provide Your Feedback!",
->>>>>>> 615b86a (Error solve in Bulk Customer Controller)
 });
 //# sourceMappingURL=index.js.map

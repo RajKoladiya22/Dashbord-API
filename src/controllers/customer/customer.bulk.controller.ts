@@ -118,7 +118,7 @@ export const bulkVerifyCustomers = async (
       if (!r.contactPerson) errorMsg.missing.push("contactPerson");
       if (!r.mobileNumber) errorMsg.missing.push("mobileNumber");
       if (!r.email) errorMsg.missing.push("email");
-      if (!r.serialNo) errorMsg.missing.push("serialNo");
+      // if (!r.serialNo) errorMsg.missing.push("serialNo");
 
       if (r.joiningDate) {
         const parsed = new Date(r.joiningDate.trim());
@@ -221,7 +221,7 @@ export const bulkCreateCustomers = async (
       !cust.contactPerson ||
       !cust.mobileNumber ||
       !cust.email ||
-      !cust.serialNo ||
+      // !cust.serialNo ||
       !cust.joiningDate
     );
 

@@ -188,20 +188,6 @@ const signIn = async (req, res, next) => {
             return;
         }
         const now = new Date();
-        if (cred.role !== "super_admin") {
-            const sub = await database_config_1.prisma.subscription.findFirst({
-                where: {
-                    adminId: cred.adminId,
-                    status: "active",
-                    endsAt: { gt: now },
-                },
-                orderBy: { endsAt: "desc" },
-            });
-            if (!sub) {
-                (0, httpResponse_1.sendErrorResponse)(res, 403, "No active subscription");
-                return;
-            }
-        }
         let profile = null;
         switch (cred.role) {
             case "super_admin":
@@ -239,6 +225,43 @@ const signIn = async (req, res, next) => {
         }
         const token = (0, jwt_token_1.generateToken)(cred.userProfileId, cred.role, cred.adminId || cred.userProfileId);
         (0, jwt_token_1.setAuthCookie)(res, token);
+        const lastPlan = await database_config_1.prisma.subscription.findFirst({
+            where: {
+                adminId: cred.adminId,
+                status: {
+                    notIn: ["active", "free_trial"]
+                },
+                endsAt: { lt: now },
+            },
+            orderBy: { endsAt: "desc" },
+            select: {
+                status: true,
+            }
+        });
+        if (cred.role !== "super_admin") {
+            const sub = await database_config_1.prisma.subscription.findFirst({
+                where: {
+                    adminId: cred.adminId,
+                    status: "active",
+                    endsAt: { gt: now },
+                },
+                orderBy: { endsAt: "desc" },
+            });
+            if (!sub) {
+                (0, httpResponse_1.sendSuccessResponse)(res, 200, "No active subscription", {
+                    token,
+                    user: {
+                        id: profile.id,
+                        email,
+                        role: cred.role,
+                        firstName: profile.firstName,
+                        lastName: profile.lastName,
+                    },
+                    planStatus: lastPlan === null || lastPlan === void 0 ? void 0 : lastPlan.status
+                });
+                return;
+            }
+        }
         (0, httpResponse_1.sendSuccessResponse)(res, 200, "Logged in", {
             token,
             user: {
@@ -248,6 +271,7 @@ const signIn = async (req, res, next) => {
                 firstName: profile.firstName,
                 lastName: profile.lastName,
             },
+            planStatus: lastPlan === null || lastPlan === void 0 ? void 0 : lastPlan.status
         });
         return;
     }
