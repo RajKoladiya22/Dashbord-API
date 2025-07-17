@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.feedbackSchema = exports.createPlanSchema = exports.statusSchema = exports.listPlansQuery = exports.createCustomFieldSchema = exports.updateCustomFieldSchema = exports.updateHistorySchema = exports.updateCustomerSchema = exports.createCustomerSchema = exports.signUpSuperAdminSchema = exports.createProductSchema = exports.createTeamMemberSchema = exports.createPartnerSchema = exports.signUpSchema = exports.signInSchema = void 0;
+exports.addFeedbackSchema = exports.createPlanSchema = exports.statusSchema = exports.listPlansQuery = exports.createCustomFieldSchema = exports.updateCustomFieldSchema = exports.updateHistorySchema = exports.updateCustomerSchema = exports.createCustomerSchema = exports.signUpSuperAdminSchema = exports.createProductSchema = exports.createTeamMemberSchema = exports.createPartnerSchema = exports.signUpSchema = exports.signInSchema = void 0;
 const zod_1 = require("zod");
 exports.signInSchema = zod_1.z.object({
     identifier: zod_1.z.string().email(),
@@ -166,7 +166,7 @@ exports.createPlanSchema = zod_1.z.object({
     }))
         .optional(),
 });
-exports.feedbackSchema = zod_1.z.object({
+exports.addFeedbackSchema = zod_1.z.object({
     rating: zod_1.z.string().optional(),
     feedback: zod_1.z.string().trim().optional(),
 });

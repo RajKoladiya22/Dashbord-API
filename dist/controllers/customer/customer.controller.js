@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.editCustomerProduct = exports.deleteCustomer = exports.setCustomerStatus = exports.updateCustomer = exports.listCustomers = exports.createCustomer = void 0;
+exports.deleteCustomerProduct = exports.editCustomerProduct = exports.deleteCustomer = exports.setCustomerStatus = exports.updateCustomer = exports.listCustomers = exports.createCustomer = void 0;
 const database_config_1 = require("../../config/database.config");
 const date_fns_1 = require("date-fns");
 const responseHandler_1 = require("../../core/utils/responseHandler");
@@ -754,4 +754,59 @@ const editCustomerProduct = async (req, res, next) => {
     }
 };
 exports.editCustomerProduct = editCustomerProduct;
+const deleteCustomerProduct = async (req, res, next) => {
+    const { customerId, ProductId } = req.params;
+    if (!customerId || !ProductId) {
+        (0, responseHandler_1.sendErrorResponse)(res, 400, "Invalid input");
+        return;
+    }
+    const user = req.user;
+    if (!user) {
+        (0, responseHandler_1.sendErrorResponse)(res, 401, "Unauthorized");
+        return;
+    }
+    const baseFilter = {
+        id: ProductId,
+        customerId,
+    };
+    switch (user.role) {
+        case "admin":
+        case "super_admin":
+            baseFilter.adminId = user.id;
+            break;
+        case "partner":
+            baseFilter.adminId = user.adminId;
+            baseFilter.customer = { partnerId: user.id };
+            break;
+        case "team_member":
+        case "sub_admin":
+            baseFilter.adminId = user.adminId;
+            break;
+        default:
+            (0, responseHandler_1.sendErrorResponse)(res, 403, "Forbidden");
+            return;
+    }
+    try {
+        const deleted = await database_config_1.prisma.customerProductHistory.delete({
+            where: baseFilter,
+        });
+        (0, responseHandler_1.sendSuccessResponse)(res, 200, "Product deleted successfully", {
+            customerId,
+            deletedProductId: deleted.id
+        });
+    }
+    catch (err) {
+        console.error("\ndeleteCustomerProduct error --->", err);
+        if (err instanceof client_1.Prisma.PrismaClientKnownRequestError &&
+            err.code === "P2025") {
+            (0, responseHandler_1.sendErrorResponse)(res, 404, "Product not found or already deleted");
+            return;
+        }
+        if (!res.headersSent)
+            next(err);
+        else
+            (0, responseHandler_1.sendErrorResponse)(res, 500, "Server error");
+    }
+};
+exports.deleteCustomerProduct = deleteCustomerProduct;
 //# sourceMappingURL=customer.controller.js.map

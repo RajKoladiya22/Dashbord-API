@@ -18,6 +18,7 @@ import {
   signUpSchema,
   signUpSuperAdminSchema,
 } from "../../core/utils/zod";
+import { SubscriptionStatus } from "@prisma/client";
 
 const SALT_ROUNDS = parseInt(env.SALT_ROUNDS ?? "12", 10);
 
@@ -317,23 +318,24 @@ export const signIn = async (
     );
     setAuthCookie(res, token);
 
-    // fetch the last subscription
-    const lastPlan = await prisma.subscription.findFirst({
-      where: {
-        adminId: cred.adminId!,
-        status: {
-          notIn: ["active", "free_trial"]
-        },
-        endsAt: { lt: now },
-      },
-      orderBy: { endsAt: "desc" },
-      select: {
-        status: true,
-      }
-    });
+    let lastPlan: { status: SubscriptionStatus; } | null = null;
 
     // for non‑super_admin, check subscription
     if (cred.role !== "super_admin") {
+      // fetch the last subscription
+      lastPlan = await prisma.subscription.findFirst({
+        where: {
+          adminId: cred.adminId!,
+          status: {
+            notIn: ["active", "free_trial"]
+          },
+          endsAt: { lt: now },
+        },
+        orderBy: { endsAt: "desc" },
+        select: {
+          status: true,
+        }
+      });
       const sub = await prisma.subscription.findFirst({
         where: {
           adminId: cred.adminId!,
@@ -351,8 +353,8 @@ export const signIn = async (
             role: cred.role,
             firstName: profile.firstName,
             lastName: profile.lastName,
+            planStatus: lastPlan?.status
           },
-          planStatus: lastPlan?.status
         });
         return;
       }
@@ -367,8 +369,8 @@ export const signIn = async (
         role: cred.role,
         firstName: profile.firstName,
         lastName: profile.lastName,
+        planStatus: lastPlan?.status
       },
-      planStatus: lastPlan?.status
     });
     return;
   } catch (err) {

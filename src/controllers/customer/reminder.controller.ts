@@ -343,8 +343,8 @@ export const listRenewalReminders = async (
           is: {
             OR: [
               { companyName: { contains: partnerSearch, mode: "insensitive" } },
-              { firstName:   { contains: partnerSearch, mode: "insensitive" } },
-              { lastName:    { contains: partnerSearch, mode: "insensitive" } },
+              { firstName: { contains: partnerSearch, mode: "insensitive" } },
+              { lastName: { contains: partnerSearch, mode: "insensitive" } },
             ],
           },
         },
@@ -574,7 +574,7 @@ export const updateCustomerProduct = async (
           ? new Date(data.renewalDate)
           : existing.renewalDate,
         renewal: data.renewal !== undefined ? data.renewal : existing.renewal,
-        detail : data.detail !== undefined ? data.detail : existing.detail,
+        detail: data.detail !== undefined ? data.detail : existing.detail,
         status: data.status !== undefined ? data.status : existing.status,
       };
     }
