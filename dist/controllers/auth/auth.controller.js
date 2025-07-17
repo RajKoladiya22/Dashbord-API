@@ -225,20 +225,21 @@ const signIn = async (req, res, next) => {
         }
         const token = (0, jwt_token_1.generateToken)(cred.userProfileId, cred.role, cred.adminId || cred.userProfileId);
         (0, jwt_token_1.setAuthCookie)(res, token);
-        const lastPlan = await database_config_1.prisma.subscription.findFirst({
-            where: {
-                adminId: cred.adminId,
-                status: {
-                    notIn: ["active", "free_trial"]
-                },
-                endsAt: { lt: now },
-            },
-            orderBy: { endsAt: "desc" },
-            select: {
-                status: true,
-            }
-        });
+        let lastPlan = null;
         if (cred.role !== "super_admin") {
+            lastPlan = await database_config_1.prisma.subscription.findFirst({
+                where: {
+                    adminId: cred.adminId,
+                    status: {
+                        notIn: ["active", "free_trial"]
+                    },
+                    endsAt: { lt: now },
+                },
+                orderBy: { endsAt: "desc" },
+                select: {
+                    status: true,
+                }
+            });
             const sub = await database_config_1.prisma.subscription.findFirst({
                 where: {
                     adminId: cred.adminId,
@@ -256,8 +257,8 @@ const signIn = async (req, res, next) => {
                         role: cred.role,
                         firstName: profile.firstName,
                         lastName: profile.lastName,
+                        planStatus: lastPlan === null || lastPlan === void 0 ? void 0 : lastPlan.status
                     },
-                    planStatus: lastPlan === null || lastPlan === void 0 ? void 0 : lastPlan.status
                 });
                 return;
             }
@@ -270,8 +271,8 @@ const signIn = async (req, res, next) => {
                 role: cred.role,
                 firstName: profile.firstName,
                 lastName: profile.lastName,
+                planStatus: lastPlan === null || lastPlan === void 0 ? void 0 : lastPlan.status
             },
-            planStatus: lastPlan === null || lastPlan === void 0 ? void 0 : lastPlan.status
         });
         return;
     }

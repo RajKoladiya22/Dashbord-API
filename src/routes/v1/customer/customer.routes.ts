@@ -18,6 +18,7 @@ import {
   setCustomerStatus,
   updateCustomer,
   editCustomerProduct,
+  deleteCustomerProduct,
 } from "../../../controllers/customer/customer.controller";
 import { getCustomerProductsByCustomerId } from "../../../controllers/customer/customerProduct.controller";
 import {
@@ -89,6 +90,12 @@ router.patch(
   editCustomerProduct
 );
 router.delete(
+  "/product/delete/:customerId/:ProductId",
+  authenticateUser,
+  authorizeRoles("admin", "partner", "team_member", "sub_admin"),
+  deleteCustomerProduct
+);
+router.delete(
   "/delete/:id",
   authenticateUser,
   authorizeRoles("admin", "partner", "sub_admin"),
@@ -123,14 +130,14 @@ router.get(
 
 router.post(
   "/bulk",
-  upload.single("file"), 
+  upload.single("file"),
   authenticateUser,
   authorizeRoles("admin", "partner", "team_member", "sub_admin"),
   bulkVerifyCustomers
 );
 router.post(
   "/bulk-upload",
-  upload.single("file"), 
+  upload.single("file"),
   authenticateUser,
   authorizeRoles("admin", "partner", "team_member", "sub_admin"),
   bulkCreateCustomers

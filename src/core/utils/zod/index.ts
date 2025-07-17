@@ -208,25 +208,8 @@ export const createPlanSchema = z.object({
 });
 export type CreatePlanBody = z.infer<typeof createPlanSchema>;
 
-<<<<<<< HEAD
-export const feedbackSchema = z.object({
+export const addFeedbackSchema = z.object({
   rating: z.string().optional(),
   feedback: z.string().trim().optional(),
 });
-export type FeedbackSchema_ = z.infer<typeof feedbackSchema>;
-=======
-export const addFeedbackSchema = z
-  .object({
-    rating: z.string(),
-    feedback: z.string().trim(),
-  })
-  .refine(
-    (data) =>
-      (typeof data.rating === "string" && data.rating.length > 0) ||
-      (typeof data.feedback === "string" && data.feedback.trim().length > 0),
-    {
-      message: "Please Provide Your Feedback!",
-    }
-  );
 export type AddFeedbackSchema_ = z.infer<typeof addFeedbackSchema>;
->>>>>>> 615b86a (Error solve in Bulk Customer Controller)

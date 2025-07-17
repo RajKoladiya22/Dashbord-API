@@ -189,13 +189,13 @@ export const listCustomers = async (
   const q = (req.query.q as string)?.trim();
   const searchFilter = q
     ? {
-        OR: [
-          { companyName: { contains: q, mode: "insensitive" } },
-          { contactPerson: { contains: q, mode: "insensitive" } },
-          { mobileNumber: { contains: q, mode: "insensitive" } },
-          { serialNo: { contains: q, mode: "insensitive" } },
-        ],
-      }
+      OR: [
+        { companyName: { contains: q, mode: "insensitive" } },
+        { contactPerson: { contains: q, mode: "insensitive" } },
+        { mobileNumber: { contains: q, mode: "insensitive" } },
+        { serialNo: { contains: q, mode: "insensitive" } },
+      ],
+    }
     : {};
 
   // Sorting
@@ -913,3 +913,69 @@ export const editCustomerProduct = async (
     else sendErrorResponse(res, 500, "Server error");
   }
 };
+
+export const deleteCustomerProduct = async (
+  req: Request<{ customerId: string; ProductId: string }, {}>,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  const { customerId, ProductId } = req.params;
+
+  if (!customerId || !ProductId) {
+    sendErrorResponse(res, 400, "Invalid input");
+    return;
+  }
+
+  const user = req.user as { id: string; role: string; adminId?: string };
+  if (!user) {
+    sendErrorResponse(res, 401, "Unauthorized");
+    return;
+  }
+
+  const baseFilter: any = {
+    id: ProductId,
+    customerId,
+  };
+
+  // Role-based access check
+  switch (user.role) {
+    case "admin":
+    case "super_admin":
+      baseFilter.adminId = user.id;
+      break;
+    case "partner":
+      baseFilter.adminId = user.adminId!;
+      baseFilter.customer = { partnerId: user.id };
+      break;
+    case "team_member":
+    case "sub_admin":
+      baseFilter.adminId = user.adminId!;
+      break;
+    default:
+      sendErrorResponse(res, 403, "Forbidden");
+      return;
+  }
+
+  try {
+    const deleted = await prisma.customerProductHistory.delete({
+      where: baseFilter,
+    });
+
+    sendSuccessResponse(res, 200, "Product deleted successfully", {
+      customerId,
+      deletedProductId: deleted.id
+    });
+  } catch (err: any) {
+    console.error("\ndeleteCustomerProduct error --->", err);
+    if (
+      err instanceof Prisma.PrismaClientKnownRequestError &&
+      err.code === "P2025"
+    ) {
+      sendErrorResponse(res, 404, "Product not found or already deleted");
+      return;
+    }
+    if (!res.headersSent) next(err);
+    else sendErrorResponse(res, 500, "Server error");
+  }
+};
+
