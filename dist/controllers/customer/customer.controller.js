@@ -70,8 +70,8 @@ const createCustomer = async (req, res, next) => {
                             break;
                         case "custom":
                         default:
-                            renewalDate = p.renewalDate ? new Date(p.renewalDate) : undefined;
                             expiryDate = p.expiryDate ? new Date(p.expiryDate) : undefined;
+                            renewalDate = p.renewalDate ? new Date(p.renewalDate) : expiryDate !== null && expiryDate !== void 0 ? expiryDate : undefined;
                             break;
                     }
                     return tx.customerProductHistory.create({
@@ -399,10 +399,8 @@ const updateCustomer = async (req, res, next) => {
                             renewalDate = (0, dateHelpers_1.addYears)(purchase, 1);
                             break;
                         default:
-                            renewalDate = p.renewalDate
-                                ? new Date(p.renewalDate)
-                                : undefined;
                             expiryDate = p.expiryDate ? new Date(p.expiryDate) : undefined;
+                            renewalDate = p.renewalDate ? new Date(p.renewalDate) : expiryDate !== null && expiryDate !== void 0 ? expiryDate : undefined;
                     }
                     if (renewalDate && !expiryDate) {
                         expiryDate = new Date(renewalDate);
@@ -643,10 +641,14 @@ const editCustomerProduct = async (req, res, next) => {
         if (renewal !== undefined)
             updateData.renewal = renewal;
         if (renewPeriod === "custom") {
-            if (renewalDate)
-                updateData.renewalDate = new Date(renewalDate);
             if (expiryDate)
                 updateData.expiryDate = new Date(expiryDate);
+            if (renewalDate) {
+                updateData.renewalDate = new Date(renewalDate);
+            }
+            else if (expiryDate) {
+                updateData.renewalDate = new Date(expiryDate);
+            }
         }
         else {
             if (newRenewalDate) {

@@ -106,8 +106,9 @@ export const createCustomer = async (
             case "custom":
             default:
               // For custom, trust the incoming values (if any)
-              renewalDate = p.renewalDate ? new Date(p.renewalDate) : undefined;
+              // renewalDate = p.renewalDate ? new Date(p.renewalDate) : undefined;
               expiryDate = p.expiryDate ? new Date(p.expiryDate) : undefined;
+              renewalDate = p.renewalDate ? new Date(p.renewalDate) : expiryDate ?? undefined;
               break;
           }
 
@@ -491,10 +492,11 @@ export const updateCustomer = async (
                 renewalDate = addYears(purchase, 1);
                 break;
               default:
-                renewalDate = p.renewalDate
-                  ? new Date(p.renewalDate)
-                  : undefined;
+                // renewalDate = p.renewalDate
+                //   ? new Date(p.renewalDate)
+                //   : undefined;
                 expiryDate = p.expiryDate ? new Date(p.expiryDate) : undefined;
+                renewalDate = p.renewalDate ? new Date(p.renewalDate) : expiryDate ?? undefined;
             }
 
             if (renewalDate && !expiryDate) {
@@ -804,8 +806,12 @@ export const editCustomerProduct = async (
     if (renewal !== undefined) updateData.renewal = renewal;
 
     if (renewPeriod === "custom") {
-      if (renewalDate) updateData.renewalDate = new Date(renewalDate);
       if (expiryDate) updateData.expiryDate = new Date(expiryDate);
+      if (renewalDate) {
+        updateData.renewalDate = new Date(renewalDate);
+      } else if (expiryDate) {
+        updateData.renewalDate = new Date(expiryDate);
+      }
     } else {
       if (newRenewalDate) {
         updateData.renewalDate = newRenewalDate;

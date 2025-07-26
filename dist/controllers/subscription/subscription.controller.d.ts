@@ -1,0 +1,12 @@
+import { Request, Response, NextFunction } from "express";
+export declare const purchaseSubscription: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+export declare const listAllSubscriptions: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+export declare const approveSubscription: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+export declare const disapproveSubscription: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+export declare const cancelSubscription: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+export declare const suspendSubscription: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+export declare const resumeSubscription: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+export declare const deleteSubscription: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+export declare const unblockSubscription: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+export declare const extendSubscription: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+export declare const inactiveSubscription: (req: Request, res: Response, next: NextFunction) => Promise<void>;

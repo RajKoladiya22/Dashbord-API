@@ -501,3 +501,26 @@ export declare const addFeedbackSchema: z.ZodObject<{
     feedback?: string | undefined;
 }>;
 export type AddFeedbackSchema_ = z.infer<typeof addFeedbackSchema>;
+export declare const purchaseSubscriptionSchema: z.ZodObject<{
+    planId: z.ZodString;
+    currency: z.ZodString;
+    paymentMethod: z.ZodString;
+    transactionId: z.ZodString;
+    accountHolder: z.ZodString;
+    paymentImage: z.ZodOptional<z.ZodString>;
+}, "strip", z.ZodTypeAny, {
+    planId: string;
+    currency: string;
+    paymentMethod: string;
+    transactionId: string;
+    accountHolder: string;
+    paymentImage?: string | undefined;
+}, {
+    planId: string;
+    currency: string;
+    paymentMethod: string;
+    transactionId: string;
+    accountHolder: string;
+    paymentImage?: string | undefined;
+}>;
+export type PurchaseSubscriptionSchema_ = z.infer<typeof purchaseSubscriptionSchema>;

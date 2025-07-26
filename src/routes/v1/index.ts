@@ -9,6 +9,7 @@ import planRoutes from "./plan/plan.routes";
 import chatRoutes from "./chat/chat.routes";
 import currentPlan from "./currentPlan/currentPlan.routes";
 import feedbackRoute from "./feedback/feedback.route";
+import subscriptionRoute from "./subscription/subscription.routes";
 import { sendSuccessResponse } from "../../core/utils/httpResponse";
 
 const router = Router();
@@ -21,5 +22,6 @@ router.use("/plan", planRoutes);
 router.use("/chat", chatRoutes);
 router.use("/current", currentPlan);
 router.use("/feedback", feedbackRoute);
+router.use("/subscription", subscriptionRoute);
 
 export default router;
