@@ -56,19 +56,34 @@ const signUpAdmin = async (req, res, next) => {
                 },
             });
             const plan = await tx.plan.findFirst({
-                where: { name: "Basic", duration: "30 days" },
+                where: { name: "Basic", duration: "30" },
             });
             if (!plan)
                 throw new Error("Default plan not found");
             const startsAt = new Date();
             const endsAt = (0, date_fns_1.addDays)(startsAt, 30);
-            await tx.subscription.create({
+            const subscription = await tx.subscription.create({
                 data: {
                     adminId: a.id,
                     planId: plan.id,
-                    status: "active",
+                    status: "free_trial",
                     startsAt,
                     endsAt,
+                },
+                select: {
+                    id: true,
+                }
+            });
+            await tx.subscriptionEvent.create({
+                data: {
+                    subscriptionId: subscription.id,
+                    eventType: "subscription_created",
+                    eventAt: new Date(),
+                    metadata: {
+                        by: "admin",
+                        source: "web",
+                        message: "Create free_trial subscription",
+                    },
                 },
             });
             return a;
@@ -226,29 +241,29 @@ const signIn = async (req, res, next) => {
         const token = (0, jwt_token_1.generateToken)(cred.userProfileId, cred.role, cred.adminId || cred.userProfileId);
         (0, jwt_token_1.setAuthCookie)(res, token);
         let lastPlan = null;
+        let activePlan = null;
         if (cred.role !== "super_admin") {
             lastPlan = await database_config_1.prisma.subscription.findFirst({
                 where: {
                     adminId: cred.adminId,
-                    status: {
-                        notIn: ["active", "free_trial"]
-                    },
-                    endsAt: { lt: now },
                 },
                 orderBy: { endsAt: "desc" },
                 select: {
                     status: true,
                 }
             });
-            const sub = await database_config_1.prisma.subscription.findFirst({
+            activePlan = await database_config_1.prisma.subscription.findFirst({
                 where: {
                     adminId: cred.adminId,
                     status: "active",
                     endsAt: { gt: now },
                 },
                 orderBy: { endsAt: "desc" },
+                select: {
+                    status: true,
+                }
             });
-            if (!sub) {
+            if (!activePlan) {
                 (0, httpResponse_1.sendSuccessResponse)(res, 200, "No active subscription", {
                     token,
                     user: {
@@ -271,7 +286,7 @@ const signIn = async (req, res, next) => {
                 role: cred.role,
                 firstName: profile.firstName,
                 lastName: profile.lastName,
-                planStatus: lastPlan === null || lastPlan === void 0 ? void 0 : lastPlan.status
+                planStatus: activePlan === null || activePlan === void 0 ? void 0 : activePlan.status
             },
         });
         return;

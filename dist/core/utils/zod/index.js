@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addFeedbackSchema = exports.createPlanSchema = exports.statusSchema = exports.listPlansQuery = exports.createCustomFieldSchema = exports.updateCustomFieldSchema = exports.updateHistorySchema = exports.updateCustomerSchema = exports.createCustomerSchema = exports.signUpSuperAdminSchema = exports.createProductSchema = exports.createTeamMemberSchema = exports.createPartnerSchema = exports.signUpSchema = exports.signInSchema = void 0;
+exports.purchaseSubscriptionSchema = exports.addFeedbackSchema = exports.createPlanSchema = exports.statusSchema = exports.listPlansQuery = exports.createCustomFieldSchema = exports.updateCustomFieldSchema = exports.updateHistorySchema = exports.updateCustomerSchema = exports.createCustomerSchema = exports.signUpSuperAdminSchema = exports.createProductSchema = exports.createTeamMemberSchema = exports.createPartnerSchema = exports.signUpSchema = exports.signInSchema = void 0;
 const zod_1 = require("zod");
 exports.signInSchema = zod_1.z.object({
     identifier: zod_1.z.string().email(),
@@ -169,5 +169,13 @@ exports.createPlanSchema = zod_1.z.object({
 exports.addFeedbackSchema = zod_1.z.object({
     rating: zod_1.z.string().optional(),
     feedback: zod_1.z.string().trim().optional(),
+});
+exports.purchaseSubscriptionSchema = zod_1.z.object({
+    planId: zod_1.z.string().uuid(),
+    currency: zod_1.z.string(),
+    paymentMethod: zod_1.z.string(),
+    transactionId: zod_1.z.string().min(1),
+    accountHolder: zod_1.z.string().min(1),
+    paymentImage: zod_1.z.string().url().optional(),
 });
 //# sourceMappingURL=index.js.map

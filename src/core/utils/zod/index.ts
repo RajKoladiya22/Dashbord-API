@@ -213,3 +213,14 @@ export const addFeedbackSchema = z.object({
   feedback: z.string().trim().optional(),
 });
 export type AddFeedbackSchema_ = z.infer<typeof addFeedbackSchema>;
+
+export const purchaseSubscriptionSchema = z.object({
+  planId: z.string().uuid(),
+  currency: z.string(),
+  paymentMethod: z.string(),
+  transactionId: z.string().min(1),
+  accountHolder: z.string().min(1),
+  paymentImage: z.string().url().optional(),
+});
+
+export type PurchaseSubscriptionSchema_ = z.infer<typeof purchaseSubscriptionSchema>;

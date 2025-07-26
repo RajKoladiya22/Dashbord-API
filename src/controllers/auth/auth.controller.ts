@@ -86,7 +86,7 @@ export const signUpAdmin = async (
 
       // fetch default “Basic” plan
       const plan = await tx.plan.findFirst({
-        where: { name: "Basic", duration: "30 days" },
+        where: { name: "Basic", duration: "30" },
       });
       if (!plan) throw new Error("Default plan not found");
 
@@ -94,13 +94,30 @@ export const signUpAdmin = async (
       const startsAt = new Date();
       // const endsAt = new Date(startsAt.getTime() + 30 * 24 * 3600 * 1000);
       const endsAt = addDays(startsAt, 30);
-      await tx.subscription.create({
+      const subscription = await tx.subscription.create({
         data: {
           adminId: a.id,
           planId: plan.id,
-          status: "active",
+          status: "free_trial",
           startsAt,
           endsAt,
+        },
+        select: {
+          id: true,
+        }
+      });
+
+      // Create Subscription Event
+      await tx.subscriptionEvent.create({
+        data: {
+          subscriptionId: subscription.id,
+          eventType: "subscription_created",
+          eventAt: new Date(),
+          metadata: {
+            by: "admin",
+            source: "web",
+            message: "Create free_trial subscription",
+          },
         },
       });
 
@@ -319,6 +336,7 @@ export const signIn = async (
     setAuthCookie(res, token);
 
     let lastPlan: { status: SubscriptionStatus; } | null = null;
+    let activePlan: { status: SubscriptionStatus; } | null = null;
 
     // for non‑super_admin, check subscription
     if (cred.role !== "super_admin") {
@@ -326,25 +344,28 @@ export const signIn = async (
       lastPlan = await prisma.subscription.findFirst({
         where: {
           adminId: cred.adminId!,
-          status: {
-            notIn: ["active", "free_trial"]
-          },
-          endsAt: { lt: now },
+          // status: {
+          //   notIn: ["active", "free_trial"]
+          // },
+          // endsAt: { lt: now },
         },
         orderBy: { endsAt: "desc" },
         select: {
           status: true,
         }
       });
-      const sub = await prisma.subscription.findFirst({
+      activePlan = await prisma.subscription.findFirst({
         where: {
           adminId: cred.adminId!,
           status: "active",
           endsAt: { gt: now },
         },
         orderBy: { endsAt: "desc" },
+        select: {
+          status: true,
+        }
       });
-      if (!sub) {
+      if (!activePlan) {
         sendSuccessResponse(res, 200, "No active subscription", {
           token,
           user: {
@@ -369,7 +390,7 @@ export const signIn = async (
         role: cred.role,
         firstName: profile.firstName,
         lastName: profile.lastName,
-        planStatus: lastPlan?.status
+        planStatus: activePlan?.status
       },
     });
     return;
