@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.inactiveSubscription = exports.extendSubscription = exports.unblockSubscription = exports.deleteSubscription = exports.resumeSubscription = exports.suspendSubscription = exports.cancelSubscription = exports.disapproveSubscription = exports.approveSubscription = exports.listAllSubscriptions = exports.purchaseSubscription = void 0;
+exports.adminSubscriptionHistory = exports.inactiveSubscription = exports.extendSubscription = exports.unblockSubscription = exports.deleteSubscription = exports.resumeSubscription = exports.suspendSubscription = exports.cancelSubscription = exports.disapproveSubscription = exports.approveSubscription = exports.listAllSubscriptions = exports.purchaseSubscription = void 0;
 const date_fns_1 = require("date-fns");
 const database_config_1 = require("../../config/database.config");
 const responseHandler_1 = require("../../core/utils/responseHandler");
@@ -59,8 +59,12 @@ const purchaseSubscription = async (req, res, next) => {
             }
             const existingSubscription = await tx.subscription.findFirst({
                 where: { adminId },
-                select: { id: true, endsAt: true }
+                select: { id: true, endsAt: true, status: true }
             });
+            if (existingSubscription && !["active", "free_trial", "pending", "expired"].includes(existingSubscription.status)) {
+                (0, responseHandler_1.sendErrorResponse)(res, 409, `Your old subscription is ${existingSubscription.status} so you can't purchase new subscription.`);
+                return;
+            }
             const startDate = (existingSubscription === null || existingSubscription === void 0 ? void 0 : existingSubscription.endsAt) && existingSubscription.endsAt > now ? existingSubscription.endsAt : now;
             const endDate = (0, date_fns_1.addDays)(startDate, Number(plan.duration));
             const subscription = (existingSubscription) ?
@@ -69,9 +73,8 @@ const purchaseSubscription = async (req, res, next) => {
                     data: {
                         planId: plan.id,
                         status: "pending",
-                        startsAt: startDate,
+                        renewedAt: startDate,
                         endsAt: endDate,
-                        renewedAt: now,
                     },
                     select: {
                         id: true,
@@ -138,6 +141,8 @@ const purchaseSubscription = async (req, res, next) => {
             });
             return subscription;
         });
+        if (!result)
+            return;
         const admin = await database_config_1.prisma.admin.findFirst({
             where: { id: adminId },
             select: {
@@ -1081,8 +1086,9 @@ const extendSubscription = async (req, res, next) => {
             const now = new Date();
             const newEndsAt = (0, date_fns_1.addDays)(now, Number(freePlan.duration));
             const updated = await tx.subscription.update({
-                where: { id, adminId, planId: freePlan.id },
+                where: { id, adminId },
                 data: {
+                    planId: freePlan.id,
                     renewedAt: now,
                     endsAt: newEndsAt,
                     status: "active",
@@ -1264,4 +1270,65 @@ const inactiveSubscription = async (req, res, next) => {
     }
 };
 exports.inactiveSubscription = inactiveSubscription;
+const adminSubscriptionHistory = async (req, res, next) => {
+    const user = req.user;
+    if (!user || user.role !== "admin") {
+        (0, responseHandler_1.sendErrorResponse)(res, 401, "Unauthorized");
+        return;
+    }
+    try {
+        const subscription = await database_config_1.prisma.subscription.findFirst({
+            where: { adminId: user.id },
+            select: { id: true },
+        });
+        if (!subscription) {
+            (0, responseHandler_1.sendErrorResponse)(res, 404, "Subscription not found");
+            return;
+        }
+        const events = await database_config_1.prisma.subscriptionEvent.findMany({
+            where: {
+                subscriptionId: subscription.id,
+                eventType: {
+                    in: ["subscription_created", "subscription_approved", "subscription_extended"]
+                }
+            },
+            orderBy: { eventAt: "desc" },
+            select: {
+                id: true,
+                subscription: {
+                    select: {
+                        id: true,
+                        startsAt: true,
+                        endsAt: true,
+                        renewedAt: true,
+                        cancelledAt: true,
+                        plan: {
+                            select: {
+                                id: true,
+                                name: true,
+                                duration: true,
+                                price: true,
+                                offers: true,
+                                specs: true,
+                                descriptions: true,
+                            }
+                        }
+                    }
+                }
+            },
+        });
+        if (!events) {
+            (0, responseHandler_1.sendErrorResponse)(res, 404, "Subscription events not found");
+            return;
+        }
+        (0, responseHandler_1.sendSuccessResponse)(res, 200, "Admin subscription history fetched", {
+            subscriptions: events.map(event => event.subscription),
+        });
+    }
+    catch (error) {
+        console.error("Error fetching subscription history:", error);
+        (0, responseHandler_1.sendErrorResponse)(res, 500, "Internal Server Error");
+    }
+};
+exports.adminSubscriptionHistory = adminSubscriptionHistory;
 //# sourceMappingURL=subscription.controller.js.map

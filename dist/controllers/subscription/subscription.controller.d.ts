@@ -10,3 +10,4 @@ export declare const deleteSubscription: (req: Request, res: Response, next: Nex
 export declare const unblockSubscription: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 export declare const extendSubscription: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 export declare const inactiveSubscription: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+export declare const adminSubscriptionHistory: (req: Request, res: Response, next: NextFunction) => Promise<void>;
