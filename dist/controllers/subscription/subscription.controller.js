@@ -326,7 +326,12 @@ const approveSubscription = async (req, res, next) => {
     try {
         const subscription = await database_config_1.prisma.subscription.findFirst({
             where: { id, adminId, planId },
-            include: { admin: true, plan: true },
+            include: {
+                admin: true,
+                plan: true,
+                payments: true,
+                events: true,
+            },
         });
         if (!subscription) {
             (0, responseHandler_1.sendErrorResponse)(res, 404, "Subscription not found");
@@ -337,23 +342,39 @@ const approveSubscription = async (req, res, next) => {
             return;
         }
         await database_config_1.prisma.$transaction(async (tx) => {
-            await tx.subscription.update({
+            const approved = await tx.subscription.update({
                 where: { id, adminId, planId },
                 data: {
                     status: "active",
                     startsAt: now,
                     endsAt: (0, date_fns_1.addDays)(now, Number(subscription.plan.duration)),
                 },
+                include: {
+                    plan: true,
+                    payments: true,
+                    events: true,
+                },
             });
             await tx.subscriptionEvent.create({
                 data: {
-                    subscriptionId: subscription.id,
+                    subscriptionId: approved.id,
                     eventType: "subscription_approved",
                     eventAt: now,
                     metadata: {
                         by: "super_admin",
                         source: "web",
                         message: "approve pending subscription",
+                        subscription: {
+                            planId: approved.planId,
+                            status: approved.status,
+                            startsAt: approved.startsAt,
+                            endsAt: approved.endsAt,
+                            renewedAt: approved.renewedAt,
+                            cancelledAt: approved.cancelledAt,
+                            plan: approved.plan,
+                            payments: approved.payments,
+                            events: approved.events,
+                        }
                     },
                 },
             });
@@ -1093,6 +1114,11 @@ const extendSubscription = async (req, res, next) => {
                     endsAt: newEndsAt,
                     status: "active",
                 },
+                include: {
+                    plan: true,
+                    payments: true,
+                    events: true,
+                }
             });
             await tx.subscriptionEvent.create({
                 data: {
@@ -1103,6 +1129,17 @@ const extendSubscription = async (req, res, next) => {
                         by: "super_admin",
                         source: "web",
                         message: "extend(active for free plan) expired subscription",
+                        subscription: {
+                            planId: updated.planId,
+                            status: updated.status,
+                            startsAt: updated.startsAt,
+                            endsAt: updated.endsAt,
+                            renewedAt: updated.renewedAt,
+                            cancelledAt: updated.cancelledAt,
+                            plan: updated.plan,
+                            payments: updated.payments,
+                            events: updated.events,
+                        }
                     },
                 },
             });
@@ -1295,34 +1332,28 @@ const adminSubscriptionHistory = async (req, res, next) => {
             orderBy: { eventAt: "desc" },
             select: {
                 id: true,
-                subscription: {
-                    select: {
-                        id: true,
-                        startsAt: true,
-                        endsAt: true,
-                        renewedAt: true,
-                        cancelledAt: true,
-                        plan: {
-                            select: {
-                                id: true,
-                                name: true,
-                                duration: true,
-                                price: true,
-                                offers: true,
-                                specs: true,
-                                descriptions: true,
-                            }
-                        }
-                    }
-                }
+                metadata: true,
             },
         });
         if (!events) {
             (0, responseHandler_1.sendErrorResponse)(res, 404, "Subscription events not found");
             return;
         }
+        const subscriptions = events
+            .map(event => {
+            const metadata = event.metadata;
+            if (metadata && typeof metadata === "object" && "subscription" in metadata) {
+                return metadata.subscription;
+            }
+            return null;
+        })
+            .filter(Boolean);
+        if (subscriptions.length === 0) {
+            (0, responseHandler_1.sendErrorResponse)(res, 404, "No valid subscription events found");
+            return;
+        }
         (0, responseHandler_1.sendSuccessResponse)(res, 200, "Admin subscription history fetched", {
-            subscriptions: events.map(event => event.subscription),
+            subscriptions,
         });
     }
     catch (error) {
