@@ -27,7 +27,7 @@ export const currentPlan = async (
 
   try {
     const subscriptions = await prisma.subscription.findMany({
-      where: { adminId: user.adminId, status: "active" },
+      where: { adminId: user.adminId, status: { in: ["active", "free_trial"] } },
       include: {
         plan: {
           include: {

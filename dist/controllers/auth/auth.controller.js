@@ -70,9 +70,11 @@ const signUpAdmin = async (req, res, next) => {
                     startsAt,
                     endsAt,
                 },
-                select: {
-                    id: true,
-                }
+                include: {
+                    plan: true,
+                    payments: true,
+                    events: true,
+                },
             });
             await tx.subscriptionEvent.create({
                 data: {
@@ -83,6 +85,17 @@ const signUpAdmin = async (req, res, next) => {
                         by: "admin",
                         source: "web",
                         message: "Create free_trial subscription",
+                        subscription: {
+                            planId: subscription.planId,
+                            status: subscription.status,
+                            startsAt: subscription.startsAt,
+                            endsAt: subscription.endsAt,
+                            renewedAt: subscription.renewedAt,
+                            cancelledAt: subscription.cancelledAt,
+                            plan: subscription.plan,
+                            payments: subscription.payments,
+                            events: subscription.events,
+                        }
                     },
                 },
             });

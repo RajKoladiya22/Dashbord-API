@@ -15,5 +15,6 @@ router.delete("/delete/:id/:adminId/:planId", jwt_token_1.authenticateUser, (0, 
 router.patch("/unblock/:id/:adminId/:planId", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("super_admin"), subscription_controller_1.unblockSubscription);
 router.patch("/extend/:id/:adminId/:planId", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("super_admin"), subscription_controller_1.extendSubscription);
 router.patch("/inactive/:id/:adminId/:planId", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("super_admin"), subscription_controller_1.inactiveSubscription);
+router.get("/history", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin"), subscription_controller_1.adminSubscriptionHistory);
 exports.default = router;
 //# sourceMappingURL=subscription.routes.js.map

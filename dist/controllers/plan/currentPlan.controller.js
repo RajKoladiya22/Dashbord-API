@@ -13,7 +13,7 @@ const currentPlan = async (req, res, next) => {
     }
     try {
         const subscriptions = await database_config_1.prisma.subscription.findMany({
-            where: { adminId: user.adminId, status: "active" },
+            where: { adminId: user.adminId, status: { in: ["active", "free_trial"] } },
             include: {
                 plan: {
                     include: {

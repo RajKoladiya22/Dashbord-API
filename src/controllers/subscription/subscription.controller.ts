@@ -79,12 +79,18 @@ export const purchaseSubscription = async (
                 sendErrorResponse(res, 409, `You already have a ${oldWithSamePlan.status} subscription for this plan.`);
                 return;
             }
+            // console.log(oldWithSamePlan);
 
             // Find Subscription
             const existingSubscription = await tx.subscription.findFirst({
                 where: { adminId },
-                select: { id: true, endsAt: true }
+                select: { id: true, endsAt: true, status: true }
             });
+
+            if (existingSubscription && !["active", "free_trial", "pending", "expired"].includes(existingSubscription.status)) {
+                sendErrorResponse(res, 409, `Your old subscription is ${existingSubscription.status} so you can't purchase new subscription.`);
+                return;
+            }
 
             const startDate = existingSubscription?.endsAt && existingSubscription.endsAt > now ? existingSubscription.endsAt : now;
             const endDate = addDays(startDate, Number(plan.duration));
@@ -96,9 +102,8 @@ export const purchaseSubscription = async (
                     data: {
                         planId: plan.id,
                         status: "pending",
-                        startsAt: startDate,
+                        renewedAt: startDate,
                         endsAt: endDate,
-                        renewedAt: now,
                     },
                     select: {
                         id: true,
@@ -172,6 +177,7 @@ export const purchaseSubscription = async (
 
             return subscription;
         });
+        if (!result) return;
 
         // Fetch admin's email after transaction
         const admin = await prisma.admin.findFirst({
@@ -392,7 +398,12 @@ export const approveSubscription = async (
     try {
         const subscription = await prisma.subscription.findFirst({
             where: { id, adminId, planId },
-            include: { admin: true, plan: true },
+            include: {
+                admin: true,
+                plan: true,
+                payments: true,
+                events: true,
+            },
         });
 
         if (!subscription) {
@@ -406,24 +417,40 @@ export const approveSubscription = async (
         }
 
         await prisma.$transaction(async (tx) => {
-            await tx.subscription.update({
+            const approved = await tx.subscription.update({
                 where: { id, adminId, planId },
                 data: {
                     status: "active",
                     startsAt: now,
                     endsAt: addDays(now, Number(subscription.plan.duration)),
                 },
+                include: {
+                    plan: true,
+                    payments: true,
+                    events: true,
+                },
             });
 
             await tx.subscriptionEvent.create({
                 data: {
-                    subscriptionId: subscription.id,
+                    subscriptionId: approved.id,
                     eventType: "subscription_approved",
                     eventAt: now,
                     metadata: {
                         by: "super_admin",
                         source: "web",
                         message: "approve pending subscription",
+                        subscription: {
+                            planId: approved.planId,
+                            status: approved.status,
+                            startsAt: approved.startsAt,
+                            endsAt: approved.endsAt,
+                            renewedAt: approved.renewedAt,
+                            cancelledAt: approved.cancelledAt,
+                            plan: approved.plan,
+                            payments: approved.payments,
+                            events: approved.events,
+                        }
                     },
                 },
             });
@@ -1251,12 +1278,18 @@ export const extendSubscription = async (
             const newEndsAt = addDays(now, Number(freePlan.duration));
 
             const updated = await tx.subscription.update({
-                where: { id, adminId, planId: freePlan.id },
+                where: { id, adminId },
                 data: {
+                    planId: freePlan.id,
                     renewedAt: now,
                     endsAt: newEndsAt,
                     status: "active",
                 },
+                include: {
+                    plan: true,
+                    payments: true,
+                    events: true,
+                }
             });
 
             await tx.subscriptionEvent.create({
@@ -1268,6 +1301,17 @@ export const extendSubscription = async (
                         by: "super_admin",
                         source: "web",
                         message: "extend(active for free plan) expired subscription",
+                        subscription: {
+                            planId: updated.planId,
+                            status: updated.status,
+                            startsAt: updated.startsAt,
+                            endsAt: updated.endsAt,
+                            renewedAt: updated.renewedAt,
+                            cancelledAt: updated.cancelledAt,
+                            plan: updated.plan,
+                            payments: updated.payments,
+                            events: updated.events,
+                        }
                     },
                 },
             });
@@ -1451,3 +1495,100 @@ export const inactiveSubscription = async (
         return;
     }
 };
+
+// Subscription History of Admin
+export const adminSubscriptionHistory = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+    const user = req.user;
+
+    if (!user || user.role !== "admin") {
+        sendErrorResponse(res, 401, "Unauthorized");
+        return;
+    }
+
+    try {
+        // Find the admin's subscription
+        const subscription = await prisma.subscription.findFirst({
+            where: { adminId: user.id },
+            select: { id: true },
+        });
+
+        if (!subscription) {
+            sendErrorResponse(res, 404, "Subscription not found");
+            return;
+        }
+
+        // Fetch event history related to that subscription
+        const events = await prisma.subscriptionEvent.findMany({
+            where: {
+                subscriptionId: subscription.id,
+                eventType: {
+                    in: ["subscription_created", "subscription_approved", "subscription_extended"]
+                }
+            },
+            orderBy: { eventAt: "desc" },
+            select: {
+                id: true,
+                // subscription: {
+                //     select: {
+                //         id: true,
+                //         startsAt: true,
+                //         endsAt: true,
+                //         renewedAt: true,
+                //         cancelledAt: true,
+                //         plan: {
+                //             select: {
+                //                 id: true,
+                //                 name: true,
+                //                 duration: true,
+                //                 price: true,
+                //                 offers: true,
+                //                 specs: true,
+                //                 descriptions: true,
+                //             }
+                //         }
+                //     }
+                // },
+                metadata: true,
+            },
+        });
+
+        if (!events) {
+            sendErrorResponse(res, 404, "Subscription events not found");
+            return;
+        }
+
+        // Safely check if metadata contains subscription object
+        const subscriptions = events
+            .map(event => {
+                const metadata = event.metadata;
+
+                // Ensure metadata is an object and contains the subscription field
+                if (metadata && typeof metadata === "object" && "subscription" in metadata) {
+                    return metadata.subscription;
+                }
+
+                return null;
+            })
+            .filter(Boolean);  // Filter out null values
+
+        if (subscriptions.length === 0) {
+            sendErrorResponse(res, 404, "No valid subscription events found");
+            return;
+        }
+
+        sendSuccessResponse(res, 200, "Admin subscription history fetched", {
+            subscriptions,
+        });
+
+        // sendSuccessResponse(res, 200, "Admin subscription history fetched", {
+        //     subscriptions: events.map(event => event.metadata?.subscription),
+        // });
+    } catch (error) {
+        console.error("Error fetching subscription history:", error);
+        sendErrorResponse(res, 500, "Internal Server Error");
+    }
+}

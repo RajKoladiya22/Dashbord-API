@@ -15,6 +15,7 @@ import {
     unblockSubscription,
     extendSubscription,
     inactiveSubscription,
+    adminSubscriptionHistory,
 } from "../../../controllers/subscription/subscription.controller";
 
 const router = Router();
@@ -34,7 +35,7 @@ router.get(
     listAllSubscriptions
 );
 
-// Purchase and listing
+// handle all actions according to status
 router.patch(
     "/approve/:id/:adminId/:planId",
     authenticateUser,
@@ -96,6 +97,14 @@ router.patch(
     authenticateUser,
     authorizeRoles("super_admin"),
     inactiveSubscription
+);
+
+// Subscription History of Admin
+router.get(
+    "/history",
+    authenticateUser,
+    authorizeRoles("admin"),
+    adminSubscriptionHistory
 );
 
 export default router;
