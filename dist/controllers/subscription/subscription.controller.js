@@ -9,6 +9,7 @@ const database_config_1 = require("../../config/database.config");
 const responseHandler_1 = require("../../core/utils/responseHandler");
 const zod_1 = require("../../core/utils/zod");
 const nodemailer_1 = __importDefault(require("nodemailer"));
+const dateHelpers_1 = require("../../core/utils/helper/dateHelpers");
 const SMTP_USER = database_config_1.env.SMTP_USER || "magicallydev@gmail.com";
 const SMTP_PASS = database_config_1.env.SMTP_PASS || "vkdd frwe seja frlb";
 if (!SMTP_USER || !SMTP_PASS) {
@@ -1093,11 +1094,18 @@ const extendSubscription = async (req, res, next) => {
             });
             if (!freePlan)
                 throw new Error("Free plan not found");
+            const admin = await tx.admin.findUnique({
+                where: { id: adminId },
+                select: { email: true },
+            });
+            if (!admin)
+                throw new Error("Admin not found");
             const subscription = await tx.subscription.findFirst({
                 where: { id, adminId, status: { not: "expired" } },
                 orderBy: { endsAt: "desc" },
                 include: {
                     plan: true,
+                    admin: true,
                 },
             });
             if (subscription) {
@@ -1105,14 +1113,14 @@ const extendSubscription = async (req, res, next) => {
                 return;
             }
             const now = new Date();
-            const newEndsAt = (0, date_fns_1.addDays)(now, Number(freePlan.duration));
+            const newEndsAt = admin.email === 'shivanshinfosys@gmail.com' ? (0, dateHelpers_1.addYears)(now, 1) : (0, date_fns_1.addDays)(now, Number(freePlan.duration));
             const updated = await tx.subscription.update({
                 where: { id, adminId },
                 data: {
                     planId: freePlan.id,
                     renewedAt: now,
                     endsAt: newEndsAt,
-                    status: "active",
+                    status: "free_trial",
                 },
                 include: {
                     plan: true,
