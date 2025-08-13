@@ -3,8 +3,7 @@
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:1234@localhost:5432/cpm_orm"
-  // url      = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
 generator client {
