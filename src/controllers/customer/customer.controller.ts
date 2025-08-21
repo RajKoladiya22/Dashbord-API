@@ -32,7 +32,10 @@ export const createCustomer = async (
     address,
     joiningDate,
     products = [],
+    motherCompanyId,
   } = req.body;
+
+  // console.log(req.body);
 
   // Determine adminId & partnerId based on logged‑in user
   const user = req.user;
@@ -47,6 +50,13 @@ export const createCustomer = async (
   }
 
   try {
+    const checkMother = await prisma.customer.findUnique({ where: { id: motherCompanyId, adminId } });
+    // console.log(checkMother);
+    if (checkMother?.sisterOfId) {
+      sendErrorResponse(res, 400, `You can't take ${checkMother.companyName} as a Mother Company`);
+      return;
+    }
+
     const result = await prisma.$transaction(async (tx) => {
       // 1) Create the customer
       const customer = await tx.customer.create({
@@ -65,6 +75,7 @@ export const createCustomer = async (
           adminCustomFields,
           address,
           joiningDate: parseISO(joiningDate),
+          sisterOfId: motherCompanyId,
         },
       });
       // console.log("customer----->\n", customer);
@@ -133,6 +144,8 @@ export const createCustomer = async (
       return { customer, history };
     });
 
+    // console.log(result)
+
     const sanitized = {
       ...result.customer,
       product: result.history,
@@ -187,15 +200,59 @@ export const listCustomers = async (
   const skip = (page - 1) * limit;
 
   // Search
-  const q = (req.query.q as string)?.trim();
-  const searchFilter = q
+  const customerSearch = (req.query.customerSearchFilter as string)?.trim();
+  // console.log(customerSearch)
+  const partnerSearch = (req.query.partnerSearchFilter as string)?.trim();
+  // console.log(partnerSearch)
+
+  // 1. Customer search filter
+  const customerSearchFilter = customerSearch
     ? {
       OR: [
-        { companyName: { contains: q, mode: "insensitive" } },
-        { contactPerson: { contains: q, mode: "insensitive" } },
-        { mobileNumber: { contains: q, mode: "insensitive" } },
-        { serialNo: { contains: q, mode: "insensitive" } },
+        { companyName: { contains: customerSearch, mode: "insensitive" } },
+        { contactPerson: { contains: customerSearch, mode: "insensitive" } },
+        { mobileNumber: { contains: customerSearch, mode: "insensitive" } },
+        // search in mother company (sisterOf)
+        {
+          sisterOf: {
+            is: {
+              OR: [
+                { companyName: { contains: customerSearch, mode: "insensitive" } },
+                { contactPerson: { contains: customerSearch, mode: "insensitive" } },
+                { mobileNumber: { contains: customerSearch, mode: "insensitive" } },
+                { serialNo: { contains: customerSearch, mode: "insensitive" } },
+              ],
+            },
+          },
+        },
+        // search in sister companies
+        {
+          sisterCompanies: {
+            some: {
+              OR: [
+                { companyName: { contains: customerSearch, mode: "insensitive" } },
+                { contactPerson: { contains: customerSearch, mode: "insensitive" } },
+                { mobileNumber: { contains: customerSearch, mode: "insensitive" } },
+                { serialNo: { contains: customerSearch, mode: "insensitive" } },
+              ],
+            },
+          },
+        },
       ],
+    }
+    : {};
+
+  // 2. Partner search filter
+  const partnerSearchFilter = partnerSearch
+    ? {
+      partner: {
+        is: {
+          OR: [
+            { firstName: { contains: partnerSearch, mode: "insensitive" } },
+            { lastName: { contains: partnerSearch, mode: "insensitive" } },
+          ],
+        },
+      },
     }
     : {};
 
@@ -226,7 +283,7 @@ export const listCustomers = async (
   }
 
   // Base filter by role
-  const baseFilter: any = { ...searchFilter, ...statusFilter };
+  const baseFilter: any = { ...customerSearchFilter, ...partnerSearchFilter, ...statusFilter };
   switch (user.role) {
     case "admin":
     case "super_admin":
@@ -288,11 +345,97 @@ export const listCustomers = async (
               },
             },
           },
+          sisterCompanies: {
+            include: {
+              partner: {
+                select: {
+                  id: true,
+                  firstName: true,
+                  lastName: true,
+                  companyName: true,
+                  contactInfo: true,
+                  email: true,
+                  address: true,
+                  status: true,
+                },
+              },
+              history: {
+                // take: 1,
+                include: {
+                  product: {
+                    select: {
+                      id: true,
+                      productName: true,
+                      productPrice: true,
+                      status: true,
+                    },
+                  },
+                  renewals: {
+                    select: {
+                      id: true,
+                      purchaseDate: true,
+                      renewalDate: true,
+                      expiryDate: true,
+                    },
+                    orderBy: { purchaseDate: "desc" },
+                  },
+                },
+              },
+            },
+          },
+          sisterOf: {
+            include: {
+              partner: {
+                select: {
+                  id: true,
+                  firstName: true,
+                  lastName: true,
+                  companyName: true,
+                  contactInfo: true,
+                  email: true,
+                  address: true,
+                  status: true,
+                },
+              },
+              history: {
+                // take: 1,
+                include: {
+                  product: {
+                    select: {
+                      id: true,
+                      productName: true,
+                      productPrice: true,
+                      status: true,
+                    },
+                  },
+                  renewals: {
+                    select: {
+                      id: true,
+                      purchaseDate: true,
+                      renewalDate: true,
+                      expiryDate: true,
+                    },
+                    orderBy: { purchaseDate: "desc" },
+                  },
+                },
+              },
+            }
+          }
         },
       }),
     ]);
 
-    const sanitized = customers.map((cust) => ({
+    // console.log(customers)
+
+    // customers.map((c) => {
+    //   console.log(c.sisterCompanies)
+    // })
+
+    // customers.map((c) => {
+    //   console.log(c.sisterOf)
+    // })
+
+    const responseCust = (cust) => ({
       id: cust.id,
       companyName: cust.companyName,
       contactPerson: cust.contactPerson,
@@ -320,7 +463,13 @@ export const listCustomers = async (
         detail: h.detail,
         status: h.status,
         history: h.renewals ?? null,
-      })),
+      }))
+    })
+
+    const sanitized = customers.map((cust) => ({
+      ...responseCust(cust),
+      sisterCompanies: cust.sisterCompanies?.map((sc) => responseCust(sc)),
+      sisterOf: cust.sisterOf && responseCust(cust.sisterOf),
     }));
 
     // 6) Return paginated response
@@ -380,6 +529,13 @@ export const updateCustomer = async (
   }
 
   try {
+    const checkMother = customerData.motherCompanyId && await prisma.customer.findUnique({ where: { id: customerData.motherCompanyId, adminId } });
+    // console.log(checkMother);
+    if (checkMother && checkMother?.sisterOfId) {
+      sendErrorResponse(res, 400, `You can't take ${checkMother.companyName} as a Mother Company`);
+      return;
+    }
+
     const result = await prisma.$transaction(async (tx) => {
       // 4) Update only the customer record
       const updatedCustomer = await tx.customer.update({
@@ -427,6 +583,9 @@ export const updateCustomer = async (
           ...(customerData.joiningDate !== undefined && {
             joiningDate: new Date(customerData.joiningDate),
           }),
+          ...(customerData.motherCompanyId !== undefined && {
+            sisterOfId: customerData.motherCompanyId
+          })
         },
         include: {
           partner: {
@@ -463,6 +622,8 @@ export const updateCustomer = async (
               },
             },
           },
+          sisterCompanies: true,
+          sisterOf: true,
         },
       });
       // if (updatedCustomer.count === 0) throw new Error("Not found or unauthorized");

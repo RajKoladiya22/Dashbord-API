@@ -110,6 +110,7 @@ exports.updateCustomerSchema = zod_1.z.object({
             .optional(),
     }))
         .optional(),
+    motherCompanyId: zod_1.z.string().uuid().nullable().optional(),
 });
 exports.updateHistorySchema = zod_1.z.object({
     purchaseDate: zod_1.z.string().optional(),

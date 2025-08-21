@@ -3,8 +3,8 @@
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:1234@localhost:5432/cpm_orm"
-  // url      = env("DATABASE_URL")
+  // url      = "postgresql://postgres:1234@localhost:5432/cpm_orm"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
@@ -371,6 +371,7 @@ model Customer {
   remark            String?
   adminCustomFields Json?
   address           Json?
+  sisterOfId        String? @db.Uuid
 
   joiningDate  DateTime @map("joining_date")
   hasReference Boolean  @default(false) @map("has_reference")
@@ -382,6 +383,11 @@ model Customer {
   admin   Admin?                   @relation(fields: [adminId], references: [id], onDelete: Cascade)
   partner Partner?                 @relation("PartnerCustomers", fields: [partnerId], references: [id])
   history CustomerProductHistory[]
+
+  // mother company
+  sisterOf        Customer?  @relation("SisterRelation", fields: [sisterOfId], references: [id])
+  // One-to-many relation (all children / sister companies)
+  sisterCompanies Customer[] @relation("SisterRelation")
 
   @@index([adminId])
   @@index([partnerId])

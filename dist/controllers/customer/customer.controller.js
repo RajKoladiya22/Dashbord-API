@@ -8,7 +8,7 @@ const zod_1 = require("../../core/utils/zod");
 const client_1 = require("@prisma/client");
 const dateHelpers_1 = require("../../core/utils/helper/dateHelpers");
 const createCustomer = async (req, res, next) => {
-    let { companyName, contactPerson, mobileNumber, email, serialNo, prime = false, blacklisted = false, remark, hasReference = false, partnerId: incomingPartnerId, adminCustomFields, address, joiningDate, products = [], } = req.body;
+    let { companyName, contactPerson, mobileNumber, email, serialNo, prime = false, blacklisted = false, remark, hasReference = false, partnerId: incomingPartnerId, adminCustomFields, address, joiningDate, products = [], motherCompanyId, } = req.body;
     const user = req.user;
     if (!user) {
         (0, responseHandler_1.sendErrorResponse)(res, 401, "Unauthorized");
@@ -20,6 +20,11 @@ const createCustomer = async (req, res, next) => {
         hasReference = true;
     }
     try {
+        const checkMother = await database_config_1.prisma.customer.findUnique({ where: { id: motherCompanyId, adminId } });
+        if (checkMother === null || checkMother === void 0 ? void 0 : checkMother.sisterOfId) {
+            (0, responseHandler_1.sendErrorResponse)(res, 400, `You can't take ${checkMother.companyName} as a Mother Company`);
+            return;
+        }
         const result = await database_config_1.prisma.$transaction(async (tx) => {
             const customer = await tx.customer.create({
                 data: {
@@ -37,6 +42,7 @@ const createCustomer = async (req, res, next) => {
                     adminCustomFields,
                     address,
                     joiningDate: (0, date_fns_1.parseISO)(joiningDate),
+                    sisterOfId: motherCompanyId,
                 },
             });
             let history = [];
@@ -122,7 +128,7 @@ const createCustomer = async (req, res, next) => {
 };
 exports.createCustomer = createCustomer;
 const listCustomers = async (req, res, next) => {
-    var _a, _b;
+    var _a, _b, _c;
     const user = req.user;
     if (!user) {
         (0, responseHandler_1.sendErrorResponse)(res, 401, "Unauthorized");
@@ -131,15 +137,51 @@ const listCustomers = async (req, res, next) => {
     const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
     const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 10, 1), 100);
     const skip = (page - 1) * limit;
-    const q = (_a = req.query.q) === null || _a === void 0 ? void 0 : _a.trim();
-    const searchFilter = q
+    const customerSearch = (_a = req.query.customerSearchFilter) === null || _a === void 0 ? void 0 : _a.trim();
+    const partnerSearch = (_b = req.query.partnerSearchFilter) === null || _b === void 0 ? void 0 : _b.trim();
+    const customerSearchFilter = customerSearch
         ? {
             OR: [
-                { companyName: { contains: q, mode: "insensitive" } },
-                { contactPerson: { contains: q, mode: "insensitive" } },
-                { mobileNumber: { contains: q, mode: "insensitive" } },
-                { serialNo: { contains: q, mode: "insensitive" } },
+                { companyName: { contains: customerSearch, mode: "insensitive" } },
+                { contactPerson: { contains: customerSearch, mode: "insensitive" } },
+                { mobileNumber: { contains: customerSearch, mode: "insensitive" } },
+                {
+                    sisterOf: {
+                        is: {
+                            OR: [
+                                { companyName: { contains: customerSearch, mode: "insensitive" } },
+                                { contactPerson: { contains: customerSearch, mode: "insensitive" } },
+                                { mobileNumber: { contains: customerSearch, mode: "insensitive" } },
+                                { serialNo: { contains: customerSearch, mode: "insensitive" } },
+                            ],
+                        },
+                    },
+                },
+                {
+                    sisterCompanies: {
+                        some: {
+                            OR: [
+                                { companyName: { contains: customerSearch, mode: "insensitive" } },
+                                { contactPerson: { contains: customerSearch, mode: "insensitive" } },
+                                { mobileNumber: { contains: customerSearch, mode: "insensitive" } },
+                                { serialNo: { contains: customerSearch, mode: "insensitive" } },
+                            ],
+                        },
+                    },
+                },
             ],
+        }
+        : {};
+    const partnerSearchFilter = partnerSearch
+        ? {
+            partner: {
+                is: {
+                    OR: [
+                        { firstName: { contains: partnerSearch, mode: "insensitive" } },
+                        { lastName: { contains: partnerSearch, mode: "insensitive" } },
+                    ],
+                },
+            },
         }
         : {};
     const allowedSortFields = [
@@ -149,7 +191,7 @@ const listCustomers = async (req, res, next) => {
         "serialNo",
     ];
     const sortBy = req.query.sortBy || "companyName";
-    const sortOrder = ((_b = req.query.sortOrder) === null || _b === void 0 ? void 0 : _b.toLowerCase()) === "desc" ? "desc" : "asc";
+    const sortOrder = ((_c = req.query.sortOrder) === null || _c === void 0 ? void 0 : _c.toLowerCase()) === "desc" ? "desc" : "asc";
     if (!allowedSortFields.includes(sortBy)) {
         (0, responseHandler_1.sendErrorResponse)(res, 400, `Invalid sortBy. Must be one of: ${allowedSortFields.join(", ")}`);
         return;
@@ -158,7 +200,7 @@ const listCustomers = async (req, res, next) => {
     if (req.query.status === "false") {
         statusFilter.status = false;
     }
-    const baseFilter = { ...searchFilter, ...statusFilter };
+    const baseFilter = { ...customerSearchFilter, ...partnerSearchFilter, ...statusFilter };
     switch (user.role) {
         case "admin":
         case "super_admin":
@@ -218,10 +260,84 @@ const listCustomers = async (req, res, next) => {
                             },
                         },
                     },
+                    sisterCompanies: {
+                        include: {
+                            partner: {
+                                select: {
+                                    id: true,
+                                    firstName: true,
+                                    lastName: true,
+                                    companyName: true,
+                                    contactInfo: true,
+                                    email: true,
+                                    address: true,
+                                    status: true,
+                                },
+                            },
+                            history: {
+                                include: {
+                                    product: {
+                                        select: {
+                                            id: true,
+                                            productName: true,
+                                            productPrice: true,
+                                            status: true,
+                                        },
+                                    },
+                                    renewals: {
+                                        select: {
+                                            id: true,
+                                            purchaseDate: true,
+                                            renewalDate: true,
+                                            expiryDate: true,
+                                        },
+                                        orderBy: { purchaseDate: "desc" },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    sisterOf: {
+                        include: {
+                            partner: {
+                                select: {
+                                    id: true,
+                                    firstName: true,
+                                    lastName: true,
+                                    companyName: true,
+                                    contactInfo: true,
+                                    email: true,
+                                    address: true,
+                                    status: true,
+                                },
+                            },
+                            history: {
+                                include: {
+                                    product: {
+                                        select: {
+                                            id: true,
+                                            productName: true,
+                                            productPrice: true,
+                                            status: true,
+                                        },
+                                    },
+                                    renewals: {
+                                        select: {
+                                            id: true,
+                                            purchaseDate: true,
+                                            renewalDate: true,
+                                            expiryDate: true,
+                                        },
+                                        orderBy: { purchaseDate: "desc" },
+                                    },
+                                },
+                            },
+                        }
+                    }
                 },
             }),
         ]);
-        const sanitized = customers.map((cust) => ({
+        const responseCust = (cust) => ({
             id: cust.id,
             companyName: cust.companyName,
             contactPerson: cust.contactPerson,
@@ -252,8 +368,16 @@ const listCustomers = async (req, res, next) => {
                     status: h.status,
                     history: (_a = h.renewals) !== null && _a !== void 0 ? _a : null,
                 });
-            }),
-        }));
+            })
+        });
+        const sanitized = customers.map((cust) => {
+            var _a;
+            return ({
+                ...responseCust(cust),
+                sisterCompanies: (_a = cust.sisterCompanies) === null || _a === void 0 ? void 0 : _a.map((sc) => responseCust(sc)),
+                sisterOf: cust.sisterOf && responseCust(cust.sisterOf),
+            });
+        });
         (0, responseHandler_1.sendSuccessResponse)(res, 200, "Customers fetched", {
             customers: sanitized,
             meta: {
@@ -294,6 +418,11 @@ const updateCustomer = async (req, res, next) => {
         return;
     }
     try {
+        const checkMother = customerData.motherCompanyId && await database_config_1.prisma.customer.findUnique({ where: { id: customerData.motherCompanyId, adminId } });
+        if (checkMother && (checkMother === null || checkMother === void 0 ? void 0 : checkMother.sisterOfId)) {
+            (0, responseHandler_1.sendErrorResponse)(res, 400, `You can't take ${checkMother.companyName} as a Mother Company`);
+            return;
+        }
         const result = await database_config_1.prisma.$transaction(async (tx) => {
             const updatedCustomer = await tx.customer.update({
                 where: {
@@ -340,6 +469,9 @@ const updateCustomer = async (req, res, next) => {
                     ...(customerData.joiningDate !== undefined && {
                         joiningDate: new Date(customerData.joiningDate),
                     }),
+                    ...(customerData.motherCompanyId !== undefined && {
+                        sisterOfId: customerData.motherCompanyId
+                    })
                 },
                 include: {
                     partner: {
@@ -375,6 +507,8 @@ const updateCustomer = async (req, res, next) => {
                             },
                         },
                     },
+                    sisterCompanies: true,
+                    sisterOf: true,
                 },
             });
             let createdHistory = [];

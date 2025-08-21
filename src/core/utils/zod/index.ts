@@ -134,6 +134,7 @@ export const updateCustomerSchema = z.object({
       })
     )
     .optional(),
+  motherCompanyId: z.string().uuid().nullable().optional(),
 });
 export type UpdateCustomerBody = z.infer<typeof updateCustomerSchema>;
 
