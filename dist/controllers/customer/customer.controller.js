@@ -145,7 +145,30 @@ const listCustomers = async (req, res, next) => {
                 { companyName: { contains: customerSearch, mode: "insensitive" } },
                 { contactPerson: { contains: customerSearch, mode: "insensitive" } },
                 { mobileNumber: { contains: customerSearch, mode: "insensitive" } },
-                { serialNo: { contains: customerSearch, mode: "insensitive" } },
+                {
+                    sisterOf: {
+                        is: {
+                            OR: [
+                                { companyName: { contains: customerSearch, mode: "insensitive" } },
+                                { contactPerson: { contains: customerSearch, mode: "insensitive" } },
+                                { mobileNumber: { contains: customerSearch, mode: "insensitive" } },
+                                { serialNo: { contains: customerSearch, mode: "insensitive" } },
+                            ],
+                        },
+                    },
+                },
+                {
+                    sisterCompanies: {
+                        some: {
+                            OR: [
+                                { companyName: { contains: customerSearch, mode: "insensitive" } },
+                                { contactPerson: { contains: customerSearch, mode: "insensitive" } },
+                                { mobileNumber: { contains: customerSearch, mode: "insensitive" } },
+                                { serialNo: { contains: customerSearch, mode: "insensitive" } },
+                            ],
+                        },
+                    },
+                },
             ],
         }
         : {};

@@ -212,7 +212,32 @@ export const listCustomers = async (
         { companyName: { contains: customerSearch, mode: "insensitive" } },
         { contactPerson: { contains: customerSearch, mode: "insensitive" } },
         { mobileNumber: { contains: customerSearch, mode: "insensitive" } },
-        { serialNo: { contains: customerSearch, mode: "insensitive" } },
+        // search in mother company (sisterOf)
+        {
+          sisterOf: {
+            is: {
+              OR: [
+                { companyName: { contains: customerSearch, mode: "insensitive" } },
+                { contactPerson: { contains: customerSearch, mode: "insensitive" } },
+                { mobileNumber: { contains: customerSearch, mode: "insensitive" } },
+                { serialNo: { contains: customerSearch, mode: "insensitive" } },
+              ],
+            },
+          },
+        },
+        // search in sister companies
+        {
+          sisterCompanies: {
+            some: {
+              OR: [
+                { companyName: { contains: customerSearch, mode: "insensitive" } },
+                { contactPerson: { contains: customerSearch, mode: "insensitive" } },
+                { mobileNumber: { contains: customerSearch, mode: "insensitive" } },
+                { serialNo: { contains: customerSearch, mode: "insensitive" } },
+              ],
+            },
+          },
+        },
       ],
     }
     : {};
