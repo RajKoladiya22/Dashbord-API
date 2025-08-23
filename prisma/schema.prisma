@@ -363,11 +363,12 @@ model Customer {
   adminId           String? @db.Uuid
   companyName       String  @map("company_name")
   contactPerson     String  @map("contact_person")
-  mobileNumber      String  @unique @map("mobile_number")
-  email             String  @unique
-  serialNo          String  @map("serial_no")
+  mobileNumber      String  @map("mobile_number")
+  email             String?
+  serialNo          String? @map("serial_no")
   prime             Boolean @default(false)
   blacklisted       Boolean @default(false)
+  connector         Boolean @default(false)
   remark            String?
   adminCustomFields Json?
   address           Json?

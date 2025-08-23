@@ -108,10 +108,17 @@ export const updateCustomerSchema = z.object({
   companyName: z.string().optional(),
   contactPerson: z.string().optional(),
   mobileNumber: z.string().optional(),
-  email: z.string().email().optional(),
-  serialNo: z.string().optional(),
+  email: z
+    .union([
+      z.string().email(),
+      z.literal(""),
+      z.null(),
+    ])
+    .optional(),
+  serialNo: z.string().nullable().optional(),
   prime: z.boolean().optional(),
   blacklisted: z.boolean().optional(),
+  connector: z.boolean().optional(),
   remark: z.string().optional(),
   hasReference: z.boolean().optional(),
   partnerId: z.string().uuid().nullable().optional(),

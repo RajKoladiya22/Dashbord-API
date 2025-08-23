@@ -203,6 +203,8 @@ export const bulkCreateCustomers = async (
   try {
     const customers = req.body;
 
+    console.log("customers ---> ", customers);
+
     const user = req.user;
     if (!user) {
       sendErrorResponse(res, 401, "Unauthorized");

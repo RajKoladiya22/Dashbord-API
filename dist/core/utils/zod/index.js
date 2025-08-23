@@ -87,10 +87,17 @@ exports.updateCustomerSchema = zod_1.z.object({
     companyName: zod_1.z.string().optional(),
     contactPerson: zod_1.z.string().optional(),
     mobileNumber: zod_1.z.string().optional(),
-    email: zod_1.z.string().email().optional(),
-    serialNo: zod_1.z.string().optional(),
+    email: zod_1.z
+        .union([
+        zod_1.z.string().email(),
+        zod_1.z.literal(""),
+        zod_1.z.null(),
+    ])
+        .optional(),
+    serialNo: zod_1.z.string().nullable().optional(),
     prime: zod_1.z.boolean().optional(),
     blacklisted: zod_1.z.boolean().optional(),
+    connector: zod_1.z.boolean().optional(),
     remark: zod_1.z.string().optional(),
     hasReference: zod_1.z.boolean().optional(),
     partnerId: zod_1.z.string().uuid().nullable().optional(),
