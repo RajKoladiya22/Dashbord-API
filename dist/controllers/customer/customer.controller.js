@@ -8,7 +8,7 @@ const zod_1 = require("../../core/utils/zod");
 const client_1 = require("@prisma/client");
 const dateHelpers_1 = require("../../core/utils/helper/dateHelpers");
 const createCustomer = async (req, res, next) => {
-    let { companyName, contactPerson, mobileNumber, email, serialNo, prime = false, blacklisted = false, remark, hasReference = false, partnerId: incomingPartnerId, adminCustomFields, address, joiningDate, products = [], motherCompanyId, } = req.body;
+    let { companyName, contactPerson, mobileNumber, email, serialNo, prime = false, blacklisted = false, connector = false, remark, hasReference = false, partnerId: incomingPartnerId, adminCustomFields, address, joiningDate, products = [], motherCompanyId, } = req.body;
     const user = req.user;
     if (!user) {
         (0, responseHandler_1.sendErrorResponse)(res, 401, "Unauthorized");
@@ -20,10 +20,29 @@ const createCustomer = async (req, res, next) => {
         hasReference = true;
     }
     try {
-        const checkMother = await database_config_1.prisma.customer.findUnique({ where: { id: motherCompanyId, adminId } });
+        const checkMother = motherCompanyId && await database_config_1.prisma.customer.findUnique({ where: { id: motherCompanyId, adminId } });
         if (checkMother === null || checkMother === void 0 ? void 0 : checkMother.sisterOfId) {
             (0, responseHandler_1.sendErrorResponse)(res, 400, `You can't take ${checkMother.companyName} as a Mother Company`);
             return;
+        }
+        if (!motherCompanyId && !checkMother) {
+            const findByMobile = await database_config_1.prisma.customer.findFirst({
+                where: { mobileNumber, adminId }
+            });
+            if (findByMobile) {
+                (0, responseHandler_1.sendErrorResponse)(res, 400, "Mobile number already in use");
+                return;
+            }
+        }
+        else if (motherCompanyId && checkMother) {
+            const findByMobile = await database_config_1.prisma.customer.findMany({ where: { mobileNumber, adminId }, include: { sisterCompanies: true } });
+            if (findByMobile.length > 0) {
+                const isMother = findByMobile.find((c) => c.id === motherCompanyId);
+                if (!isMother) {
+                    (0, responseHandler_1.sendErrorResponse)(res, 400, "Mobile number already in use");
+                    return;
+                }
+            }
         }
         const result = await database_config_1.prisma.$transaction(async (tx) => {
             const customer = await tx.customer.create({
@@ -37,6 +56,7 @@ const createCustomer = async (req, res, next) => {
                     serialNo,
                     prime,
                     blacklisted,
+                    connector,
                     remark,
                     hasReference,
                     adminCustomFields,
@@ -45,6 +65,7 @@ const createCustomer = async (req, res, next) => {
                     sisterOfId: motherCompanyId,
                 },
             });
+            console.log("customer----->\n", customer);
             let history = [];
             const now = new Date();
             if (products) {
@@ -109,11 +130,6 @@ const createCustomer = async (req, res, next) => {
         return;
     }
     catch (err) {
-        if (err instanceof client_1.Prisma.PrismaClientKnownRequestError &&
-            err.code === "P2002") {
-            (0, responseHandler_1.sendErrorResponse)(res, 409, "Mobile number or email already in use");
-            return;
-        }
         if (err instanceof client_1.Prisma.PrismaClientKnownRequestError &&
             err.code === "P2003") {
             (0, responseHandler_1.sendErrorResponse)(res, 400, "Invalid partnerId");
@@ -346,6 +362,7 @@ const listCustomers = async (req, res, next) => {
             serialNo: cust.serialNo,
             prime: cust.prime,
             blacklisted: cust.blacklisted,
+            connector: cust.connector,
             remark: cust.remark,
             address: cust.address,
             adminCustomFields: cust.adminCustomFields,
@@ -423,6 +440,25 @@ const updateCustomer = async (req, res, next) => {
             (0, responseHandler_1.sendErrorResponse)(res, 400, `You can't take ${checkMother.companyName} as a Mother Company`);
             return;
         }
+        if (!customerData.motherCompanyId && !checkMother) {
+            const findByMobile = await database_config_1.prisma.customer.findFirst({
+                where: { mobileNumber: customerData.mobileNumber, adminId }
+            });
+            if (findByMobile) {
+                (0, responseHandler_1.sendErrorResponse)(res, 400, "Mobile number already in use");
+                return;
+            }
+        }
+        else if (customerData.motherCompanyId && checkMother) {
+            const findByMobile = await database_config_1.prisma.customer.findMany({ where: { mobileNumber: customerData.mobileNumber, adminId, NOT: { id: customerId } }, include: { sisterCompanies: true } });
+            if (findByMobile.length > 0) {
+                const isMother = findByMobile.find((c) => c.id === customerData.motherCompanyId);
+                if (!isMother) {
+                    (0, responseHandler_1.sendErrorResponse)(res, 400, "Mobile number already in use");
+                    return;
+                }
+            }
+        }
         const result = await database_config_1.prisma.$transaction(async (tx) => {
             const updatedCustomer = await tx.customer.update({
                 where: {
@@ -450,6 +486,9 @@ const updateCustomer = async (req, res, next) => {
                     }),
                     ...(customerData.blacklisted !== undefined && {
                         blacklisted: customerData.blacklisted,
+                    }),
+                    ...(customerData.connector !== undefined && {
+                        connector: customerData.connector,
                     }),
                     ...(customerData.remark !== undefined && {
                         remark: customerData.remark,

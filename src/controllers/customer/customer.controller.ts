@@ -25,6 +25,7 @@ export const createCustomer = async (
     serialNo,
     prime = false,
     blacklisted = false,
+    connector = false,
     remark,
     hasReference = false,
     partnerId: incomingPartnerId,
@@ -50,11 +51,49 @@ export const createCustomer = async (
   }
 
   try {
-    const checkMother = await prisma.customer.findUnique({ where: { id: motherCompanyId, adminId } });
+    const checkMother = motherCompanyId && await prisma.customer.findUnique({ where: { id: motherCompanyId, adminId } });
     // console.log(checkMother);
     if (checkMother?.sisterOfId) {
       sendErrorResponse(res, 400, `You can't take ${checkMother.companyName} as a Mother Company`);
       return;
+    }
+
+    if (!motherCompanyId && !checkMother) {
+      const findByMobile = await prisma.customer.findFirst({
+        where: { mobileNumber, adminId }
+      });
+      // console.log("findByMobile ---> ", findByMobile);
+
+      if (findByMobile) {
+        sendErrorResponse(res, 400, "Mobile number already in use");
+        return;
+      }
+    } else if (motherCompanyId && checkMother) {
+      // console.log("motherCompanyId ---> ", motherCompanyId);
+      // console.log("checkMother ---> ", checkMother);
+
+      const findByMobile = await prisma.customer.findMany({ where: { mobileNumber, adminId }, include: { sisterCompanies: true } });
+      // console.log("findByMobile ---> ", findByMobile);
+
+      if (findByMobile.length > 0) {
+        // console.log("findByMobile.length ---> ", findByMobile.length);
+
+        const isMother = findByMobile.find((c) => c.id === motherCompanyId);
+        // console.log("isMother ---> ", isMother);
+
+        if (!isMother) {
+          // console.log("isMother ---> ", false);
+          sendErrorResponse(res, 400, "Mobile number already in use");
+          return;
+        }
+        // else if (isMother) {
+        //   console.log("isMother ---> ", true);
+        //   if (isMother.sisterCompanies.length !== findByMobile.length - 1) {
+        //     sendErrorResponse(res, 400, "Mobile number already in use");
+        //     return;
+        //   }
+        // }
+      }
     }
 
     const result = await prisma.$transaction(async (tx) => {
@@ -70,6 +109,7 @@ export const createCustomer = async (
           serialNo,
           prime,
           blacklisted,
+          connector,
           remark,
           hasReference,
           adminCustomFields,
@@ -78,7 +118,7 @@ export const createCustomer = async (
           sisterOfId: motherCompanyId,
         },
       });
-      // console.log("customer----->\n", customer);
+      console.log("customer----->\n", customer);
 
       // 2) Create history entries for each product
       let history: Array<any> = [];
@@ -158,13 +198,13 @@ export const createCustomer = async (
     return;
   } catch (err: any) {
     // Unique violation on mobile/email
-    if (
-      err instanceof Prisma.PrismaClientKnownRequestError &&
-      err.code === "P2002"
-    ) {
-      sendErrorResponse(res, 409, "Mobile number or email already in use");
-      return;
-    }
+    // if (
+    //   err instanceof Prisma.PrismaClientKnownRequestError &&
+    //   err.code === "P2002"
+    // ) {
+    //   sendErrorResponse(res, 409, "Mobile number or email already in use");
+    //   return;
+    // }
     // Foreign key violation on partnerId
     if (
       err instanceof Prisma.PrismaClientKnownRequestError &&
@@ -444,6 +484,7 @@ export const listCustomers = async (
       serialNo: cust.serialNo,
       prime: cust.prime,
       blacklisted: cust.blacklisted,
+      connector: cust.connector,
       remark: cust.remark,
       address: cust.address,
       adminCustomFields: cust.adminCustomFields,
@@ -495,10 +536,13 @@ export const updateCustomer = async (
 ): Promise<void> => {
   const customerId = req.params.id;
 
+  // console.log("req.body ---> ", req.body);
+
   // 2) Validate request body
   const parsed = updateCustomerSchema.safeParse(req.body);
   // console.log("customerId---->", customerId);
-  // console.log("parsed---->", parsed.error);
+  // console.log("parsed.error---->", parsed.error);
+  // console.log("parsed.data---->", parsed.data);
 
   if (!parsed.success) {
     console.error("Validation failed with errors: ", parsed.error.errors);
@@ -536,6 +580,44 @@ export const updateCustomer = async (
       return;
     }
 
+    if (!customerData.motherCompanyId && !checkMother) {
+      const findByMobile = await prisma.customer.findFirst({
+        where: { mobileNumber: customerData.mobileNumber, adminId }
+      });
+      // console.log("findByMobile ---> ", findByMobile);
+
+      if (findByMobile) {
+        sendErrorResponse(res, 400, "Mobile number already in use");
+        return;
+      }
+    } else if (customerData.motherCompanyId && checkMother) {
+      // console.log("customerData.motherCompanyId ---> ", customerData.motherCompanyId);
+      // console.log("checkMother ---> ", checkMother);
+
+      const findByMobile = await prisma.customer.findMany({ where: { mobileNumber: customerData.mobileNumber, adminId, NOT: { id: customerId } }, include: { sisterCompanies: true } });
+      // console.log("findByMobile ---> ", findByMobile);
+
+      if (findByMobile.length > 0) {
+        // console.log("findByMobile.length ---> ", findByMobile.length);
+
+        const isMother = findByMobile.find((c) => c.id === customerData.motherCompanyId);
+        // console.log("isMother ---> ", isMother);
+
+        if (!isMother) {
+          // console.log("isMother ---> ", false);
+          sendErrorResponse(res, 400, "Mobile number already in use");
+          return;
+        }
+        // else if (isMother) {
+        //   console.log("isMother ---> ", true);
+        //   if (isMother.sisterCompanies.length !== findByMobile.length - 1) {
+        //     sendErrorResponse(res, 400, "Mobile number already in use");
+        //     return;
+        //   }
+        // }
+      }
+    }
+
     const result = await prisma.$transaction(async (tx) => {
       // 4) Update only the customer record
       const updatedCustomer = await tx.customer.update({
@@ -564,6 +646,9 @@ export const updateCustomer = async (
           }),
           ...(customerData.blacklisted !== undefined && {
             blacklisted: customerData.blacklisted,
+          }),
+          ...(customerData.connector !== undefined && {
+            connector: customerData.connector,
           }),
           ...(customerData.remark !== undefined && {
             remark: customerData.remark,

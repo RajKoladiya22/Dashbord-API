@@ -148,6 +148,7 @@ exports.bulkVerifyCustomers = bulkVerifyCustomers;
 const bulkCreateCustomers = async (req, res, next) => {
     try {
         const customers = req.body;
+        console.log("customers ---> ", customers);
         const user = req.user;
         if (!user) {
             (0, responseHandler_1.sendErrorResponse)(res, 401, "Unauthorized");
