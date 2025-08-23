@@ -205,9 +205,11 @@ const listCustomers = async (req, res, next) => {
         "contactPerson",
         "mobileNumber",
         "serialNo",
+        "updatedAt",
     ];
-    const sortBy = req.query.sortBy || "companyName";
-    const sortOrder = ((_c = req.query.sortOrder) === null || _c === void 0 ? void 0 : _c.toLowerCase()) === "desc" ? "desc" : "asc";
+    const sortBy = req.query.sortBy || "updatedAt";
+    const sortOrder = ((_c = req.query.sortOrder) === null || _c === void 0 ? void 0 : _c.toLowerCase()) === "asc" ? "asc" : "desc";
+    console.log("sortOrder --> ", sortOrder);
     if (!allowedSortFields.includes(sortBy)) {
         (0, responseHandler_1.sendErrorResponse)(res, 400, `Invalid sortBy. Must be one of: ${allowedSortFields.join(", ")}`);
         return;
@@ -441,12 +443,17 @@ const updateCustomer = async (req, res, next) => {
             return;
         }
         if (!customerData.motherCompanyId && !checkMother) {
-            const findByMobile = await database_config_1.prisma.customer.findFirst({
-                where: { mobileNumber: customerData.mobileNumber, adminId }
+            const findByMobile = await database_config_1.prisma.customer.findMany({
+                where: { mobileNumber: customerData.mobileNumber, adminId, NOT: { id: customerId } }
             });
-            if (findByMobile) {
-                (0, responseHandler_1.sendErrorResponse)(res, 400, "Mobile number already in use");
-                return;
+            if (findByMobile.length) {
+                const isConflict = findByMobile.some((c) => {
+                    return c.sisterOfId !== customerId && c.id !== customerId;
+                });
+                if (isConflict) {
+                    (0, responseHandler_1.sendErrorResponse)(res, 400, "Mobile number already in use");
+                    return;
+                }
             }
         }
         else if (customerData.motherCompanyId && checkMother) {
