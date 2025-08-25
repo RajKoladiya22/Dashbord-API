@@ -144,7 +144,7 @@ const createCustomer = async (req, res, next) => {
 };
 exports.createCustomer = createCustomer;
 const listCustomers = async (req, res, next) => {
-    var _a, _b, _c;
+    var _a, _b, _c, _d, _e;
     const user = req.user;
     if (!user) {
         (0, responseHandler_1.sendErrorResponse)(res, 401, "Unauthorized");
@@ -209,7 +209,6 @@ const listCustomers = async (req, res, next) => {
     ];
     const sortBy = req.query.sortBy || "updatedAt";
     const sortOrder = ((_c = req.query.sortOrder) === null || _c === void 0 ? void 0 : _c.toLowerCase()) === "asc" ? "asc" : "desc";
-    console.log("sortOrder --> ", sortOrder);
     if (!allowedSortFields.includes(sortBy)) {
         (0, responseHandler_1.sendErrorResponse)(res, 400, `Invalid sortBy. Must be one of: ${allowedSortFields.join(", ")}`);
         return;
@@ -217,6 +216,35 @@ const listCustomers = async (req, res, next) => {
     let statusFilter = { status: true };
     if (req.query.status === "false") {
         statusFilter.status = false;
+    }
+    const category = ((_d = req.query.category) === null || _d === void 0 ? void 0 : _d.trim()) || "all";
+    const filterStatus = ((_e = req.query.filterStatus) === null || _e === void 0 ? void 0 : _e.trim()) || "all";
+    switch (category) {
+        case "withPartner":
+            statusFilter.partnerId = { not: null };
+            statusFilter.hasReference = true;
+            break;
+        case "withoutPartner":
+            statusFilter.partnerId = null;
+            statusFilter.hasReference = false;
+            break;
+        case "all":
+        default:
+            break;
+    }
+    switch (filterStatus) {
+        case "prime":
+            statusFilter.prime = true;
+            break;
+        case "blacklisted":
+            statusFilter.blacklisted = true;
+            break;
+        case "connector":
+            statusFilter.connector = true;
+            break;
+        case "all":
+        default:
+            break;
     }
     const baseFilter = { ...customerSearchFilter, ...partnerSearchFilter, ...statusFilter };
     switch (user.role) {

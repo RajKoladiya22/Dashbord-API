@@ -311,7 +311,7 @@ export const listCustomers = async (
 
   const sortOrder =
     (req.query.sortOrder as string)?.toLowerCase() === "asc" ? "asc" : "desc";
-    console.log("sortOrder --> ", sortOrder)
+  // console.log("sortOrder --> ", sortOrder)
 
   if (!allowedSortFields.includes(sortBy)) {
     sendErrorResponse(
@@ -323,9 +323,44 @@ export const listCustomers = async (
   }
 
   // New: optional status filter
-  let statusFilter = { status: true };
+  let statusFilter: Record<string, any> = { status: true };
   if (req.query.status === "false") {
     statusFilter.status = false;
+  }
+
+  // Filter
+  const category = (req.query.category as string)?.trim() || "all";
+  // console.log(category)
+  const filterStatus = (req.query.filterStatus as string)?.trim() || "all";
+  // console.log(filterStatus)
+
+  switch (category) {
+    case "withPartner":
+      statusFilter.partnerId = { not: null };
+      statusFilter.hasReference = true;
+      break;
+    case "withoutPartner":
+      statusFilter.partnerId = null;
+      statusFilter.hasReference = false;
+      break;
+    case "all":
+    default:
+      break;
+  }
+
+  switch (filterStatus) {
+    case "prime":
+      statusFilter.prime = true;
+      break;
+    case "blacklisted":
+      statusFilter.blacklisted = true;
+      break;
+    case "connector":
+      statusFilter.connector = true;
+      break;
+    case "all":
+    default:
+      break;
   }
 
   // Base filter by role
