@@ -373,10 +373,29 @@ export const listCustomers = async (
       break;
   }
 
+  let sinceFilter: Record<string, any> = {};
+  const since = (req.query.since as string)?.trim();
+  if (since) {
+    const [value, unit] = (since as string).split("_");
+    let date = new Date();
+
+    if (unit === "days") {
+      date.setDate(date.getDate() - parseInt(value));
+    } else if (unit === "months") {
+      date.setMonth(date.getMonth() - parseInt(value));
+    } else if (unit === "years") {
+      date.setFullYear(date.getFullYear() - parseInt(value));
+    }
+
+    sinceFilter.joiningDate = {
+      gte: date,
+    };
+  }
+
   const customerCategoryId = (req.query.customerCategoryId as string)?.trim();
 
   // Base filter by role
-  const baseFilter: any = { ...customerSearchFilter, ...partnerSearchFilter, ...statusFilter, ...(customerCategoryId && {categoryId: customerCategoryId}) };
+  const baseFilter: any = { ...customerSearchFilter, ...partnerSearchFilter, ...statusFilter, ...(customerCategoryId && { categoryId: customerCategoryId }), ...sinceFilter };
   switch (user.role) {
     case "admin":
     case "super_admin":

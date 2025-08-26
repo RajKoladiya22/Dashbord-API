@@ -151,7 +151,7 @@ const createCustomer = async (req, res, next) => {
 };
 exports.createCustomer = createCustomer;
 const listCustomers = async (req, res, next) => {
-    var _a, _b, _c, _d, _e, _f;
+    var _a, _b, _c, _d, _e, _f, _g;
     const user = req.user;
     if (!user) {
         (0, responseHandler_1.sendErrorResponse)(res, 401, "Unauthorized");
@@ -253,8 +253,26 @@ const listCustomers = async (req, res, next) => {
         default:
             break;
     }
-    const customerCategoryId = (_f = req.query.customerCategoryId) === null || _f === void 0 ? void 0 : _f.trim();
-    const baseFilter = { ...customerSearchFilter, ...partnerSearchFilter, ...statusFilter, ...(customerCategoryId && { categoryId: customerCategoryId }) };
+    let sinceFilter = {};
+    const since = (_f = req.query.since) === null || _f === void 0 ? void 0 : _f.trim();
+    if (since) {
+        const [value, unit] = since.split("_");
+        let date = new Date();
+        if (unit === "days") {
+            date.setDate(date.getDate() - parseInt(value));
+        }
+        else if (unit === "months") {
+            date.setMonth(date.getMonth() - parseInt(value));
+        }
+        else if (unit === "years") {
+            date.setFullYear(date.getFullYear() - parseInt(value));
+        }
+        sinceFilter.joiningDate = {
+            gte: date,
+        };
+    }
+    const customerCategoryId = (_g = req.query.customerCategoryId) === null || _g === void 0 ? void 0 : _g.trim();
+    const baseFilter = { ...customerSearchFilter, ...partnerSearchFilter, ...statusFilter, ...(customerCategoryId && { categoryId: customerCategoryId }), ...sinceFilter };
     switch (user.role) {
         case "admin":
         case "super_admin":
