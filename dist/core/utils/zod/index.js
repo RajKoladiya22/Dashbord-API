@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.purchaseSubscriptionSchema = exports.addFeedbackSchema = exports.createPlanSchema = exports.statusSchema = exports.listPlansQuery = exports.createCustomFieldSchema = exports.updateCustomFieldSchema = exports.updateHistorySchema = exports.updateCustomerSchema = exports.createCustomerSchema = exports.signUpSuperAdminSchema = exports.createProductSchema = exports.createTeamMemberSchema = exports.createPartnerSchema = exports.signUpSchema = exports.signInSchema = void 0;
+exports.createAndUpdateCustomerCategorySchema = exports.purchaseSubscriptionSchema = exports.addFeedbackSchema = exports.createPlanSchema = exports.statusSchema = exports.listPlansQuery = exports.createCustomFieldSchema = exports.updateCustomFieldSchema = exports.updateHistorySchema = exports.updateCustomerSchema = exports.createCustomerSchema = exports.signUpSuperAdminSchema = exports.createProductSchema = exports.createTeamMemberSchema = exports.createPartnerSchema = exports.signUpSchema = exports.signInSchema = void 0;
 const zod_1 = require("zod");
 exports.signInSchema = zod_1.z.object({
     identifier: zod_1.z.string().email(),
@@ -118,6 +118,7 @@ exports.updateCustomerSchema = zod_1.z.object({
     }))
         .optional(),
     motherCompanyId: zod_1.z.string().uuid().nullable().optional(),
+    categoryId: zod_1.z.string().uuid().nullable().optional(),
 });
 exports.updateHistorySchema = zod_1.z.object({
     purchaseDate: zod_1.z.string().optional(),
@@ -185,5 +186,9 @@ exports.purchaseSubscriptionSchema = zod_1.z.object({
     transactionId: zod_1.z.string().min(1),
     accountHolder: zod_1.z.string().min(1),
     paymentImage: zod_1.z.string().url().optional(),
+});
+exports.createAndUpdateCustomerCategorySchema = zod_1.z.object({
+    categoryName: zod_1.z.string({ required_error: "Category Name is Required" }).trim().min(1),
+    specialization: zod_1.z.string({ required_error: "Specialization is Required" }).trim().min(1),
 });
 //# sourceMappingURL=index.js.map

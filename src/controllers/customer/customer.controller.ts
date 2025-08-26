@@ -34,6 +34,7 @@ export const createCustomer = async (
     joiningDate,
     products = [],
     motherCompanyId,
+    categoryId,
   } = req.body;
 
   // console.log(req.body);
@@ -96,6 +97,14 @@ export const createCustomer = async (
       }
     }
 
+    if (categoryId) {
+      const category = await prisma.customerCategory.findUnique({ where: { id: categoryId, adminId } });
+      if (!category) {
+        sendErrorResponse(res, 404, "Category not found");
+        return;
+      }
+    }
+
     const result = await prisma.$transaction(async (tx) => {
       // 1) Create the customer
       const customer = await tx.customer.create({
@@ -116,9 +125,10 @@ export const createCustomer = async (
           address,
           joiningDate: parseISO(joiningDate),
           sisterOfId: motherCompanyId,
+          categoryId,
         },
       });
-      console.log("customer----->\n", customer);
+      // console.log("customer----->\n", customer);
 
       // 2) Create history entries for each product
       let history: Array<any> = [];
@@ -363,8 +373,10 @@ export const listCustomers = async (
       break;
   }
 
+  const customerCategoryId = (req.query.customerCategoryId as string)?.trim();
+
   // Base filter by role
-  const baseFilter: any = { ...customerSearchFilter, ...partnerSearchFilter, ...statusFilter };
+  const baseFilter: any = { ...customerSearchFilter, ...partnerSearchFilter, ...statusFilter, ...(customerCategoryId && {categoryId: customerCategoryId}) };
   switch (user.role) {
     case "admin":
     case "super_admin":
@@ -382,7 +394,6 @@ export const listCustomers = async (
       sendErrorResponse(res, 403, "Forbidden");
       return;
   }
-
   // console.log("baseFilter ---> ", baseFilter)
 
   try {
@@ -464,6 +475,16 @@ export const listCustomers = async (
                   },
                 },
               },
+              category: {
+                select: {
+                  id: true,
+                  categoryName: true,
+                  specialization: true,
+                  status: true,
+                  createdAt: true,
+                  updatedAt: true,
+                }
+              }
             },
           },
           sisterOf: {
@@ -502,6 +523,26 @@ export const listCustomers = async (
                   },
                 },
               },
+              category: {
+                select: {
+                  id: true,
+                  categoryName: true,
+                  specialization: true,
+                  status: true,
+                  createdAt: true,
+                  updatedAt: true,
+                }
+              }
+            }
+          },
+          category: {
+            select: {
+              id: true,
+              categoryName: true,
+              specialization: true,
+              status: true,
+              createdAt: true,
+              updatedAt: true,
             }
           }
         },
@@ -547,7 +588,8 @@ export const listCustomers = async (
         detail: h.detail,
         status: h.status,
         history: h.renewals ?? null,
-      }))
+      })),
+      category: cust.category,
     })
 
     const sanitized = customers.map((cust) => ({
@@ -719,6 +761,9 @@ export const updateCustomer = async (
           }),
           ...(customerData.motherCompanyId !== undefined && {
             sisterOfId: customerData.motherCompanyId
+          }),
+          ...(customerData.categoryId !== undefined && {
+            categoryId: customerData.categoryId
           })
         },
         include: {
@@ -758,6 +803,7 @@ export const updateCustomer = async (
           },
           sisterCompanies: true,
           sisterOf: true,
+          category: true,
         },
       });
       // if (updatedCustomer.count === 0) throw new Error("Not found or unauthorized");

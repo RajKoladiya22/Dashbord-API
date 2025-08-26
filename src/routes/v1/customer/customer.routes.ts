@@ -28,6 +28,7 @@ import {
 // import { bulkCreateCustomers } from "./controllers/customer/customer.bulk.controller";
 import { bulkCreateCustomers, bulkVerifyCustomers } from "../../../controllers/customer/customer.bulk.controller";
 import { upload } from "../../../core/middleware/multer/fileUpload";
+import { createCustomerCategory, deleteCustomerCategory, listCustomerCategories, updateCustomerCategory } from "../../../controllers/customer/category.controller";
 
 const router = Router();
 
@@ -143,5 +144,30 @@ router.post(
   bulkCreateCustomers
 );
 
+//  ── CATEGORY ───────────────────────────────────────────────────────────────
+router.get(
+  "/category",
+  authenticateUser,
+  authorizeRoles("admin", "partner", "team_member", "sub_admin"),
+  listCustomerCategories
+);
+router.post(
+  "/category",
+  authenticateUser,
+  authorizeRoles("admin", "sub_admin"),
+  createCustomerCategory
+);
+router.put(
+  "/category/:id",
+  authenticateUser,
+  authorizeRoles("admin", "sub_admin"),
+  updateCustomerCategory
+);
+router.delete(
+  "/category/:id",
+  authenticateUser,
+  authorizeRoles("admin", "sub_admin"),
+  deleteCustomerCategory
+);
 
 export default router;

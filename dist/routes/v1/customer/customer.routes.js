@@ -8,6 +8,7 @@ const customerProduct_controller_1 = require("../../../controllers/customer/cust
 const reminder_controller_1 = require("../../../controllers/customer/reminder.controller");
 const customer_bulk_controller_1 = require("../../../controllers/customer/customer.bulk.controller");
 const fileUpload_1 = require("../../../core/middleware/multer/fileUpload");
+const category_controller_1 = require("../../../controllers/customer/category.controller");
 const router = (0, express_1.Router)();
 router.get("/customfield", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner", "team_member", "sub_admin"), custommField_controller_1.listAdminCustomFields);
 router.post("/customfield", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "sub_admin"), custommField_controller_1.createAdminCustomField);
@@ -25,5 +26,9 @@ router.patch("/product/update/:id", jwt_token_1.authenticateUser, (0, jwt_token_
 router.get("/reminders", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner", "team_member", "sub_admin"), reminder_controller_1.listRenewalReminders);
 router.post("/bulk", fileUpload_1.upload.single("file"), jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner", "team_member", "sub_admin"), customer_bulk_controller_1.bulkVerifyCustomers);
 router.post("/bulk-upload", fileUpload_1.upload.single("file"), jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner", "team_member", "sub_admin"), customer_bulk_controller_1.bulkCreateCustomers);
+router.get("/category", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner", "team_member", "sub_admin"), category_controller_1.listCustomerCategories);
+router.post("/category", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "sub_admin"), category_controller_1.createCustomerCategory);
+router.put("/category/:id", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "sub_admin"), category_controller_1.updateCustomerCategory);
+router.delete("/category/:id", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "sub_admin"), category_controller_1.deleteCustomerCategory);
 exports.default = router;
 //# sourceMappingURL=customer.routes.js.map
