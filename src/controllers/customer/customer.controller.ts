@@ -34,6 +34,7 @@ export const createCustomer = async (
     joiningDate,
     products = [],
     motherCompanyId,
+    categoryId,
   } = req.body;
 
   // console.log(req.body);
@@ -96,6 +97,14 @@ export const createCustomer = async (
       }
     }
 
+    if (categoryId) {
+      const category = await prisma.customerCategory.findUnique({ where: { id: categoryId, adminId } });
+      if (!category) {
+        sendErrorResponse(res, 404, "Category not found");
+        return;
+      }
+    }
+
     const result = await prisma.$transaction(async (tx) => {
       // 1) Create the customer
       const customer = await tx.customer.create({
@@ -116,9 +125,10 @@ export const createCustomer = async (
           address,
           joiningDate: parseISO(joiningDate),
           sisterOfId: motherCompanyId,
+          categoryId,
         },
       });
-      console.log("customer----->\n", customer);
+      // console.log("customer----->\n", customer);
 
       // 2) Create history entries for each product
       let history: Array<any> = [];
@@ -241,9 +251,9 @@ export const listCustomers = async (
 
   // Search
   const customerSearch = (req.query.customerSearchFilter as string)?.trim();
-  console.log(customerSearch)
+  // console.log(customerSearch)
   const partnerSearch = (req.query.partnerSearchFilter as string)?.trim();
-  console.log(partnerSearch)
+  // console.log(partnerSearch)
 
   // 1. Customer search filter
   const customerSearchFilter = customerSearch
@@ -304,14 +314,14 @@ export const listCustomers = async (
     "serialNo",
     "updatedAt",
   ];
-  console.log(allowedSortFields)
+  // console.log(allowedSortFields)
 
   const sortBy = (req.query.sortBy as string) || "updatedAt";
-  console.log("sortBy --> ", sortBy)
+  // console.log("sortBy --> ", sortBy)
 
   const sortOrder =
     (req.query.sortOrder as string)?.toLowerCase() === "asc" ? "asc" : "desc";
-  console.log("sortOrder --> ", sortOrder)
+  // console.log("sortOrder --> ", sortOrder)
 
   if (!allowedSortFields.includes(sortBy)) {
     sendErrorResponse(
@@ -330,9 +340,9 @@ export const listCustomers = async (
 
   // Filter
   const category = (req.query.category as string)?.trim() || "all";
-  console.log(category)
+  // console.log(category)
   const filterStatus = (req.query.filterStatus as string)?.trim() || "all";
-  console.log(filterStatus)
+  // console.log(filterStatus)
 
   switch (category) {
     case "withPartner":
@@ -363,8 +373,10 @@ export const listCustomers = async (
       break;
   }
 
+  const customerCategoryId = (req.query.customerCategoryId as string)?.trim();
+
   // Base filter by role
-  const baseFilter: any = { ...customerSearchFilter, ...partnerSearchFilter, ...statusFilter };
+  const baseFilter: any = { ...customerSearchFilter, ...partnerSearchFilter, ...statusFilter, ...(customerCategoryId && {categoryId: customerCategoryId}) };
   switch (user.role) {
     case "admin":
     case "super_admin":
@@ -382,8 +394,7 @@ export const listCustomers = async (
       sendErrorResponse(res, 403, "Forbidden");
       return;
   }
-
-  console.log("baseFilter ---> ", baseFilter)
+  // console.log("baseFilter ---> ", baseFilter)
 
   try {
     const [total, customers] = await Promise.all([
@@ -464,6 +475,16 @@ export const listCustomers = async (
                   },
                 },
               },
+              category: {
+                select: {
+                  id: true,
+                  categoryName: true,
+                  specialization: true,
+                  status: true,
+                  createdAt: true,
+                  updatedAt: true,
+                }
+              }
             },
           },
           sisterOf: {
@@ -502,21 +523,41 @@ export const listCustomers = async (
                   },
                 },
               },
+              category: {
+                select: {
+                  id: true,
+                  categoryName: true,
+                  specialization: true,
+                  status: true,
+                  createdAt: true,
+                  updatedAt: true,
+                }
+              }
+            }
+          },
+          category: {
+            select: {
+              id: true,
+              categoryName: true,
+              specialization: true,
+              status: true,
+              createdAt: true,
+              updatedAt: true,
             }
           }
         },
       }),
     ]);
 
-    console.log(customers)
+    // console.log(customers)
 
-    customers.map((c) => {
-      console.log(c.sisterCompanies)
-    })
+    // customers.map((c) => {
+    //   console.log(c.sisterCompanies)
+    // })
 
-    customers.map((c) => {
-      console.log(c.sisterOf)
-    })
+    // customers.map((c) => {
+    //   console.log(c.sisterOf)
+    // })
 
     const responseCust = (cust) => ({
       id: cust.id,
@@ -547,7 +588,8 @@ export const listCustomers = async (
         detail: h.detail,
         status: h.status,
         history: h.renewals ?? null,
-      }))
+      })),
+      category: cust.category,
     })
 
     const sanitized = customers.map((cust) => ({
@@ -579,13 +621,13 @@ export const updateCustomer = async (
 ): Promise<void> => {
   const customerId = req.params.id;
 
-  console.log("req.body ---> ", req.body);
+  // console.log("req.body ---> ", req.body);
 
   // 2) Validate request body
   const parsed = updateCustomerSchema.safeParse(req.body);
-  console.log("customerId---->", customerId);
-  console.log("parsed.error---->", parsed.error);
-  console.log("parsed.data---->", parsed.data);
+  // console.log("customerId---->", customerId);
+  // console.log("parsed.error---->", parsed.error);
+  // console.log("parsed.data---->", parsed.data);
 
   if (!parsed.success) {
     console.error("Validation failed with errors: ", parsed.error.errors);
@@ -617,7 +659,7 @@ export const updateCustomer = async (
 
   try {
     const checkMother = customerData.motherCompanyId && await prisma.customer.findUnique({ where: { id: customerData.motherCompanyId, adminId } });
-    console.log(checkMother);
+    // console.log(checkMother);
     if (checkMother && checkMother?.sisterOfId) {
       sendErrorResponse(res, 400, `You can't take ${checkMother.companyName} as a Mother Company`);
       return;
@@ -627,7 +669,7 @@ export const updateCustomer = async (
       const findByMobile = await prisma.customer.findMany({
         where: { mobileNumber: customerData.mobileNumber, adminId, NOT: { id: customerId } }
       });
-      console.log("findByMobile ---> ", findByMobile);
+      // console.log("findByMobile ---> ", findByMobile);
 
       if (findByMobile.length) {
         const isConflict = findByMobile.some((c) => {
@@ -640,20 +682,20 @@ export const updateCustomer = async (
         }
       }
     } else if (customerData.motherCompanyId && checkMother) {
-      console.log("customerData.motherCompanyId ---> ", customerData.motherCompanyId);
-      console.log("checkMother ---> ", checkMother);
+      // console.log("customerData.motherCompanyId ---> ", customerData.motherCompanyId);
+      // console.log("checkMother ---> ", checkMother);
 
       const findByMobile = await prisma.customer.findMany({ where: { mobileNumber: customerData.mobileNumber, adminId, NOT: { id: customerId } }, include: { sisterCompanies: true } });
-      console.log("findByMobile ---> ", findByMobile);
+      // console.log("findByMobile ---> ", findByMobile);
 
       if (findByMobile.length > 0) {
-        console.log("findByMobile.length ---> ", findByMobile.length);
+        // console.log("findByMobile.length ---> ", findByMobile.length);
 
         const isMother = findByMobile.find((c) => c.id === customerData.motherCompanyId);
-        console.log("isMother ---> ", isMother);
+        // console.log("isMother ---> ", isMother);
 
         if (!isMother) {
-          console.log("isMother ---> ", false);
+          // console.log("isMother ---> ", false);
           sendErrorResponse(res, 400, "Mobile number already in use");
           return;
         }
@@ -719,6 +761,9 @@ export const updateCustomer = async (
           }),
           ...(customerData.motherCompanyId !== undefined && {
             sisterOfId: customerData.motherCompanyId
+          }),
+          ...(customerData.categoryId !== undefined && {
+            categoryId: customerData.categoryId
           })
         },
         include: {
@@ -758,13 +803,14 @@ export const updateCustomer = async (
           },
           sisterCompanies: true,
           sisterOf: true,
+          category: true,
         },
       });
       // if (updatedCustomer.count === 0) throw new Error("Not found or unauthorized");
 
       // 5) If any new products provided, append them to CustomerProductHistory
       let createdHistory: Array<any> = [];
-      console.log("\n\n product----->", product)
+      // console.log("\n\n product----->", product)
       if (Array.isArray(product) && product.length > 0) {
         createdHistory = await Promise.all(
           product.map((p) => {
@@ -817,7 +863,7 @@ export const updateCustomer = async (
         );
       }
 
-      console.log("createdHistory----->", createdHistory)
+      // console.log("createdHistory----->", createdHistory)
 
       return { updatedCustomer, createdHistory };
     });
@@ -827,8 +873,8 @@ export const updateCustomer = async (
       products: [...result.createdHistory],
     };
 
-    console.log("\v \n\n result----->", result)
-    console.log("\v \n\n sanitized----->", sanitized)
+    // console.log("\v \n\n result----->", result)
+    // console.log("\v \n\n sanitized----->", sanitized)
 
     // 6) Respond with both updated customer and any new history entries
     sendSuccessResponse(res, 200, "Customer updated", {

@@ -8,7 +8,7 @@ const zod_1 = require("../../core/utils/zod");
 const client_1 = require("@prisma/client");
 const dateHelpers_1 = require("../../core/utils/helper/dateHelpers");
 const createCustomer = async (req, res, next) => {
-    let { companyName, contactPerson, mobileNumber, email, serialNo, prime = false, blacklisted = false, connector = false, remark, hasReference = false, partnerId: incomingPartnerId, adminCustomFields, address, joiningDate, products = [], motherCompanyId, } = req.body;
+    let { companyName, contactPerson, mobileNumber, email, serialNo, prime = false, blacklisted = false, connector = false, remark, hasReference = false, partnerId: incomingPartnerId, adminCustomFields, address, joiningDate, products = [], motherCompanyId, categoryId, } = req.body;
     const user = req.user;
     if (!user) {
         (0, responseHandler_1.sendErrorResponse)(res, 401, "Unauthorized");
@@ -44,6 +44,13 @@ const createCustomer = async (req, res, next) => {
                 }
             }
         }
+        if (categoryId) {
+            const category = await database_config_1.prisma.customerCategory.findUnique({ where: { id: categoryId, adminId } });
+            if (!category) {
+                (0, responseHandler_1.sendErrorResponse)(res, 404, "Category not found");
+                return;
+            }
+        }
         const result = await database_config_1.prisma.$transaction(async (tx) => {
             const customer = await tx.customer.create({
                 data: {
@@ -63,9 +70,9 @@ const createCustomer = async (req, res, next) => {
                     address,
                     joiningDate: (0, date_fns_1.parseISO)(joiningDate),
                     sisterOfId: motherCompanyId,
+                    categoryId,
                 },
             });
-            console.log("customer----->\n", customer);
             let history = [];
             const now = new Date();
             if (products) {
@@ -144,7 +151,7 @@ const createCustomer = async (req, res, next) => {
 };
 exports.createCustomer = createCustomer;
 const listCustomers = async (req, res, next) => {
-    var _a, _b, _c, _d, _e;
+    var _a, _b, _c, _d, _e, _f;
     const user = req.user;
     if (!user) {
         (0, responseHandler_1.sendErrorResponse)(res, 401, "Unauthorized");
@@ -246,7 +253,8 @@ const listCustomers = async (req, res, next) => {
         default:
             break;
     }
-    const baseFilter = { ...customerSearchFilter, ...partnerSearchFilter, ...statusFilter };
+    const customerCategoryId = (_f = req.query.customerCategoryId) === null || _f === void 0 ? void 0 : _f.trim();
+    const baseFilter = { ...customerSearchFilter, ...partnerSearchFilter, ...statusFilter, ...(customerCategoryId && { categoryId: customerCategoryId }) };
     switch (user.role) {
         case "admin":
         case "super_admin":
@@ -341,6 +349,16 @@ const listCustomers = async (req, res, next) => {
                                     },
                                 },
                             },
+                            category: {
+                                select: {
+                                    id: true,
+                                    categoryName: true,
+                                    specialization: true,
+                                    status: true,
+                                    createdAt: true,
+                                    updatedAt: true,
+                                }
+                            }
                         },
                     },
                     sisterOf: {
@@ -378,6 +396,26 @@ const listCustomers = async (req, res, next) => {
                                     },
                                 },
                             },
+                            category: {
+                                select: {
+                                    id: true,
+                                    categoryName: true,
+                                    specialization: true,
+                                    status: true,
+                                    createdAt: true,
+                                    updatedAt: true,
+                                }
+                            }
+                        }
+                    },
+                    category: {
+                        select: {
+                            id: true,
+                            categoryName: true,
+                            specialization: true,
+                            status: true,
+                            createdAt: true,
+                            updatedAt: true,
                         }
                     }
                 },
@@ -415,7 +453,8 @@ const listCustomers = async (req, res, next) => {
                     status: h.status,
                     history: (_a = h.renewals) !== null && _a !== void 0 ? _a : null,
                 });
-            })
+            }),
+            category: cust.category,
         });
         const sanitized = customers.map((cust) => {
             var _a;
@@ -545,6 +584,9 @@ const updateCustomer = async (req, res, next) => {
                     }),
                     ...(customerData.motherCompanyId !== undefined && {
                         sisterOfId: customerData.motherCompanyId
+                    }),
+                    ...(customerData.categoryId !== undefined && {
+                        categoryId: customerData.categoryId
                     })
                 },
                 include: {
@@ -583,6 +625,7 @@ const updateCustomer = async (req, res, next) => {
                     },
                     sisterCompanies: true,
                     sisterOf: true,
+                    category: true,
                 },
             });
             let createdHistory = [];

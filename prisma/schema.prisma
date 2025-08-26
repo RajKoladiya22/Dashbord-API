@@ -93,6 +93,7 @@ model Admin {
   subscriptions    Subscription[]
   loginCreds       LoginCredential[]        @relation("AdminCredentials")
   productHistories CustomerProductHistory[]
+  CustomerCategory CustomerCategory[]
 
   @@map("admins")
 }
@@ -356,7 +357,7 @@ model ProductRenewalHistory {
 }
 
 // ——————————————————————————————————————————
-// Customer & History
+// Customer & History & Category
 // ——————————————————————————————————————————
 model Customer {
   id                String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
@@ -373,6 +374,7 @@ model Customer {
   adminCustomFields Json?
   address           Json?
   sisterOfId        String? @db.Uuid
+  categoryId        String? @db.Uuid
 
   joiningDate  DateTime @map("joining_date")
   hasReference Boolean  @default(false) @map("has_reference")
@@ -381,9 +383,10 @@ model Customer {
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
-  admin   Admin?                   @relation(fields: [adminId], references: [id], onDelete: Cascade)
-  partner Partner?                 @relation("PartnerCustomers", fields: [partnerId], references: [id])
-  history CustomerProductHistory[]
+  admin    Admin?                   @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  partner  Partner?                 @relation("PartnerCustomers", fields: [partnerId], references: [id])
+  category CustomerCategory?        @relation("CustomerCategory", fields: [categoryId], references: [id])
+  history  CustomerProductHistory[]
 
   // mother company
   sisterOf        Customer?  @relation("SisterRelation", fields: [sisterOfId], references: [id])
@@ -428,6 +431,22 @@ model CustomerProductHistory {
   @@index([productId])
   @@index([expiryDate])
   @@map("customer_product_history")
+}
+
+model CustomerCategory {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  adminId        String   @map("admin_id") @db.Uuid
+  categoryName   String
+  specialization String
+  status         Boolean  @default(true) @map("status")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  admin     Admin      @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  customers Customer[] @relation("CustomerCategory")
+
+  @@index([adminId])
+  @@map("customer_category")
 }
 
 // ——————————————————————————————————————————

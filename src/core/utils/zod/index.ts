@@ -142,6 +142,7 @@ export const updateCustomerSchema = z.object({
     )
     .optional(),
   motherCompanyId: z.string().uuid().nullable().optional(),
+  categoryId: z.string().uuid().nullable().optional(),
 });
 export type UpdateCustomerBody = z.infer<typeof updateCustomerSchema>;
 
@@ -230,5 +231,9 @@ export const purchaseSubscriptionSchema = z.object({
   accountHolder: z.string().min(1),
   paymentImage: z.string().url().optional(),
 });
-
 export type PurchaseSubscriptionSchema_ = z.infer<typeof purchaseSubscriptionSchema>;
+
+export const createAndUpdateCustomerCategorySchema = z.object({
+  categoryName: z.string({ required_error: "Category Name is Required" }).trim().min(1),
+  specialization: z.string({ required_error: "Specialization is Required" }).trim().min(1),
+});
