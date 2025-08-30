@@ -28,7 +28,7 @@ import {
 // import { bulkCreateCustomers } from "./controllers/customer/customer.bulk.controller";
 import { bulkCreateCustomers, bulkVerifyCustomers } from "../../../controllers/customer/customer.bulk.controller";
 import { upload } from "../../../core/middleware/multer/fileUpload";
-import { createCustomerCategory, deleteCustomerCategory, listCustomerCategories, updateCustomerCategory } from "../../../controllers/customer/category.controller";
+import { addSpecialization, createCustomerCategory, deleteCustomerCategory, deleteSpecialization, listCustomerCategories, updateCustomerCategory, updateSpecialization } from "../../../controllers/customer/category.controller";
 
 const router = Router();
 
@@ -157,7 +157,7 @@ router.post(
   authorizeRoles("admin", "sub_admin"),
   createCustomerCategory
 );
-router.put(
+router.patch(
   "/category/:id",
   authenticateUser,
   authorizeRoles("admin", "sub_admin"),
@@ -168,6 +168,26 @@ router.delete(
   authenticateUser,
   authorizeRoles("admin", "sub_admin"),
   deleteCustomerCategory
+);
+
+//  ── SPECIALIZATION ───────────────────────────────────────────────────────────────
+router.patch(
+  "/category/:id/addspecialization",
+  authenticateUser,
+  authorizeRoles("admin", "sub_admin"),
+  addSpecialization
+);
+router.patch(
+  "/category/:id/updatespecialization",
+  authenticateUser,
+  authorizeRoles("admin", "sub_admin"),
+  updateSpecialization
+);
+router.patch(
+  "/category/:id/deletespecialization",
+  authenticateUser,
+  authorizeRoles("admin", "sub_admin"),
+  deleteSpecialization
 );
 
 export default router;

@@ -35,9 +35,10 @@ export const createCustomer = async (
     products = [],
     motherCompanyId,
     categoryId,
+    specialization,
   } = req.body;
 
-  // console.log(req.body);
+  console.log(req.body);
 
   // Determine adminId & partnerId based on logged‑in user
   const user = req.user;
@@ -126,9 +127,10 @@ export const createCustomer = async (
           joiningDate: parseISO(joiningDate),
           sisterOfId: motherCompanyId,
           categoryId,
+          specialization,
         },
       });
-      // console.log("customer----->\n", customer);
+      console.log("customer----->\n", customer);
 
       // 2) Create history entries for each product
       let history: Array<any> = [];
@@ -312,11 +314,12 @@ export const listCustomers = async (
     "contactPerson",
     "mobileNumber",
     "serialNo",
-    "updatedAt",
+    "createdAt",
+    "joiningDate",
   ];
   // console.log(allowedSortFields)
 
-  const sortBy = (req.query.sortBy as string) || "updatedAt";
+  const sortBy = (req.query.sortBy as string) || "createdAt";
   // console.log("sortBy --> ", sortBy)
 
   const sortOrder =
@@ -373,10 +376,30 @@ export const listCustomers = async (
       break;
   }
 
+  const sinceStartStr = (req.query.sinceStart as string)?.trim();
+  const sinceEndStr = (req.query.sinceEnd as string)?.trim();
+  let sinceFilter: Record<string, any> = {};
+
+  if (sinceStartStr || sinceEndStr) {
+    const range: Record<string, any> = {};
+    if (sinceStartStr) range.gte = new Date(sinceStartStr);
+    if (sinceEndStr) range.lte = new Date(sinceEndStr);
+    sinceFilter.joiningDate = range;
+  }
+
   const customerCategoryId = (req.query.customerCategoryId as string)?.trim();
+  const specialization = (req.query.specialization as string)?.trim();
 
   // Base filter by role
-  const baseFilter: any = { ...customerSearchFilter, ...partnerSearchFilter, ...statusFilter, ...(customerCategoryId && {categoryId: customerCategoryId}) };
+  const baseFilter: any = {
+    ...customerSearchFilter,
+    ...partnerSearchFilter,
+    ...statusFilter,
+    ...(customerCategoryId && { categoryId: customerCategoryId }),
+    ...(specialization && { specialization }),
+    ...sinceFilter,
+  };
+
   switch (user.role) {
     case "admin":
     case "super_admin":
@@ -590,6 +613,7 @@ export const listCustomers = async (
         history: h.renewals ?? null,
       })),
       category: cust.category,
+      specialization: cust.specialization,
     })
 
     const sanitized = customers.map((cust) => ({
@@ -764,6 +788,9 @@ export const updateCustomer = async (
           }),
           ...(customerData.categoryId !== undefined && {
             categoryId: customerData.categoryId
+          }),
+          ...(customerData.specialization !== undefined && {
+            specialization: customerData.specialization
           })
         },
         include: {

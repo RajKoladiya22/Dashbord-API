@@ -3,7 +3,8 @@
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:1234@localhost:5432/cpm_orm"
+  // url      = "postgresql://postgres:1234@localhost:5432/cpm_orm"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
@@ -92,6 +93,7 @@ model Admin {
   subscriptions    Subscription[]
   loginCreds       LoginCredential[]        @relation("AdminCredentials")
   productHistories CustomerProductHistory[]
+  CustomerCategory CustomerCategory[]
 
   @@map("admins")
 }
@@ -355,21 +357,25 @@ model ProductRenewalHistory {
 }
 
 // ——————————————————————————————————————————
-// Customer & History
+// Customer & History & Category
 // ——————————————————————————————————————————
 model Customer {
   id                String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   adminId           String? @db.Uuid
   companyName       String  @map("company_name")
   contactPerson     String  @map("contact_person")
-  mobileNumber      String  @unique @map("mobile_number")
-  email             String  @unique
-  serialNo          String  @map("serial_no")
+  mobileNumber      String  @map("mobile_number")
+  email             String?
+  serialNo          String? @map("serial_no")
   prime             Boolean @default(false)
   blacklisted       Boolean @default(false)
+  connector         Boolean @default(false)
   remark            String?
   adminCustomFields Json?
   address           Json?
+  sisterOfId        String? @db.Uuid
+  categoryId        String? @db.Uuid
+  specialization    String?
 
   joiningDate  DateTime @map("joining_date")
   hasReference Boolean  @default(false) @map("has_reference")
@@ -378,9 +384,15 @@ model Customer {
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
-  admin   Admin?                   @relation(fields: [adminId], references: [id], onDelete: Cascade)
-  partner Partner?                 @relation("PartnerCustomers", fields: [partnerId], references: [id])
-  history CustomerProductHistory[]
+  admin    Admin?                   @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  partner  Partner?                 @relation("PartnerCustomers", fields: [partnerId], references: [id])
+  category CustomerCategory?        @relation("CustomerCategory", fields: [categoryId], references: [id])
+  history  CustomerProductHistory[]
+
+  // mother company
+  sisterOf        Customer?  @relation("SisterRelation", fields: [sisterOfId], references: [id])
+  // One-to-many relation (all children / sister companies)
+  sisterCompanies Customer[] @relation("SisterRelation")
 
   @@index([adminId])
   @@index([partnerId])
@@ -420,6 +432,22 @@ model CustomerProductHistory {
   @@index([productId])
   @@index([expiryDate])
   @@map("customer_product_history")
+}
+
+model CustomerCategory {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  adminId        String   @map("admin_id") @db.Uuid
+  categoryName   String
+  specialization String[] @default([]) @db.Text
+  status         Boolean  @default(true) @map("status")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  admin     Admin      @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  customers Customer[] @relation("CustomerCategory")
+
+  @@index([adminId])
+  @@map("customer_category")
 }
 
 // ——————————————————————————————————————————
@@ -479,8 +507,8 @@ model PasswordOtp {
 model Feedback {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId    String   @db.Uuid
-  rating    String
-  feedback  String
+  rating    String?
+  feedback  String?
   createdAt DateTime @default(now()) @map("created_at")
 
   user LoginCredential @relation(fields: [userId], references: [userProfileId], onDelete: Cascade)

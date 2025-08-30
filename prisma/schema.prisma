@@ -375,6 +375,7 @@ model Customer {
   address           Json?
   sisterOfId        String? @db.Uuid
   categoryId        String? @db.Uuid
+  specialization    String?
 
   joiningDate  DateTime @map("joining_date")
   hasReference Boolean  @default(false) @map("has_reference")
@@ -437,7 +438,7 @@ model CustomerCategory {
   id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   adminId        String   @map("admin_id") @db.Uuid
   categoryName   String
-  specialization String
+  specialization String[] @default([]) @db.Text
   status         Boolean  @default(true) @map("status")
   createdAt      DateTime @default(now()) @map("created_at")
   updatedAt      DateTime @updatedAt @map("updated_at")
