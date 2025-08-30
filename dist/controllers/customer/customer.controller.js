@@ -8,7 +8,8 @@ const zod_1 = require("../../core/utils/zod");
 const client_1 = require("@prisma/client");
 const dateHelpers_1 = require("../../core/utils/helper/dateHelpers");
 const createCustomer = async (req, res, next) => {
-    let { companyName, contactPerson, mobileNumber, email, serialNo, prime = false, blacklisted = false, connector = false, remark, hasReference = false, partnerId: incomingPartnerId, adminCustomFields, address, joiningDate, products = [], motherCompanyId, categoryId, } = req.body;
+    let { companyName, contactPerson, mobileNumber, email, serialNo, prime = false, blacklisted = false, connector = false, remark, hasReference = false, partnerId: incomingPartnerId, adminCustomFields, address, joiningDate, products = [], motherCompanyId, categoryId, specialization, } = req.body;
+    console.log(req.body);
     const user = req.user;
     if (!user) {
         (0, responseHandler_1.sendErrorResponse)(res, 401, "Unauthorized");
@@ -71,8 +72,10 @@ const createCustomer = async (req, res, next) => {
                     joiningDate: (0, date_fns_1.parseISO)(joiningDate),
                     sisterOfId: motherCompanyId,
                     categoryId,
+                    specialization,
                 },
             });
+            console.log("customer----->\n", customer);
             let history = [];
             const now = new Date();
             if (products) {
@@ -151,7 +154,7 @@ const createCustomer = async (req, res, next) => {
 };
 exports.createCustomer = createCustomer;
 const listCustomers = async (req, res, next) => {
-    var _a, _b, _c, _d, _e, _f, _g;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
     const user = req.user;
     if (!user) {
         (0, responseHandler_1.sendErrorResponse)(res, 401, "Unauthorized");
@@ -212,9 +215,10 @@ const listCustomers = async (req, res, next) => {
         "contactPerson",
         "mobileNumber",
         "serialNo",
-        "updatedAt",
+        "createdAt",
+        "joiningDate",
     ];
-    const sortBy = req.query.sortBy || "updatedAt";
+    const sortBy = req.query.sortBy || "createdAt";
     const sortOrder = ((_c = req.query.sortOrder) === null || _c === void 0 ? void 0 : _c.toLowerCase()) === "asc" ? "asc" : "desc";
     if (!allowedSortFields.includes(sortBy)) {
         (0, responseHandler_1.sendErrorResponse)(res, 400, `Invalid sortBy. Must be one of: ${allowedSortFields.join(", ")}`);
@@ -253,26 +257,27 @@ const listCustomers = async (req, res, next) => {
         default:
             break;
     }
+    const sinceStartStr = (_f = req.query.sinceStart) === null || _f === void 0 ? void 0 : _f.trim();
+    const sinceEndStr = (_g = req.query.sinceEnd) === null || _g === void 0 ? void 0 : _g.trim();
     let sinceFilter = {};
-    const since = (_f = req.query.since) === null || _f === void 0 ? void 0 : _f.trim();
-    if (since) {
-        const [value, unit] = since.split("_");
-        let date = new Date();
-        if (unit === "days") {
-            date.setDate(date.getDate() - parseInt(value));
-        }
-        else if (unit === "months") {
-            date.setMonth(date.getMonth() - parseInt(value));
-        }
-        else if (unit === "years") {
-            date.setFullYear(date.getFullYear() - parseInt(value));
-        }
-        sinceFilter.joiningDate = {
-            gte: date,
-        };
+    if (sinceStartStr || sinceEndStr) {
+        const range = {};
+        if (sinceStartStr)
+            range.gte = new Date(sinceStartStr);
+        if (sinceEndStr)
+            range.lte = new Date(sinceEndStr);
+        sinceFilter.joiningDate = range;
     }
-    const customerCategoryId = (_g = req.query.customerCategoryId) === null || _g === void 0 ? void 0 : _g.trim();
-    const baseFilter = { ...customerSearchFilter, ...partnerSearchFilter, ...statusFilter, ...(customerCategoryId && { categoryId: customerCategoryId }), ...sinceFilter };
+    const customerCategoryId = (_h = req.query.customerCategoryId) === null || _h === void 0 ? void 0 : _h.trim();
+    const specialization = (_j = req.query.specialization) === null || _j === void 0 ? void 0 : _j.trim();
+    const baseFilter = {
+        ...customerSearchFilter,
+        ...partnerSearchFilter,
+        ...statusFilter,
+        ...(customerCategoryId && { categoryId: customerCategoryId }),
+        ...(specialization && { specialization }),
+        ...sinceFilter,
+    };
     switch (user.role) {
         case "admin":
         case "super_admin":
@@ -473,6 +478,7 @@ const listCustomers = async (req, res, next) => {
                 });
             }),
             category: cust.category,
+            specialization: cust.specialization,
         });
         const sanitized = customers.map((cust) => {
             var _a;
@@ -605,6 +611,9 @@ const updateCustomer = async (req, res, next) => {
                     }),
                     ...(customerData.categoryId !== undefined && {
                         categoryId: customerData.categoryId
+                    }),
+                    ...(customerData.specialization !== undefined && {
+                        specialization: customerData.specialization
                     })
                 },
                 include: {

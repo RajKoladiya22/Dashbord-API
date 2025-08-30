@@ -28,7 +28,10 @@ router.post("/bulk", fileUpload_1.upload.single("file"), jwt_token_1.authenticat
 router.post("/bulk-upload", fileUpload_1.upload.single("file"), jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner", "team_member", "sub_admin"), customer_bulk_controller_1.bulkCreateCustomers);
 router.get("/category", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "partner", "team_member", "sub_admin"), category_controller_1.listCustomerCategories);
 router.post("/category", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "sub_admin"), category_controller_1.createCustomerCategory);
-router.put("/category/:id", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "sub_admin"), category_controller_1.updateCustomerCategory);
+router.patch("/category/:id", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "sub_admin"), category_controller_1.updateCustomerCategory);
 router.delete("/category/:id", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "sub_admin"), category_controller_1.deleteCustomerCategory);
+router.patch("/category/:id/addspecialization", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "sub_admin"), category_controller_1.addSpecialization);
+router.patch("/category/:id/updatespecialization", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "sub_admin"), category_controller_1.updateSpecialization);
+router.patch("/category/:id/deletespecialization", jwt_token_1.authenticateUser, (0, jwt_token_1.authorizeRoles)("admin", "sub_admin"), category_controller_1.deleteSpecialization);
 exports.default = router;
 //# sourceMappingURL=customer.routes.js.map

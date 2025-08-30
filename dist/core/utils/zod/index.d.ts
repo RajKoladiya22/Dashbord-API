@@ -289,6 +289,7 @@ export declare const updateCustomerSchema: z.ZodObject<{
     }>, "many">>;
     motherCompanyId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     categoryId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    specialization: z.ZodOptional<z.ZodNullable<z.ZodString>>;
 }, "strip", z.ZodTypeAny, {
     email?: string | null | undefined;
     companyName?: string | undefined;
@@ -315,6 +316,7 @@ export declare const updateCustomerSchema: z.ZodObject<{
     }[] | undefined;
     motherCompanyId?: string | null | undefined;
     categoryId?: string | null | undefined;
+    specialization?: string | null | undefined;
 }, {
     email?: string | null | undefined;
     companyName?: string | undefined;
@@ -341,6 +343,7 @@ export declare const updateCustomerSchema: z.ZodObject<{
     }[] | undefined;
     motherCompanyId?: string | null | undefined;
     categoryId?: string | null | undefined;
+    specialization?: string | null | undefined;
 }>;
 export type UpdateCustomerBody = z.infer<typeof updateCustomerSchema>;
 export declare const updateHistorySchema: z.ZodObject<{
@@ -535,11 +538,28 @@ export declare const purchaseSubscriptionSchema: z.ZodObject<{
 export type PurchaseSubscriptionSchema_ = z.infer<typeof purchaseSubscriptionSchema>;
 export declare const createAndUpdateCustomerCategorySchema: z.ZodObject<{
     categoryName: z.ZodString;
-    specialization: z.ZodString;
 }, "strip", z.ZodTypeAny, {
     categoryName: string;
-    specialization: string;
 }, {
     categoryName: string;
+}>;
+export declare const specializationSchema: z.ZodObject<{
+    specialization: z.ZodString;
+}, "strip", z.ZodTypeAny, {
     specialization: string;
+}, {
+    specialization: string;
+}>;
+export declare const updateSpecializationSchema: z.ZodObject<{
+    newCategoryId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    oldSpecialization: z.ZodString;
+    newSpecialization: z.ZodString;
+}, "strip", z.ZodTypeAny, {
+    oldSpecialization: string;
+    newSpecialization: string;
+    newCategoryId?: string | null | undefined;
+}, {
+    oldSpecialization: string;
+    newSpecialization: string;
+    newCategoryId?: string | null | undefined;
 }>;

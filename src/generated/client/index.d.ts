@@ -99,6 +99,11 @@ export type Customer = $Result.DefaultSelection<Prisma.$CustomerPayload>
  */
 export type CustomerProductHistory = $Result.DefaultSelection<Prisma.$CustomerProductHistoryPayload>
 /**
+ * Model CustomerCategory
+ * 
+ */
+export type CustomerCategory = $Result.DefaultSelection<Prisma.$CustomerCategoryPayload>
+/**
  * Model AdminCustomField
  * 
  */
@@ -203,7 +208,7 @@ export const renewPeriod: typeof $Enums.renewPeriod
  */
 export class PrismaClient<
   ClientOptions extends Prisma.PrismaClientOptions = Prisma.PrismaClientOptions,
-  U = 'log' extends keyof ClientOptions ? ClientOptions['log'] extends Array<Prisma.LogLevel | Prisma.LogDefinition> ? Prisma.GetEvents<ClientOptions['log']> : never : never,
+  const U = 'log' extends keyof ClientOptions ? ClientOptions['log'] extends Array<Prisma.LogLevel | Prisma.LogDefinition> ? Prisma.GetEvents<ClientOptions['log']> : never : never,
   ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs
 > {
   [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['other'] }
@@ -483,6 +488,16 @@ export class PrismaClient<
   get customerProductHistory(): Prisma.CustomerProductHistoryDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.customerCategory`: Exposes CRUD operations for the **CustomerCategory** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CustomerCategories
+    * const customerCategories = await prisma.customerCategory.findMany()
+    * ```
+    */
+  get customerCategory(): Prisma.CustomerCategoryDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.adminCustomField`: Exposes CRUD operations for the **AdminCustomField** model.
     * Example usage:
     * ```ts
@@ -579,8 +594,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.7.0
-   * Query Engine version: 3cff47a7f5d65c3ea74883f1d736e41d68ce91ed
+   * Prisma Client JS version: 6.13.0
+   * Query Engine version: 361e86d0ea4987e9f53a565309b3eed797a6bcbd
    */
   export type PrismaVersion = {
     client: string
@@ -978,6 +993,7 @@ export namespace Prisma {
     ProductRenewalHistory: 'ProductRenewalHistory',
     Customer: 'Customer',
     CustomerProductHistory: 'CustomerProductHistory',
+    CustomerCategory: 'CustomerCategory',
     AdminCustomField: 'AdminCustomField',
     LoginAudit: 'LoginAudit',
     PasswordOtp: 'PasswordOtp',
@@ -1000,7 +1016,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "superAdmin" | "admin" | "teamMember" | "partner" | "loginCredential" | "liveChatApp" | "plan" | "planOffer" | "planSpec" | "planDescription" | "subscription" | "subscriptionPayment" | "subscriptionEvent" | "product" | "productRenewalHistory" | "customer" | "customerProductHistory" | "adminCustomField" | "loginAudit" | "passwordOtp" | "feedback"
+      modelProps: "superAdmin" | "admin" | "teamMember" | "partner" | "loginCredential" | "liveChatApp" | "plan" | "planOffer" | "planSpec" | "planDescription" | "subscription" | "subscriptionPayment" | "subscriptionEvent" | "product" | "productRenewalHistory" | "customer" | "customerProductHistory" | "customerCategory" | "adminCustomField" | "loginAudit" | "passwordOtp" | "feedback"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2262,6 +2278,80 @@ export namespace Prisma {
           }
         }
       }
+      CustomerCategory: {
+        payload: Prisma.$CustomerCategoryPayload<ExtArgs>
+        fields: Prisma.CustomerCategoryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CustomerCategoryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerCategoryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CustomerCategoryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerCategoryPayload>
+          }
+          findFirst: {
+            args: Prisma.CustomerCategoryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerCategoryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CustomerCategoryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerCategoryPayload>
+          }
+          findMany: {
+            args: Prisma.CustomerCategoryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerCategoryPayload>[]
+          }
+          create: {
+            args: Prisma.CustomerCategoryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerCategoryPayload>
+          }
+          createMany: {
+            args: Prisma.CustomerCategoryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CustomerCategoryCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerCategoryPayload>[]
+          }
+          delete: {
+            args: Prisma.CustomerCategoryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerCategoryPayload>
+          }
+          update: {
+            args: Prisma.CustomerCategoryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerCategoryPayload>
+          }
+          deleteMany: {
+            args: Prisma.CustomerCategoryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CustomerCategoryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CustomerCategoryUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerCategoryPayload>[]
+          }
+          upsert: {
+            args: Prisma.CustomerCategoryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerCategoryPayload>
+          }
+          aggregate: {
+            args: Prisma.CustomerCategoryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCustomerCategory>
+          }
+          groupBy: {
+            args: Prisma.CustomerCategoryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CustomerCategoryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CustomerCategoryCountArgs<ExtArgs>
+            result: $Utils.Optional<CustomerCategoryCountAggregateOutputType> | number
+          }
+        }
+      }
       AdminCustomField: {
         payload: Prisma.$AdminCustomFieldPayload<ExtArgs>
         fields: Prisma.AdminCustomFieldFieldRefs
@@ -2601,16 +2691,24 @@ export namespace Prisma {
     /**
      * @example
      * ```
-     * // Defaults to stdout
+     * // Shorthand for `emit: 'stdout'`
      * log: ['query', 'info', 'warn', 'error']
      * 
-     * // Emit as events
+     * // Emit as events only
      * log: [
-     *   { emit: 'stdout', level: 'query' },
-     *   { emit: 'stdout', level: 'info' },
-     *   { emit: 'stdout', level: 'warn' }
-     *   { emit: 'stdout', level: 'error' }
+     *   { emit: 'event', level: 'query' },
+     *   { emit: 'event', level: 'info' },
+     *   { emit: 'event', level: 'warn' }
+     *   { emit: 'event', level: 'error' }
      * ]
+     * 
+     * / Emit as events and log to stdout
+     * og: [
+     *  { emit: 'stdout', level: 'query' },
+     *  { emit: 'stdout', level: 'info' },
+     *  { emit: 'stdout', level: 'warn' }
+     *  { emit: 'stdout', level: 'error' }
+     * 
      * ```
      * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/logging#the-log-option).
      */
@@ -2659,6 +2757,7 @@ export namespace Prisma {
     productRenewalHistory?: ProductRenewalHistoryOmit
     customer?: CustomerOmit
     customerProductHistory?: CustomerProductHistoryOmit
+    customerCategory?: CustomerCategoryOmit
     adminCustomField?: AdminCustomFieldOmit
     loginAudit?: LoginAuditOmit
     passwordOtp?: PasswordOtpOmit
@@ -2672,10 +2771,15 @@ export namespace Prisma {
     emit: 'stdout' | 'event'
   }
 
-  export type GetLogType<T extends LogLevel | LogDefinition> = T extends LogDefinition ? T['emit'] extends 'event' ? T['level'] : never : never
-  export type GetEvents<T extends any> = T extends Array<LogLevel | LogDefinition> ?
-    GetLogType<T[0]> | GetLogType<T[1]> | GetLogType<T[2]> | GetLogType<T[3]>
-    : never
+  export type CheckIsLogLevel<T> = T extends LogLevel ? T : never;
+
+  export type GetLogType<T> = CheckIsLogLevel<
+    T extends LogDefinition ? T['level'] : T
+  >;
+
+  export type GetEvents<T extends any[]> = T extends Array<LogLevel | LogDefinition>
+    ? GetLogType<T[number]>
+    : never;
 
   export type QueryEvent = {
     timestamp: Date
@@ -2796,6 +2900,7 @@ export namespace Prisma {
     subscriptions: number
     loginCreds: number
     productHistories: number
+    CustomerCategory: number
   }
 
   export type AdminCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2807,6 +2912,7 @@ export namespace Prisma {
     subscriptions?: boolean | AdminCountOutputTypeCountSubscriptionsArgs
     loginCreds?: boolean | AdminCountOutputTypeCountLoginCredsArgs
     productHistories?: boolean | AdminCountOutputTypeCountProductHistoriesArgs
+    CustomerCategory?: boolean | AdminCountOutputTypeCountCustomerCategoryArgs
   }
 
   // Custom InputTypes
@@ -2874,6 +2980,13 @@ export namespace Prisma {
    */
   export type AdminCountOutputTypeCountProductHistoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CustomerProductHistoryWhereInput
+  }
+
+  /**
+   * AdminCountOutputType without action
+   */
+  export type AdminCountOutputTypeCountCustomerCategoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CustomerCategoryWhereInput
   }
 
 
@@ -3110,10 +3223,12 @@ export namespace Prisma {
 
   export type CustomerCountOutputType = {
     history: number
+    sisterCompanies: number
   }
 
   export type CustomerCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     history?: boolean | CustomerCountOutputTypeCountHistoryArgs
+    sisterCompanies?: boolean | CustomerCountOutputTypeCountSisterCompaniesArgs
   }
 
   // Custom InputTypes
@@ -3132,6 +3247,13 @@ export namespace Prisma {
    */
   export type CustomerCountOutputTypeCountHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CustomerProductHistoryWhereInput
+  }
+
+  /**
+   * CustomerCountOutputType without action
+   */
+  export type CustomerCountOutputTypeCountSisterCompaniesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CustomerWhereInput
   }
 
 
@@ -3163,6 +3285,37 @@ export namespace Prisma {
    */
   export type CustomerProductHistoryCountOutputTypeCountRenewalsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProductRenewalHistoryWhereInput
+  }
+
+
+  /**
+   * Count Type CustomerCategoryCountOutputType
+   */
+
+  export type CustomerCategoryCountOutputType = {
+    customers: number
+  }
+
+  export type CustomerCategoryCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customers?: boolean | CustomerCategoryCountOutputTypeCountCustomersArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * CustomerCategoryCountOutputType without action
+   */
+  export type CustomerCategoryCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerCategoryCountOutputType
+     */
+    select?: CustomerCategoryCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * CustomerCategoryCountOutputType without action
+   */
+  export type CustomerCategoryCountOutputTypeCountCustomersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CustomerWhereInput
   }
 
 
@@ -4517,6 +4670,7 @@ export namespace Prisma {
     subscriptions?: boolean | Admin$subscriptionsArgs<ExtArgs>
     loginCreds?: boolean | Admin$loginCredsArgs<ExtArgs>
     productHistories?: boolean | Admin$productHistoriesArgs<ExtArgs>
+    CustomerCategory?: boolean | Admin$CustomerCategoryArgs<ExtArgs>
     _count?: boolean | AdminCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["admin"]>
 
@@ -4575,6 +4729,7 @@ export namespace Prisma {
     subscriptions?: boolean | Admin$subscriptionsArgs<ExtArgs>
     loginCreds?: boolean | Admin$loginCredsArgs<ExtArgs>
     productHistories?: boolean | Admin$productHistoriesArgs<ExtArgs>
+    CustomerCategory?: boolean | Admin$CustomerCategoryArgs<ExtArgs>
     _count?: boolean | AdminCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type AdminIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -4591,6 +4746,7 @@ export namespace Prisma {
       subscriptions: Prisma.$SubscriptionPayload<ExtArgs>[]
       loginCreds: Prisma.$LoginCredentialPayload<ExtArgs>[]
       productHistories: Prisma.$CustomerProductHistoryPayload<ExtArgs>[]
+      CustomerCategory: Prisma.$CustomerCategoryPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -5007,6 +5163,7 @@ export namespace Prisma {
     subscriptions<T extends Admin$subscriptionsArgs<ExtArgs> = {}>(args?: Subset<T, Admin$subscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     loginCreds<T extends Admin$loginCredsArgs<ExtArgs> = {}>(args?: Subset<T, Admin$loginCredsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoginCredentialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     productHistories<T extends Admin$productHistoriesArgs<ExtArgs> = {}>(args?: Subset<T, Admin$productHistoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerProductHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    CustomerCategory<T extends Admin$CustomerCategoryArgs<ExtArgs> = {}>(args?: Subset<T, Admin$CustomerCategoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5625,6 +5782,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: CustomerProductHistoryScalarFieldEnum | CustomerProductHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * Admin.CustomerCategory
+   */
+  export type Admin$CustomerCategoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerCategory
+     */
+    select?: CustomerCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerCategory
+     */
+    omit?: CustomerCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerCategoryInclude<ExtArgs> | null
+    where?: CustomerCategoryWhereInput
+    orderBy?: CustomerCategoryOrderByWithRelationInput | CustomerCategoryOrderByWithRelationInput[]
+    cursor?: CustomerCategoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CustomerCategoryScalarFieldEnum | CustomerCategoryScalarFieldEnum[]
   }
 
   /**
@@ -20575,7 +20756,11 @@ export namespace Prisma {
     serialNo: string | null
     prime: boolean | null
     blacklisted: boolean | null
+    connector: boolean | null
     remark: string | null
+    sisterOfId: string | null
+    categoryId: string | null
+    specialization: string | null
     joiningDate: Date | null
     hasReference: boolean | null
     partnerId: string | null
@@ -20594,7 +20779,11 @@ export namespace Prisma {
     serialNo: string | null
     prime: boolean | null
     blacklisted: boolean | null
+    connector: boolean | null
     remark: string | null
+    sisterOfId: string | null
+    categoryId: string | null
+    specialization: string | null
     joiningDate: Date | null
     hasReference: boolean | null
     partnerId: string | null
@@ -20613,9 +20802,13 @@ export namespace Prisma {
     serialNo: number
     prime: number
     blacklisted: number
+    connector: number
     remark: number
     adminCustomFields: number
     address: number
+    sisterOfId: number
+    categoryId: number
+    specialization: number
     joiningDate: number
     hasReference: number
     partnerId: number
@@ -20636,7 +20829,11 @@ export namespace Prisma {
     serialNo?: true
     prime?: true
     blacklisted?: true
+    connector?: true
     remark?: true
+    sisterOfId?: true
+    categoryId?: true
+    specialization?: true
     joiningDate?: true
     hasReference?: true
     partnerId?: true
@@ -20655,7 +20852,11 @@ export namespace Prisma {
     serialNo?: true
     prime?: true
     blacklisted?: true
+    connector?: true
     remark?: true
+    sisterOfId?: true
+    categoryId?: true
+    specialization?: true
     joiningDate?: true
     hasReference?: true
     partnerId?: true
@@ -20674,9 +20875,13 @@ export namespace Prisma {
     serialNo?: true
     prime?: true
     blacklisted?: true
+    connector?: true
     remark?: true
     adminCustomFields?: true
     address?: true
+    sisterOfId?: true
+    categoryId?: true
+    specialization?: true
     joiningDate?: true
     hasReference?: true
     partnerId?: true
@@ -20764,13 +20969,17 @@ export namespace Prisma {
     companyName: string
     contactPerson: string
     mobileNumber: string
-    email: string
-    serialNo: string
+    email: string | null
+    serialNo: string | null
     prime: boolean
     blacklisted: boolean
+    connector: boolean
     remark: string | null
     adminCustomFields: JsonValue | null
     address: JsonValue | null
+    sisterOfId: string | null
+    categoryId: string | null
+    specialization: string | null
     joiningDate: Date
     hasReference: boolean
     partnerId: string | null
@@ -20806,9 +21015,13 @@ export namespace Prisma {
     serialNo?: boolean
     prime?: boolean
     blacklisted?: boolean
+    connector?: boolean
     remark?: boolean
     adminCustomFields?: boolean
     address?: boolean
+    sisterOfId?: boolean
+    categoryId?: boolean
+    specialization?: boolean
     joiningDate?: boolean
     hasReference?: boolean
     partnerId?: boolean
@@ -20817,7 +21030,10 @@ export namespace Prisma {
     updatedAt?: boolean
     admin?: boolean | Customer$adminArgs<ExtArgs>
     partner?: boolean | Customer$partnerArgs<ExtArgs>
+    category?: boolean | Customer$categoryArgs<ExtArgs>
     history?: boolean | Customer$historyArgs<ExtArgs>
+    sisterOf?: boolean | Customer$sisterOfArgs<ExtArgs>
+    sisterCompanies?: boolean | Customer$sisterCompaniesArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["customer"]>
 
@@ -20831,9 +21047,13 @@ export namespace Prisma {
     serialNo?: boolean
     prime?: boolean
     blacklisted?: boolean
+    connector?: boolean
     remark?: boolean
     adminCustomFields?: boolean
     address?: boolean
+    sisterOfId?: boolean
+    categoryId?: boolean
+    specialization?: boolean
     joiningDate?: boolean
     hasReference?: boolean
     partnerId?: boolean
@@ -20842,6 +21062,8 @@ export namespace Prisma {
     updatedAt?: boolean
     admin?: boolean | Customer$adminArgs<ExtArgs>
     partner?: boolean | Customer$partnerArgs<ExtArgs>
+    category?: boolean | Customer$categoryArgs<ExtArgs>
+    sisterOf?: boolean | Customer$sisterOfArgs<ExtArgs>
   }, ExtArgs["result"]["customer"]>
 
   export type CustomerSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -20854,9 +21076,13 @@ export namespace Prisma {
     serialNo?: boolean
     prime?: boolean
     blacklisted?: boolean
+    connector?: boolean
     remark?: boolean
     adminCustomFields?: boolean
     address?: boolean
+    sisterOfId?: boolean
+    categoryId?: boolean
+    specialization?: boolean
     joiningDate?: boolean
     hasReference?: boolean
     partnerId?: boolean
@@ -20865,6 +21091,8 @@ export namespace Prisma {
     updatedAt?: boolean
     admin?: boolean | Customer$adminArgs<ExtArgs>
     partner?: boolean | Customer$partnerArgs<ExtArgs>
+    category?: boolean | Customer$categoryArgs<ExtArgs>
+    sisterOf?: boolean | Customer$sisterOfArgs<ExtArgs>
   }, ExtArgs["result"]["customer"]>
 
   export type CustomerSelectScalar = {
@@ -20877,9 +21105,13 @@ export namespace Prisma {
     serialNo?: boolean
     prime?: boolean
     blacklisted?: boolean
+    connector?: boolean
     remark?: boolean
     adminCustomFields?: boolean
     address?: boolean
+    sisterOfId?: boolean
+    categoryId?: boolean
+    specialization?: boolean
     joiningDate?: boolean
     hasReference?: boolean
     partnerId?: boolean
@@ -20888,20 +21120,27 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "adminId" | "companyName" | "contactPerson" | "mobileNumber" | "email" | "serialNo" | "prime" | "blacklisted" | "remark" | "adminCustomFields" | "address" | "joiningDate" | "hasReference" | "partnerId" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
+  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "adminId" | "companyName" | "contactPerson" | "mobileNumber" | "email" | "serialNo" | "prime" | "blacklisted" | "connector" | "remark" | "adminCustomFields" | "address" | "sisterOfId" | "categoryId" | "specialization" | "joiningDate" | "hasReference" | "partnerId" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
   export type CustomerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     admin?: boolean | Customer$adminArgs<ExtArgs>
     partner?: boolean | Customer$partnerArgs<ExtArgs>
+    category?: boolean | Customer$categoryArgs<ExtArgs>
     history?: boolean | Customer$historyArgs<ExtArgs>
+    sisterOf?: boolean | Customer$sisterOfArgs<ExtArgs>
+    sisterCompanies?: boolean | Customer$sisterCompaniesArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CustomerIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     admin?: boolean | Customer$adminArgs<ExtArgs>
     partner?: boolean | Customer$partnerArgs<ExtArgs>
+    category?: boolean | Customer$categoryArgs<ExtArgs>
+    sisterOf?: boolean | Customer$sisterOfArgs<ExtArgs>
   }
   export type CustomerIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     admin?: boolean | Customer$adminArgs<ExtArgs>
     partner?: boolean | Customer$partnerArgs<ExtArgs>
+    category?: boolean | Customer$categoryArgs<ExtArgs>
+    sisterOf?: boolean | Customer$sisterOfArgs<ExtArgs>
   }
 
   export type $CustomerPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -20909,7 +21148,10 @@ export namespace Prisma {
     objects: {
       admin: Prisma.$AdminPayload<ExtArgs> | null
       partner: Prisma.$PartnerPayload<ExtArgs> | null
+      category: Prisma.$CustomerCategoryPayload<ExtArgs> | null
       history: Prisma.$CustomerProductHistoryPayload<ExtArgs>[]
+      sisterOf: Prisma.$CustomerPayload<ExtArgs> | null
+      sisterCompanies: Prisma.$CustomerPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -20917,13 +21159,17 @@ export namespace Prisma {
       companyName: string
       contactPerson: string
       mobileNumber: string
-      email: string
-      serialNo: string
+      email: string | null
+      serialNo: string | null
       prime: boolean
       blacklisted: boolean
+      connector: boolean
       remark: string | null
       adminCustomFields: Prisma.JsonValue | null
       address: Prisma.JsonValue | null
+      sisterOfId: string | null
+      categoryId: string | null
+      specialization: string | null
       joiningDate: Date
       hasReference: boolean
       partnerId: string | null
@@ -21326,7 +21572,10 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     admin<T extends Customer$adminArgs<ExtArgs> = {}>(args?: Subset<T, Customer$adminArgs<ExtArgs>>): Prisma__AdminClient<$Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     partner<T extends Customer$partnerArgs<ExtArgs> = {}>(args?: Subset<T, Customer$partnerArgs<ExtArgs>>): Prisma__PartnerClient<$Result.GetResult<Prisma.$PartnerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    category<T extends Customer$categoryArgs<ExtArgs> = {}>(args?: Subset<T, Customer$categoryArgs<ExtArgs>>): Prisma__CustomerCategoryClient<$Result.GetResult<Prisma.$CustomerCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     history<T extends Customer$historyArgs<ExtArgs> = {}>(args?: Subset<T, Customer$historyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerProductHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    sisterOf<T extends Customer$sisterOfArgs<ExtArgs> = {}>(args?: Subset<T, Customer$sisterOfArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    sisterCompanies<T extends Customer$sisterCompaniesArgs<ExtArgs> = {}>(args?: Subset<T, Customer$sisterCompaniesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -21365,9 +21614,13 @@ export namespace Prisma {
     readonly serialNo: FieldRef<"Customer", 'String'>
     readonly prime: FieldRef<"Customer", 'Boolean'>
     readonly blacklisted: FieldRef<"Customer", 'Boolean'>
+    readonly connector: FieldRef<"Customer", 'Boolean'>
     readonly remark: FieldRef<"Customer", 'String'>
     readonly adminCustomFields: FieldRef<"Customer", 'Json'>
     readonly address: FieldRef<"Customer", 'Json'>
+    readonly sisterOfId: FieldRef<"Customer", 'String'>
+    readonly categoryId: FieldRef<"Customer", 'String'>
+    readonly specialization: FieldRef<"Customer", 'String'>
     readonly joiningDate: FieldRef<"Customer", 'DateTime'>
     readonly hasReference: FieldRef<"Customer", 'Boolean'>
     readonly partnerId: FieldRef<"Customer", 'String'>
@@ -21808,6 +22061,25 @@ export namespace Prisma {
   }
 
   /**
+   * Customer.category
+   */
+  export type Customer$categoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerCategory
+     */
+    select?: CustomerCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerCategory
+     */
+    omit?: CustomerCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerCategoryInclude<ExtArgs> | null
+    where?: CustomerCategoryWhereInput
+  }
+
+  /**
    * Customer.history
    */
   export type Customer$historyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -21829,6 +22101,49 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: CustomerProductHistoryScalarFieldEnum | CustomerProductHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * Customer.sisterOf
+   */
+  export type Customer$sisterOfArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Customer
+     */
+    select?: CustomerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Customer
+     */
+    omit?: CustomerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerInclude<ExtArgs> | null
+    where?: CustomerWhereInput
+  }
+
+  /**
+   * Customer.sisterCompanies
+   */
+  export type Customer$sisterCompaniesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Customer
+     */
+    select?: CustomerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Customer
+     */
+    omit?: CustomerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerInclude<ExtArgs> | null
+    where?: CustomerWhereInput
+    orderBy?: CustomerOrderByWithRelationInput | CustomerOrderByWithRelationInput[]
+    cursor?: CustomerWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CustomerScalarFieldEnum | CustomerScalarFieldEnum[]
   }
 
   /**
@@ -23055,6 +23370,1116 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: CustomerProductHistoryInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model CustomerCategory
+   */
+
+  export type AggregateCustomerCategory = {
+    _count: CustomerCategoryCountAggregateOutputType | null
+    _min: CustomerCategoryMinAggregateOutputType | null
+    _max: CustomerCategoryMaxAggregateOutputType | null
+  }
+
+  export type CustomerCategoryMinAggregateOutputType = {
+    id: string | null
+    adminId: string | null
+    categoryName: string | null
+    status: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CustomerCategoryMaxAggregateOutputType = {
+    id: string | null
+    adminId: string | null
+    categoryName: string | null
+    status: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CustomerCategoryCountAggregateOutputType = {
+    id: number
+    adminId: number
+    categoryName: number
+    specialization: number
+    status: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type CustomerCategoryMinAggregateInputType = {
+    id?: true
+    adminId?: true
+    categoryName?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CustomerCategoryMaxAggregateInputType = {
+    id?: true
+    adminId?: true
+    categoryName?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CustomerCategoryCountAggregateInputType = {
+    id?: true
+    adminId?: true
+    categoryName?: true
+    specialization?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type CustomerCategoryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CustomerCategory to aggregate.
+     */
+    where?: CustomerCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomerCategories to fetch.
+     */
+    orderBy?: CustomerCategoryOrderByWithRelationInput | CustomerCategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CustomerCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomerCategories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomerCategories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CustomerCategories
+    **/
+    _count?: true | CustomerCategoryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CustomerCategoryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CustomerCategoryMaxAggregateInputType
+  }
+
+  export type GetCustomerCategoryAggregateType<T extends CustomerCategoryAggregateArgs> = {
+        [P in keyof T & keyof AggregateCustomerCategory]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCustomerCategory[P]>
+      : GetScalarType<T[P], AggregateCustomerCategory[P]>
+  }
+
+
+
+
+  export type CustomerCategoryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CustomerCategoryWhereInput
+    orderBy?: CustomerCategoryOrderByWithAggregationInput | CustomerCategoryOrderByWithAggregationInput[]
+    by: CustomerCategoryScalarFieldEnum[] | CustomerCategoryScalarFieldEnum
+    having?: CustomerCategoryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CustomerCategoryCountAggregateInputType | true
+    _min?: CustomerCategoryMinAggregateInputType
+    _max?: CustomerCategoryMaxAggregateInputType
+  }
+
+  export type CustomerCategoryGroupByOutputType = {
+    id: string
+    adminId: string
+    categoryName: string
+    specialization: string[]
+    status: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: CustomerCategoryCountAggregateOutputType | null
+    _min: CustomerCategoryMinAggregateOutputType | null
+    _max: CustomerCategoryMaxAggregateOutputType | null
+  }
+
+  type GetCustomerCategoryGroupByPayload<T extends CustomerCategoryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CustomerCategoryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CustomerCategoryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CustomerCategoryGroupByOutputType[P]>
+            : GetScalarType<T[P], CustomerCategoryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CustomerCategorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    adminId?: boolean
+    categoryName?: boolean
+    specialization?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    admin?: boolean | AdminDefaultArgs<ExtArgs>
+    customers?: boolean | CustomerCategory$customersArgs<ExtArgs>
+    _count?: boolean | CustomerCategoryCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["customerCategory"]>
+
+  export type CustomerCategorySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    adminId?: boolean
+    categoryName?: boolean
+    specialization?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    admin?: boolean | AdminDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["customerCategory"]>
+
+  export type CustomerCategorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    adminId?: boolean
+    categoryName?: boolean
+    specialization?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    admin?: boolean | AdminDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["customerCategory"]>
+
+  export type CustomerCategorySelectScalar = {
+    id?: boolean
+    adminId?: boolean
+    categoryName?: boolean
+    specialization?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type CustomerCategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "adminId" | "categoryName" | "specialization" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["customerCategory"]>
+  export type CustomerCategoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    admin?: boolean | AdminDefaultArgs<ExtArgs>
+    customers?: boolean | CustomerCategory$customersArgs<ExtArgs>
+    _count?: boolean | CustomerCategoryCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type CustomerCategoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    admin?: boolean | AdminDefaultArgs<ExtArgs>
+  }
+  export type CustomerCategoryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    admin?: boolean | AdminDefaultArgs<ExtArgs>
+  }
+
+  export type $CustomerCategoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CustomerCategory"
+    objects: {
+      admin: Prisma.$AdminPayload<ExtArgs>
+      customers: Prisma.$CustomerPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      adminId: string
+      categoryName: string
+      specialization: string[]
+      status: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["customerCategory"]>
+    composites: {}
+  }
+
+  type CustomerCategoryGetPayload<S extends boolean | null | undefined | CustomerCategoryDefaultArgs> = $Result.GetResult<Prisma.$CustomerCategoryPayload, S>
+
+  type CustomerCategoryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CustomerCategoryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CustomerCategoryCountAggregateInputType | true
+    }
+
+  export interface CustomerCategoryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CustomerCategory'], meta: { name: 'CustomerCategory' } }
+    /**
+     * Find zero or one CustomerCategory that matches the filter.
+     * @param {CustomerCategoryFindUniqueArgs} args - Arguments to find a CustomerCategory
+     * @example
+     * // Get one CustomerCategory
+     * const customerCategory = await prisma.customerCategory.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CustomerCategoryFindUniqueArgs>(args: SelectSubset<T, CustomerCategoryFindUniqueArgs<ExtArgs>>): Prisma__CustomerCategoryClient<$Result.GetResult<Prisma.$CustomerCategoryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CustomerCategory that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CustomerCategoryFindUniqueOrThrowArgs} args - Arguments to find a CustomerCategory
+     * @example
+     * // Get one CustomerCategory
+     * const customerCategory = await prisma.customerCategory.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CustomerCategoryFindUniqueOrThrowArgs>(args: SelectSubset<T, CustomerCategoryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CustomerCategoryClient<$Result.GetResult<Prisma.$CustomerCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CustomerCategory that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerCategoryFindFirstArgs} args - Arguments to find a CustomerCategory
+     * @example
+     * // Get one CustomerCategory
+     * const customerCategory = await prisma.customerCategory.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CustomerCategoryFindFirstArgs>(args?: SelectSubset<T, CustomerCategoryFindFirstArgs<ExtArgs>>): Prisma__CustomerCategoryClient<$Result.GetResult<Prisma.$CustomerCategoryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CustomerCategory that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerCategoryFindFirstOrThrowArgs} args - Arguments to find a CustomerCategory
+     * @example
+     * // Get one CustomerCategory
+     * const customerCategory = await prisma.customerCategory.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CustomerCategoryFindFirstOrThrowArgs>(args?: SelectSubset<T, CustomerCategoryFindFirstOrThrowArgs<ExtArgs>>): Prisma__CustomerCategoryClient<$Result.GetResult<Prisma.$CustomerCategoryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CustomerCategories that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerCategoryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CustomerCategories
+     * const customerCategories = await prisma.customerCategory.findMany()
+     * 
+     * // Get first 10 CustomerCategories
+     * const customerCategories = await prisma.customerCategory.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const customerCategoryWithIdOnly = await prisma.customerCategory.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CustomerCategoryFindManyArgs>(args?: SelectSubset<T, CustomerCategoryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CustomerCategory.
+     * @param {CustomerCategoryCreateArgs} args - Arguments to create a CustomerCategory.
+     * @example
+     * // Create one CustomerCategory
+     * const CustomerCategory = await prisma.customerCategory.create({
+     *   data: {
+     *     // ... data to create a CustomerCategory
+     *   }
+     * })
+     * 
+     */
+    create<T extends CustomerCategoryCreateArgs>(args: SelectSubset<T, CustomerCategoryCreateArgs<ExtArgs>>): Prisma__CustomerCategoryClient<$Result.GetResult<Prisma.$CustomerCategoryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CustomerCategories.
+     * @param {CustomerCategoryCreateManyArgs} args - Arguments to create many CustomerCategories.
+     * @example
+     * // Create many CustomerCategories
+     * const customerCategory = await prisma.customerCategory.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CustomerCategoryCreateManyArgs>(args?: SelectSubset<T, CustomerCategoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CustomerCategories and returns the data saved in the database.
+     * @param {CustomerCategoryCreateManyAndReturnArgs} args - Arguments to create many CustomerCategories.
+     * @example
+     * // Create many CustomerCategories
+     * const customerCategory = await prisma.customerCategory.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CustomerCategories and only return the `id`
+     * const customerCategoryWithIdOnly = await prisma.customerCategory.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CustomerCategoryCreateManyAndReturnArgs>(args?: SelectSubset<T, CustomerCategoryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerCategoryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CustomerCategory.
+     * @param {CustomerCategoryDeleteArgs} args - Arguments to delete one CustomerCategory.
+     * @example
+     * // Delete one CustomerCategory
+     * const CustomerCategory = await prisma.customerCategory.delete({
+     *   where: {
+     *     // ... filter to delete one CustomerCategory
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CustomerCategoryDeleteArgs>(args: SelectSubset<T, CustomerCategoryDeleteArgs<ExtArgs>>): Prisma__CustomerCategoryClient<$Result.GetResult<Prisma.$CustomerCategoryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CustomerCategory.
+     * @param {CustomerCategoryUpdateArgs} args - Arguments to update one CustomerCategory.
+     * @example
+     * // Update one CustomerCategory
+     * const customerCategory = await prisma.customerCategory.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CustomerCategoryUpdateArgs>(args: SelectSubset<T, CustomerCategoryUpdateArgs<ExtArgs>>): Prisma__CustomerCategoryClient<$Result.GetResult<Prisma.$CustomerCategoryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CustomerCategories.
+     * @param {CustomerCategoryDeleteManyArgs} args - Arguments to filter CustomerCategories to delete.
+     * @example
+     * // Delete a few CustomerCategories
+     * const { count } = await prisma.customerCategory.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CustomerCategoryDeleteManyArgs>(args?: SelectSubset<T, CustomerCategoryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CustomerCategories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerCategoryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CustomerCategories
+     * const customerCategory = await prisma.customerCategory.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CustomerCategoryUpdateManyArgs>(args: SelectSubset<T, CustomerCategoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CustomerCategories and returns the data updated in the database.
+     * @param {CustomerCategoryUpdateManyAndReturnArgs} args - Arguments to update many CustomerCategories.
+     * @example
+     * // Update many CustomerCategories
+     * const customerCategory = await prisma.customerCategory.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CustomerCategories and only return the `id`
+     * const customerCategoryWithIdOnly = await prisma.customerCategory.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CustomerCategoryUpdateManyAndReturnArgs>(args: SelectSubset<T, CustomerCategoryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerCategoryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CustomerCategory.
+     * @param {CustomerCategoryUpsertArgs} args - Arguments to update or create a CustomerCategory.
+     * @example
+     * // Update or create a CustomerCategory
+     * const customerCategory = await prisma.customerCategory.upsert({
+     *   create: {
+     *     // ... data to create a CustomerCategory
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CustomerCategory we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CustomerCategoryUpsertArgs>(args: SelectSubset<T, CustomerCategoryUpsertArgs<ExtArgs>>): Prisma__CustomerCategoryClient<$Result.GetResult<Prisma.$CustomerCategoryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CustomerCategories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerCategoryCountArgs} args - Arguments to filter CustomerCategories to count.
+     * @example
+     * // Count the number of CustomerCategories
+     * const count = await prisma.customerCategory.count({
+     *   where: {
+     *     // ... the filter for the CustomerCategories we want to count
+     *   }
+     * })
+    **/
+    count<T extends CustomerCategoryCountArgs>(
+      args?: Subset<T, CustomerCategoryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CustomerCategoryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CustomerCategory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerCategoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CustomerCategoryAggregateArgs>(args: Subset<T, CustomerCategoryAggregateArgs>): Prisma.PrismaPromise<GetCustomerCategoryAggregateType<T>>
+
+    /**
+     * Group by CustomerCategory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerCategoryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CustomerCategoryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CustomerCategoryGroupByArgs['orderBy'] }
+        : { orderBy?: CustomerCategoryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CustomerCategoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCustomerCategoryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CustomerCategory model
+   */
+  readonly fields: CustomerCategoryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CustomerCategory.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CustomerCategoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    admin<T extends AdminDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AdminDefaultArgs<ExtArgs>>): Prisma__AdminClient<$Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    customers<T extends CustomerCategory$customersArgs<ExtArgs> = {}>(args?: Subset<T, CustomerCategory$customersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CustomerCategory model
+   */
+  interface CustomerCategoryFieldRefs {
+    readonly id: FieldRef<"CustomerCategory", 'String'>
+    readonly adminId: FieldRef<"CustomerCategory", 'String'>
+    readonly categoryName: FieldRef<"CustomerCategory", 'String'>
+    readonly specialization: FieldRef<"CustomerCategory", 'String[]'>
+    readonly status: FieldRef<"CustomerCategory", 'Boolean'>
+    readonly createdAt: FieldRef<"CustomerCategory", 'DateTime'>
+    readonly updatedAt: FieldRef<"CustomerCategory", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CustomerCategory findUnique
+   */
+  export type CustomerCategoryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerCategory
+     */
+    select?: CustomerCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerCategory
+     */
+    omit?: CustomerCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomerCategory to fetch.
+     */
+    where: CustomerCategoryWhereUniqueInput
+  }
+
+  /**
+   * CustomerCategory findUniqueOrThrow
+   */
+  export type CustomerCategoryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerCategory
+     */
+    select?: CustomerCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerCategory
+     */
+    omit?: CustomerCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomerCategory to fetch.
+     */
+    where: CustomerCategoryWhereUniqueInput
+  }
+
+  /**
+   * CustomerCategory findFirst
+   */
+  export type CustomerCategoryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerCategory
+     */
+    select?: CustomerCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerCategory
+     */
+    omit?: CustomerCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomerCategory to fetch.
+     */
+    where?: CustomerCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomerCategories to fetch.
+     */
+    orderBy?: CustomerCategoryOrderByWithRelationInput | CustomerCategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CustomerCategories.
+     */
+    cursor?: CustomerCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomerCategories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomerCategories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CustomerCategories.
+     */
+    distinct?: CustomerCategoryScalarFieldEnum | CustomerCategoryScalarFieldEnum[]
+  }
+
+  /**
+   * CustomerCategory findFirstOrThrow
+   */
+  export type CustomerCategoryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerCategory
+     */
+    select?: CustomerCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerCategory
+     */
+    omit?: CustomerCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomerCategory to fetch.
+     */
+    where?: CustomerCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomerCategories to fetch.
+     */
+    orderBy?: CustomerCategoryOrderByWithRelationInput | CustomerCategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CustomerCategories.
+     */
+    cursor?: CustomerCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomerCategories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomerCategories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CustomerCategories.
+     */
+    distinct?: CustomerCategoryScalarFieldEnum | CustomerCategoryScalarFieldEnum[]
+  }
+
+  /**
+   * CustomerCategory findMany
+   */
+  export type CustomerCategoryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerCategory
+     */
+    select?: CustomerCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerCategory
+     */
+    omit?: CustomerCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomerCategories to fetch.
+     */
+    where?: CustomerCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomerCategories to fetch.
+     */
+    orderBy?: CustomerCategoryOrderByWithRelationInput | CustomerCategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CustomerCategories.
+     */
+    cursor?: CustomerCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomerCategories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomerCategories.
+     */
+    skip?: number
+    distinct?: CustomerCategoryScalarFieldEnum | CustomerCategoryScalarFieldEnum[]
+  }
+
+  /**
+   * CustomerCategory create
+   */
+  export type CustomerCategoryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerCategory
+     */
+    select?: CustomerCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerCategory
+     */
+    omit?: CustomerCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerCategoryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CustomerCategory.
+     */
+    data: XOR<CustomerCategoryCreateInput, CustomerCategoryUncheckedCreateInput>
+  }
+
+  /**
+   * CustomerCategory createMany
+   */
+  export type CustomerCategoryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CustomerCategories.
+     */
+    data: CustomerCategoryCreateManyInput | CustomerCategoryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CustomerCategory createManyAndReturn
+   */
+  export type CustomerCategoryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerCategory
+     */
+    select?: CustomerCategorySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerCategory
+     */
+    omit?: CustomerCategoryOmit<ExtArgs> | null
+    /**
+     * The data used to create many CustomerCategories.
+     */
+    data: CustomerCategoryCreateManyInput | CustomerCategoryCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerCategoryIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CustomerCategory update
+   */
+  export type CustomerCategoryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerCategory
+     */
+    select?: CustomerCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerCategory
+     */
+    omit?: CustomerCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerCategoryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CustomerCategory.
+     */
+    data: XOR<CustomerCategoryUpdateInput, CustomerCategoryUncheckedUpdateInput>
+    /**
+     * Choose, which CustomerCategory to update.
+     */
+    where: CustomerCategoryWhereUniqueInput
+  }
+
+  /**
+   * CustomerCategory updateMany
+   */
+  export type CustomerCategoryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CustomerCategories.
+     */
+    data: XOR<CustomerCategoryUpdateManyMutationInput, CustomerCategoryUncheckedUpdateManyInput>
+    /**
+     * Filter which CustomerCategories to update
+     */
+    where?: CustomerCategoryWhereInput
+    /**
+     * Limit how many CustomerCategories to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CustomerCategory updateManyAndReturn
+   */
+  export type CustomerCategoryUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerCategory
+     */
+    select?: CustomerCategorySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerCategory
+     */
+    omit?: CustomerCategoryOmit<ExtArgs> | null
+    /**
+     * The data used to update CustomerCategories.
+     */
+    data: XOR<CustomerCategoryUpdateManyMutationInput, CustomerCategoryUncheckedUpdateManyInput>
+    /**
+     * Filter which CustomerCategories to update
+     */
+    where?: CustomerCategoryWhereInput
+    /**
+     * Limit how many CustomerCategories to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerCategoryIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CustomerCategory upsert
+   */
+  export type CustomerCategoryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerCategory
+     */
+    select?: CustomerCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerCategory
+     */
+    omit?: CustomerCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerCategoryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CustomerCategory to update in case it exists.
+     */
+    where: CustomerCategoryWhereUniqueInput
+    /**
+     * In case the CustomerCategory found by the `where` argument doesn't exist, create a new CustomerCategory with this data.
+     */
+    create: XOR<CustomerCategoryCreateInput, CustomerCategoryUncheckedCreateInput>
+    /**
+     * In case the CustomerCategory was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CustomerCategoryUpdateInput, CustomerCategoryUncheckedUpdateInput>
+  }
+
+  /**
+   * CustomerCategory delete
+   */
+  export type CustomerCategoryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerCategory
+     */
+    select?: CustomerCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerCategory
+     */
+    omit?: CustomerCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerCategoryInclude<ExtArgs> | null
+    /**
+     * Filter which CustomerCategory to delete.
+     */
+    where: CustomerCategoryWhereUniqueInput
+  }
+
+  /**
+   * CustomerCategory deleteMany
+   */
+  export type CustomerCategoryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CustomerCategories to delete
+     */
+    where?: CustomerCategoryWhereInput
+    /**
+     * Limit how many CustomerCategories to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CustomerCategory.customers
+   */
+  export type CustomerCategory$customersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Customer
+     */
+    select?: CustomerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Customer
+     */
+    omit?: CustomerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerInclude<ExtArgs> | null
+    where?: CustomerWhereInput
+    orderBy?: CustomerOrderByWithRelationInput | CustomerOrderByWithRelationInput[]
+    cursor?: CustomerWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CustomerScalarFieldEnum | CustomerScalarFieldEnum[]
+  }
+
+  /**
+   * CustomerCategory without action
+   */
+  export type CustomerCategoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerCategory
+     */
+    select?: CustomerCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerCategory
+     */
+    omit?: CustomerCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerCategoryInclude<ExtArgs> | null
   }
 
 
@@ -26405,8 +27830,8 @@ export namespace Prisma {
   export type FeedbackGroupByOutputType = {
     id: string
     userId: string
-    rating: string
-    feedback: string
+    rating: string | null
+    feedback: string | null
     createdAt: Date
     _count: FeedbackCountAggregateOutputType | null
     _min: FeedbackMinAggregateOutputType | null
@@ -26481,8 +27906,8 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       userId: string
-      rating: string
-      feedback: string
+      rating: string | null
+      feedback: string | null
       createdAt: Date
     }, ExtArgs["result"]["feedback"]>
     composites: {}
@@ -27579,9 +29004,13 @@ export namespace Prisma {
     serialNo: 'serialNo',
     prime: 'prime',
     blacklisted: 'blacklisted',
+    connector: 'connector',
     remark: 'remark',
     adminCustomFields: 'adminCustomFields',
     address: 'address',
+    sisterOfId: 'sisterOfId',
+    categoryId: 'categoryId',
+    specialization: 'specialization',
     joiningDate: 'joiningDate',
     hasReference: 'hasReference',
     partnerId: 'partnerId',
@@ -27610,6 +29039,19 @@ export namespace Prisma {
   };
 
   export type CustomerProductHistoryScalarFieldEnum = (typeof CustomerProductHistoryScalarFieldEnum)[keyof typeof CustomerProductHistoryScalarFieldEnum]
+
+
+  export const CustomerCategoryScalarFieldEnum: {
+    id: 'id',
+    adminId: 'adminId',
+    categoryName: 'categoryName',
+    specialization: 'specialization',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type CustomerCategoryScalarFieldEnum = (typeof CustomerCategoryScalarFieldEnum)[keyof typeof CustomerCategoryScalarFieldEnum]
 
 
   export const AdminCustomFieldScalarFieldEnum: {
@@ -27957,6 +29399,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionListRelationFilter
     loginCreds?: LoginCredentialListRelationFilter
     productHistories?: CustomerProductHistoryListRelationFilter
+    CustomerCategory?: CustomerCategoryListRelationFilter
   }
 
   export type AdminOrderByWithRelationInput = {
@@ -27980,6 +29423,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionOrderByRelationAggregateInput
     loginCreds?: LoginCredentialOrderByRelationAggregateInput
     productHistories?: CustomerProductHistoryOrderByRelationAggregateInput
+    CustomerCategory?: CustomerCategoryOrderByRelationAggregateInput
   }
 
   export type AdminWhereUniqueInput = Prisma.AtLeast<{
@@ -28006,6 +29450,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionListRelationFilter
     loginCreds?: LoginCredentialListRelationFilter
     productHistories?: CustomerProductHistoryListRelationFilter
+    CustomerCategory?: CustomerCategoryListRelationFilter
   }, "id" | "email">
 
   export type AdminOrderByWithAggregationInput = {
@@ -29077,13 +30522,17 @@ export namespace Prisma {
     companyName?: StringFilter<"Customer"> | string
     contactPerson?: StringFilter<"Customer"> | string
     mobileNumber?: StringFilter<"Customer"> | string
-    email?: StringFilter<"Customer"> | string
-    serialNo?: StringFilter<"Customer"> | string
+    email?: StringNullableFilter<"Customer"> | string | null
+    serialNo?: StringNullableFilter<"Customer"> | string | null
     prime?: BoolFilter<"Customer"> | boolean
     blacklisted?: BoolFilter<"Customer"> | boolean
+    connector?: BoolFilter<"Customer"> | boolean
     remark?: StringNullableFilter<"Customer"> | string | null
     adminCustomFields?: JsonNullableFilter<"Customer">
     address?: JsonNullableFilter<"Customer">
+    sisterOfId?: UuidNullableFilter<"Customer"> | string | null
+    categoryId?: UuidNullableFilter<"Customer"> | string | null
+    specialization?: StringNullableFilter<"Customer"> | string | null
     joiningDate?: DateTimeFilter<"Customer"> | Date | string
     hasReference?: BoolFilter<"Customer"> | boolean
     partnerId?: UuidNullableFilter<"Customer"> | string | null
@@ -29092,7 +30541,10 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Customer"> | Date | string
     admin?: XOR<AdminNullableScalarRelationFilter, AdminWhereInput> | null
     partner?: XOR<PartnerNullableScalarRelationFilter, PartnerWhereInput> | null
+    category?: XOR<CustomerCategoryNullableScalarRelationFilter, CustomerCategoryWhereInput> | null
     history?: CustomerProductHistoryListRelationFilter
+    sisterOf?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
+    sisterCompanies?: CustomerListRelationFilter
   }
 
   export type CustomerOrderByWithRelationInput = {
@@ -29101,13 +30553,17 @@ export namespace Prisma {
     companyName?: SortOrder
     contactPerson?: SortOrder
     mobileNumber?: SortOrder
-    email?: SortOrder
-    serialNo?: SortOrder
+    email?: SortOrderInput | SortOrder
+    serialNo?: SortOrderInput | SortOrder
     prime?: SortOrder
     blacklisted?: SortOrder
+    connector?: SortOrder
     remark?: SortOrderInput | SortOrder
     adminCustomFields?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
+    sisterOfId?: SortOrderInput | SortOrder
+    categoryId?: SortOrderInput | SortOrder
+    specialization?: SortOrderInput | SortOrder
     joiningDate?: SortOrder
     hasReference?: SortOrder
     partnerId?: SortOrderInput | SortOrder
@@ -29116,25 +30572,32 @@ export namespace Prisma {
     updatedAt?: SortOrder
     admin?: AdminOrderByWithRelationInput
     partner?: PartnerOrderByWithRelationInput
+    category?: CustomerCategoryOrderByWithRelationInput
     history?: CustomerProductHistoryOrderByRelationAggregateInput
+    sisterOf?: CustomerOrderByWithRelationInput
+    sisterCompanies?: CustomerOrderByRelationAggregateInput
   }
 
   export type CustomerWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    mobileNumber?: string
-    email?: string
     AND?: CustomerWhereInput | CustomerWhereInput[]
     OR?: CustomerWhereInput[]
     NOT?: CustomerWhereInput | CustomerWhereInput[]
     adminId?: UuidNullableFilter<"Customer"> | string | null
     companyName?: StringFilter<"Customer"> | string
     contactPerson?: StringFilter<"Customer"> | string
-    serialNo?: StringFilter<"Customer"> | string
+    mobileNumber?: StringFilter<"Customer"> | string
+    email?: StringNullableFilter<"Customer"> | string | null
+    serialNo?: StringNullableFilter<"Customer"> | string | null
     prime?: BoolFilter<"Customer"> | boolean
     blacklisted?: BoolFilter<"Customer"> | boolean
+    connector?: BoolFilter<"Customer"> | boolean
     remark?: StringNullableFilter<"Customer"> | string | null
     adminCustomFields?: JsonNullableFilter<"Customer">
     address?: JsonNullableFilter<"Customer">
+    sisterOfId?: UuidNullableFilter<"Customer"> | string | null
+    categoryId?: UuidNullableFilter<"Customer"> | string | null
+    specialization?: StringNullableFilter<"Customer"> | string | null
     joiningDate?: DateTimeFilter<"Customer"> | Date | string
     hasReference?: BoolFilter<"Customer"> | boolean
     partnerId?: UuidNullableFilter<"Customer"> | string | null
@@ -29143,8 +30606,11 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Customer"> | Date | string
     admin?: XOR<AdminNullableScalarRelationFilter, AdminWhereInput> | null
     partner?: XOR<PartnerNullableScalarRelationFilter, PartnerWhereInput> | null
+    category?: XOR<CustomerCategoryNullableScalarRelationFilter, CustomerCategoryWhereInput> | null
     history?: CustomerProductHistoryListRelationFilter
-  }, "id" | "mobileNumber" | "email">
+    sisterOf?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
+    sisterCompanies?: CustomerListRelationFilter
+  }, "id">
 
   export type CustomerOrderByWithAggregationInput = {
     id?: SortOrder
@@ -29152,13 +30618,17 @@ export namespace Prisma {
     companyName?: SortOrder
     contactPerson?: SortOrder
     mobileNumber?: SortOrder
-    email?: SortOrder
-    serialNo?: SortOrder
+    email?: SortOrderInput | SortOrder
+    serialNo?: SortOrderInput | SortOrder
     prime?: SortOrder
     blacklisted?: SortOrder
+    connector?: SortOrder
     remark?: SortOrderInput | SortOrder
     adminCustomFields?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
+    sisterOfId?: SortOrderInput | SortOrder
+    categoryId?: SortOrderInput | SortOrder
+    specialization?: SortOrderInput | SortOrder
     joiningDate?: SortOrder
     hasReference?: SortOrder
     partnerId?: SortOrderInput | SortOrder
@@ -29179,13 +30649,17 @@ export namespace Prisma {
     companyName?: StringWithAggregatesFilter<"Customer"> | string
     contactPerson?: StringWithAggregatesFilter<"Customer"> | string
     mobileNumber?: StringWithAggregatesFilter<"Customer"> | string
-    email?: StringWithAggregatesFilter<"Customer"> | string
-    serialNo?: StringWithAggregatesFilter<"Customer"> | string
+    email?: StringNullableWithAggregatesFilter<"Customer"> | string | null
+    serialNo?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     prime?: BoolWithAggregatesFilter<"Customer"> | boolean
     blacklisted?: BoolWithAggregatesFilter<"Customer"> | boolean
+    connector?: BoolWithAggregatesFilter<"Customer"> | boolean
     remark?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     adminCustomFields?: JsonNullableWithAggregatesFilter<"Customer">
     address?: JsonNullableWithAggregatesFilter<"Customer">
+    sisterOfId?: UuidNullableWithAggregatesFilter<"Customer"> | string | null
+    categoryId?: UuidNullableWithAggregatesFilter<"Customer"> | string | null
+    specialization?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     joiningDate?: DateTimeWithAggregatesFilter<"Customer"> | Date | string
     hasReference?: BoolWithAggregatesFilter<"Customer"> | boolean
     partnerId?: UuidNullableWithAggregatesFilter<"Customer"> | string | null
@@ -29296,6 +30770,74 @@ export namespace Prisma {
     detail?: StringNullableWithAggregatesFilter<"CustomerProductHistory"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"CustomerProductHistory"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"CustomerProductHistory"> | Date | string
+  }
+
+  export type CustomerCategoryWhereInput = {
+    AND?: CustomerCategoryWhereInput | CustomerCategoryWhereInput[]
+    OR?: CustomerCategoryWhereInput[]
+    NOT?: CustomerCategoryWhereInput | CustomerCategoryWhereInput[]
+    id?: UuidFilter<"CustomerCategory"> | string
+    adminId?: UuidFilter<"CustomerCategory"> | string
+    categoryName?: StringFilter<"CustomerCategory"> | string
+    specialization?: StringNullableListFilter<"CustomerCategory">
+    status?: BoolFilter<"CustomerCategory"> | boolean
+    createdAt?: DateTimeFilter<"CustomerCategory"> | Date | string
+    updatedAt?: DateTimeFilter<"CustomerCategory"> | Date | string
+    admin?: XOR<AdminScalarRelationFilter, AdminWhereInput>
+    customers?: CustomerListRelationFilter
+  }
+
+  export type CustomerCategoryOrderByWithRelationInput = {
+    id?: SortOrder
+    adminId?: SortOrder
+    categoryName?: SortOrder
+    specialization?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    admin?: AdminOrderByWithRelationInput
+    customers?: CustomerOrderByRelationAggregateInput
+  }
+
+  export type CustomerCategoryWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: CustomerCategoryWhereInput | CustomerCategoryWhereInput[]
+    OR?: CustomerCategoryWhereInput[]
+    NOT?: CustomerCategoryWhereInput | CustomerCategoryWhereInput[]
+    adminId?: UuidFilter<"CustomerCategory"> | string
+    categoryName?: StringFilter<"CustomerCategory"> | string
+    specialization?: StringNullableListFilter<"CustomerCategory">
+    status?: BoolFilter<"CustomerCategory"> | boolean
+    createdAt?: DateTimeFilter<"CustomerCategory"> | Date | string
+    updatedAt?: DateTimeFilter<"CustomerCategory"> | Date | string
+    admin?: XOR<AdminScalarRelationFilter, AdminWhereInput>
+    customers?: CustomerListRelationFilter
+  }, "id">
+
+  export type CustomerCategoryOrderByWithAggregationInput = {
+    id?: SortOrder
+    adminId?: SortOrder
+    categoryName?: SortOrder
+    specialization?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: CustomerCategoryCountOrderByAggregateInput
+    _max?: CustomerCategoryMaxOrderByAggregateInput
+    _min?: CustomerCategoryMinOrderByAggregateInput
+  }
+
+  export type CustomerCategoryScalarWhereWithAggregatesInput = {
+    AND?: CustomerCategoryScalarWhereWithAggregatesInput | CustomerCategoryScalarWhereWithAggregatesInput[]
+    OR?: CustomerCategoryScalarWhereWithAggregatesInput[]
+    NOT?: CustomerCategoryScalarWhereWithAggregatesInput | CustomerCategoryScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"CustomerCategory"> | string
+    adminId?: UuidWithAggregatesFilter<"CustomerCategory"> | string
+    categoryName?: StringWithAggregatesFilter<"CustomerCategory"> | string
+    specialization?: StringNullableListFilter<"CustomerCategory">
+    status?: BoolWithAggregatesFilter<"CustomerCategory"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"CustomerCategory"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"CustomerCategory"> | Date | string
   }
 
   export type AdminCustomFieldWhereInput = {
@@ -29506,8 +31048,8 @@ export namespace Prisma {
     NOT?: FeedbackWhereInput | FeedbackWhereInput[]
     id?: UuidFilter<"Feedback"> | string
     userId?: UuidFilter<"Feedback"> | string
-    rating?: StringFilter<"Feedback"> | string
-    feedback?: StringFilter<"Feedback"> | string
+    rating?: StringNullableFilter<"Feedback"> | string | null
+    feedback?: StringNullableFilter<"Feedback"> | string | null
     createdAt?: DateTimeFilter<"Feedback"> | Date | string
     user?: XOR<LoginCredentialScalarRelationFilter, LoginCredentialWhereInput>
   }
@@ -29515,8 +31057,8 @@ export namespace Prisma {
   export type FeedbackOrderByWithRelationInput = {
     id?: SortOrder
     userId?: SortOrder
-    rating?: SortOrder
-    feedback?: SortOrder
+    rating?: SortOrderInput | SortOrder
+    feedback?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     user?: LoginCredentialOrderByWithRelationInput
   }
@@ -29527,8 +31069,8 @@ export namespace Prisma {
     OR?: FeedbackWhereInput[]
     NOT?: FeedbackWhereInput | FeedbackWhereInput[]
     userId?: UuidFilter<"Feedback"> | string
-    rating?: StringFilter<"Feedback"> | string
-    feedback?: StringFilter<"Feedback"> | string
+    rating?: StringNullableFilter<"Feedback"> | string | null
+    feedback?: StringNullableFilter<"Feedback"> | string | null
     createdAt?: DateTimeFilter<"Feedback"> | Date | string
     user?: XOR<LoginCredentialScalarRelationFilter, LoginCredentialWhereInput>
   }, "id">
@@ -29536,8 +31078,8 @@ export namespace Prisma {
   export type FeedbackOrderByWithAggregationInput = {
     id?: SortOrder
     userId?: SortOrder
-    rating?: SortOrder
-    feedback?: SortOrder
+    rating?: SortOrderInput | SortOrder
+    feedback?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: FeedbackCountOrderByAggregateInput
     _max?: FeedbackMaxOrderByAggregateInput
@@ -29550,8 +31092,8 @@ export namespace Prisma {
     NOT?: FeedbackScalarWhereWithAggregatesInput | FeedbackScalarWhereWithAggregatesInput[]
     id?: UuidWithAggregatesFilter<"Feedback"> | string
     userId?: UuidWithAggregatesFilter<"Feedback"> | string
-    rating?: StringWithAggregatesFilter<"Feedback"> | string
-    feedback?: StringWithAggregatesFilter<"Feedback"> | string
+    rating?: StringNullableWithAggregatesFilter<"Feedback"> | string | null
+    feedback?: StringNullableWithAggregatesFilter<"Feedback"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Feedback"> | Date | string
   }
 
@@ -29671,6 +31213,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionCreateNestedManyWithoutAdminInput
     loginCreds?: LoginCredentialCreateNestedManyWithoutAdminInput
     productHistories?: CustomerProductHistoryCreateNestedManyWithoutAdminInput
+    CustomerCategory?: CustomerCategoryCreateNestedManyWithoutAdminInput
   }
 
   export type AdminUncheckedCreateInput = {
@@ -29694,6 +31237,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutAdminInput
     loginCreds?: LoginCredentialUncheckedCreateNestedManyWithoutAdminInput
     productHistories?: CustomerProductHistoryUncheckedCreateNestedManyWithoutAdminInput
+    CustomerCategory?: CustomerCategoryUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AdminUpdateInput = {
@@ -29717,6 +31261,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUpdateManyWithoutAdminNestedInput
     loginCreds?: LoginCredentialUpdateManyWithoutAdminNestedInput
     productHistories?: CustomerProductHistoryUpdateManyWithoutAdminNestedInput
+    CustomerCategory?: CustomerCategoryUpdateManyWithoutAdminNestedInput
   }
 
   export type AdminUncheckedUpdateInput = {
@@ -29740,6 +31285,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutAdminNestedInput
     loginCreds?: LoginCredentialUncheckedUpdateManyWithoutAdminNestedInput
     productHistories?: CustomerProductHistoryUncheckedUpdateManyWithoutAdminNestedInput
+    CustomerCategory?: CustomerCategoryUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type AdminCreateManyInput = {
@@ -30913,13 +32459,15 @@ export namespace Prisma {
     companyName: string
     contactPerson: string
     mobileNumber: string
-    email: string
-    serialNo: string
+    email?: string | null
+    serialNo?: string | null
     prime?: boolean
     blacklisted?: boolean
+    connector?: boolean
     remark?: string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
+    specialization?: string | null
     joiningDate: Date | string
     hasReference?: boolean
     status?: boolean
@@ -30927,7 +32475,10 @@ export namespace Prisma {
     updatedAt?: Date | string
     admin?: AdminCreateNestedOneWithoutCustomersInput
     partner?: PartnerCreateNestedOneWithoutCustomersInput
+    category?: CustomerCategoryCreateNestedOneWithoutCustomersInput
     history?: CustomerProductHistoryCreateNestedManyWithoutCustomerInput
+    sisterOf?: CustomerCreateNestedOneWithoutSisterCompaniesInput
+    sisterCompanies?: CustomerCreateNestedManyWithoutSisterOfInput
   }
 
   export type CustomerUncheckedCreateInput = {
@@ -30936,13 +32487,17 @@ export namespace Prisma {
     companyName: string
     contactPerson: string
     mobileNumber: string
-    email: string
-    serialNo: string
+    email?: string | null
+    serialNo?: string | null
     prime?: boolean
     blacklisted?: boolean
+    connector?: boolean
     remark?: string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
+    sisterOfId?: string | null
+    categoryId?: string | null
+    specialization?: string | null
     joiningDate: Date | string
     hasReference?: boolean
     partnerId?: string | null
@@ -30950,6 +32505,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     history?: CustomerProductHistoryUncheckedCreateNestedManyWithoutCustomerInput
+    sisterCompanies?: CustomerUncheckedCreateNestedManyWithoutSisterOfInput
   }
 
   export type CustomerUpdateInput = {
@@ -30957,13 +32513,15 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     contactPerson?: StringFieldUpdateOperationsInput | string
     mobileNumber?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    serialNo?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     prime?: BoolFieldUpdateOperationsInput | boolean
     blacklisted?: BoolFieldUpdateOperationsInput | boolean
+    connector?: BoolFieldUpdateOperationsInput | boolean
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
     status?: BoolFieldUpdateOperationsInput | boolean
@@ -30971,7 +32529,10 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     admin?: AdminUpdateOneWithoutCustomersNestedInput
     partner?: PartnerUpdateOneWithoutCustomersNestedInput
+    category?: CustomerCategoryUpdateOneWithoutCustomersNestedInput
     history?: CustomerProductHistoryUpdateManyWithoutCustomerNestedInput
+    sisterOf?: CustomerUpdateOneWithoutSisterCompaniesNestedInput
+    sisterCompanies?: CustomerUpdateManyWithoutSisterOfNestedInput
   }
 
   export type CustomerUncheckedUpdateInput = {
@@ -30980,13 +32541,17 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     contactPerson?: StringFieldUpdateOperationsInput | string
     mobileNumber?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    serialNo?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     prime?: BoolFieldUpdateOperationsInput | boolean
     blacklisted?: BoolFieldUpdateOperationsInput | boolean
+    connector?: BoolFieldUpdateOperationsInput | boolean
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
+    sisterOfId?: NullableStringFieldUpdateOperationsInput | string | null
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30994,6 +32559,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     history?: CustomerProductHistoryUncheckedUpdateManyWithoutCustomerNestedInput
+    sisterCompanies?: CustomerUncheckedUpdateManyWithoutSisterOfNestedInput
   }
 
   export type CustomerCreateManyInput = {
@@ -31002,13 +32568,17 @@ export namespace Prisma {
     companyName: string
     contactPerson: string
     mobileNumber: string
-    email: string
-    serialNo: string
+    email?: string | null
+    serialNo?: string | null
     prime?: boolean
     blacklisted?: boolean
+    connector?: boolean
     remark?: string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
+    sisterOfId?: string | null
+    categoryId?: string | null
+    specialization?: string | null
     joiningDate: Date | string
     hasReference?: boolean
     partnerId?: string | null
@@ -31022,13 +32592,15 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     contactPerson?: StringFieldUpdateOperationsInput | string
     mobileNumber?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    serialNo?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     prime?: BoolFieldUpdateOperationsInput | boolean
     blacklisted?: BoolFieldUpdateOperationsInput | boolean
+    connector?: BoolFieldUpdateOperationsInput | boolean
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
     status?: BoolFieldUpdateOperationsInput | boolean
@@ -31042,13 +32614,17 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     contactPerson?: StringFieldUpdateOperationsInput | string
     mobileNumber?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    serialNo?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     prime?: BoolFieldUpdateOperationsInput | boolean
     blacklisted?: BoolFieldUpdateOperationsInput | boolean
+    connector?: BoolFieldUpdateOperationsInput | boolean
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
+    sisterOfId?: NullableStringFieldUpdateOperationsInput | string | null
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31166,6 +32742,79 @@ export namespace Prisma {
     renewalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: BoolFieldUpdateOperationsInput | boolean
     detail?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CustomerCategoryCreateInput = {
+    id?: string
+    categoryName: string
+    specialization?: CustomerCategoryCreatespecializationInput | string[]
+    status?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    admin: AdminCreateNestedOneWithoutCustomerCategoryInput
+    customers?: CustomerCreateNestedManyWithoutCategoryInput
+  }
+
+  export type CustomerCategoryUncheckedCreateInput = {
+    id?: string
+    adminId: string
+    categoryName: string
+    specialization?: CustomerCategoryCreatespecializationInput | string[]
+    status?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customers?: CustomerUncheckedCreateNestedManyWithoutCategoryInput
+  }
+
+  export type CustomerCategoryUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    categoryName?: StringFieldUpdateOperationsInput | string
+    specialization?: CustomerCategoryUpdatespecializationInput | string[]
+    status?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    admin?: AdminUpdateOneRequiredWithoutCustomerCategoryNestedInput
+    customers?: CustomerUpdateManyWithoutCategoryNestedInput
+  }
+
+  export type CustomerCategoryUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    adminId?: StringFieldUpdateOperationsInput | string
+    categoryName?: StringFieldUpdateOperationsInput | string
+    specialization?: CustomerCategoryUpdatespecializationInput | string[]
+    status?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customers?: CustomerUncheckedUpdateManyWithoutCategoryNestedInput
+  }
+
+  export type CustomerCategoryCreateManyInput = {
+    id?: string
+    adminId: string
+    categoryName: string
+    specialization?: CustomerCategoryCreatespecializationInput | string[]
+    status?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CustomerCategoryUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    categoryName?: StringFieldUpdateOperationsInput | string
+    specialization?: CustomerCategoryUpdatespecializationInput | string[]
+    status?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CustomerCategoryUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    adminId?: StringFieldUpdateOperationsInput | string
+    categoryName?: StringFieldUpdateOperationsInput | string
+    specialization?: CustomerCategoryUpdatespecializationInput | string[]
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -31394,8 +33043,8 @@ export namespace Prisma {
 
   export type FeedbackCreateInput = {
     id?: string
-    rating: string
-    feedback: string
+    rating?: string | null
+    feedback?: string | null
     createdAt?: Date | string
     user: LoginCredentialCreateNestedOneWithoutFeedbackInput
   }
@@ -31403,15 +33052,15 @@ export namespace Prisma {
   export type FeedbackUncheckedCreateInput = {
     id?: string
     userId: string
-    rating: string
-    feedback: string
+    rating?: string | null
+    feedback?: string | null
     createdAt?: Date | string
   }
 
   export type FeedbackUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    rating?: StringFieldUpdateOperationsInput | string
-    feedback?: StringFieldUpdateOperationsInput | string
+    rating?: NullableStringFieldUpdateOperationsInput | string | null
+    feedback?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: LoginCredentialUpdateOneRequiredWithoutFeedbackNestedInput
   }
@@ -31419,31 +33068,31 @@ export namespace Prisma {
   export type FeedbackUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    rating?: StringFieldUpdateOperationsInput | string
-    feedback?: StringFieldUpdateOperationsInput | string
+    rating?: NullableStringFieldUpdateOperationsInput | string | null
+    feedback?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FeedbackCreateManyInput = {
     id?: string
     userId: string
-    rating: string
-    feedback: string
+    rating?: string | null
+    feedback?: string | null
     createdAt?: Date | string
   }
 
   export type FeedbackUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    rating?: StringFieldUpdateOperationsInput | string
-    feedback?: StringFieldUpdateOperationsInput | string
+    rating?: NullableStringFieldUpdateOperationsInput | string | null
+    feedback?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FeedbackUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    rating?: StringFieldUpdateOperationsInput | string
-    feedback?: StringFieldUpdateOperationsInput | string
+    rating?: NullableStringFieldUpdateOperationsInput | string | null
+    feedback?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -31693,6 +33342,12 @@ export namespace Prisma {
     none?: CustomerProductHistoryWhereInput
   }
 
+  export type CustomerCategoryListRelationFilter = {
+    every?: CustomerCategoryWhereInput
+    some?: CustomerCategoryWhereInput
+    none?: CustomerCategoryWhereInput
+  }
+
   export type TeamMemberOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -31718,6 +33373,10 @@ export namespace Prisma {
   }
 
   export type CustomerProductHistoryOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CustomerCategoryOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -32608,6 +34267,16 @@ export namespace Prisma {
     isNot?: PartnerWhereInput | null
   }
 
+  export type CustomerCategoryNullableScalarRelationFilter = {
+    is?: CustomerCategoryWhereInput | null
+    isNot?: CustomerCategoryWhereInput | null
+  }
+
+  export type CustomerNullableScalarRelationFilter = {
+    is?: CustomerWhereInput | null
+    isNot?: CustomerWhereInput | null
+  }
+
   export type CustomerCountOrderByAggregateInput = {
     id?: SortOrder
     adminId?: SortOrder
@@ -32618,9 +34287,13 @@ export namespace Prisma {
     serialNo?: SortOrder
     prime?: SortOrder
     blacklisted?: SortOrder
+    connector?: SortOrder
     remark?: SortOrder
     adminCustomFields?: SortOrder
     address?: SortOrder
+    sisterOfId?: SortOrder
+    categoryId?: SortOrder
+    specialization?: SortOrder
     joiningDate?: SortOrder
     hasReference?: SortOrder
     partnerId?: SortOrder
@@ -32639,7 +34312,11 @@ export namespace Prisma {
     serialNo?: SortOrder
     prime?: SortOrder
     blacklisted?: SortOrder
+    connector?: SortOrder
     remark?: SortOrder
+    sisterOfId?: SortOrder
+    categoryId?: SortOrder
+    specialization?: SortOrder
     joiningDate?: SortOrder
     hasReference?: SortOrder
     partnerId?: SortOrder
@@ -32658,7 +34335,11 @@ export namespace Prisma {
     serialNo?: SortOrder
     prime?: SortOrder
     blacklisted?: SortOrder
+    connector?: SortOrder
     remark?: SortOrder
+    sisterOfId?: SortOrder
+    categoryId?: SortOrder
+    specialization?: SortOrder
     joiningDate?: SortOrder
     hasReference?: SortOrder
     partnerId?: SortOrder
@@ -32735,6 +34416,34 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumrenewPeriodFilter<$PrismaModel>
     _max?: NestedEnumrenewPeriodFilter<$PrismaModel>
+  }
+
+  export type CustomerCategoryCountOrderByAggregateInput = {
+    id?: SortOrder
+    adminId?: SortOrder
+    categoryName?: SortOrder
+    specialization?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CustomerCategoryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    adminId?: SortOrder
+    categoryName?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CustomerCategoryMinOrderByAggregateInput = {
+    id?: SortOrder
+    adminId?: SortOrder
+    categoryName?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type AdminCustomFieldCountOrderByAggregateInput = {
@@ -32965,6 +34674,13 @@ export namespace Prisma {
     connect?: CustomerProductHistoryWhereUniqueInput | CustomerProductHistoryWhereUniqueInput[]
   }
 
+  export type CustomerCategoryCreateNestedManyWithoutAdminInput = {
+    create?: XOR<CustomerCategoryCreateWithoutAdminInput, CustomerCategoryUncheckedCreateWithoutAdminInput> | CustomerCategoryCreateWithoutAdminInput[] | CustomerCategoryUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: CustomerCategoryCreateOrConnectWithoutAdminInput | CustomerCategoryCreateOrConnectWithoutAdminInput[]
+    createMany?: CustomerCategoryCreateManyAdminInputEnvelope
+    connect?: CustomerCategoryWhereUniqueInput | CustomerCategoryWhereUniqueInput[]
+  }
+
   export type TeamMemberUncheckedCreateNestedManyWithoutAdminInput = {
     create?: XOR<TeamMemberCreateWithoutAdminInput, TeamMemberUncheckedCreateWithoutAdminInput> | TeamMemberCreateWithoutAdminInput[] | TeamMemberUncheckedCreateWithoutAdminInput[]
     connectOrCreate?: TeamMemberCreateOrConnectWithoutAdminInput | TeamMemberCreateOrConnectWithoutAdminInput[]
@@ -33019,6 +34735,13 @@ export namespace Prisma {
     connectOrCreate?: CustomerProductHistoryCreateOrConnectWithoutAdminInput | CustomerProductHistoryCreateOrConnectWithoutAdminInput[]
     createMany?: CustomerProductHistoryCreateManyAdminInputEnvelope
     connect?: CustomerProductHistoryWhereUniqueInput | CustomerProductHistoryWhereUniqueInput[]
+  }
+
+  export type CustomerCategoryUncheckedCreateNestedManyWithoutAdminInput = {
+    create?: XOR<CustomerCategoryCreateWithoutAdminInput, CustomerCategoryUncheckedCreateWithoutAdminInput> | CustomerCategoryCreateWithoutAdminInput[] | CustomerCategoryUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: CustomerCategoryCreateOrConnectWithoutAdminInput | CustomerCategoryCreateOrConnectWithoutAdminInput[]
+    createMany?: CustomerCategoryCreateManyAdminInputEnvelope
+    connect?: CustomerCategoryWhereUniqueInput | CustomerCategoryWhereUniqueInput[]
   }
 
   export type EnumRoleFieldUpdateOperationsInput = {
@@ -33137,6 +34860,20 @@ export namespace Prisma {
     deleteMany?: CustomerProductHistoryScalarWhereInput | CustomerProductHistoryScalarWhereInput[]
   }
 
+  export type CustomerCategoryUpdateManyWithoutAdminNestedInput = {
+    create?: XOR<CustomerCategoryCreateWithoutAdminInput, CustomerCategoryUncheckedCreateWithoutAdminInput> | CustomerCategoryCreateWithoutAdminInput[] | CustomerCategoryUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: CustomerCategoryCreateOrConnectWithoutAdminInput | CustomerCategoryCreateOrConnectWithoutAdminInput[]
+    upsert?: CustomerCategoryUpsertWithWhereUniqueWithoutAdminInput | CustomerCategoryUpsertWithWhereUniqueWithoutAdminInput[]
+    createMany?: CustomerCategoryCreateManyAdminInputEnvelope
+    set?: CustomerCategoryWhereUniqueInput | CustomerCategoryWhereUniqueInput[]
+    disconnect?: CustomerCategoryWhereUniqueInput | CustomerCategoryWhereUniqueInput[]
+    delete?: CustomerCategoryWhereUniqueInput | CustomerCategoryWhereUniqueInput[]
+    connect?: CustomerCategoryWhereUniqueInput | CustomerCategoryWhereUniqueInput[]
+    update?: CustomerCategoryUpdateWithWhereUniqueWithoutAdminInput | CustomerCategoryUpdateWithWhereUniqueWithoutAdminInput[]
+    updateMany?: CustomerCategoryUpdateManyWithWhereWithoutAdminInput | CustomerCategoryUpdateManyWithWhereWithoutAdminInput[]
+    deleteMany?: CustomerCategoryScalarWhereInput | CustomerCategoryScalarWhereInput[]
+  }
+
   export type TeamMemberUncheckedUpdateManyWithoutAdminNestedInput = {
     create?: XOR<TeamMemberCreateWithoutAdminInput, TeamMemberUncheckedCreateWithoutAdminInput> | TeamMemberCreateWithoutAdminInput[] | TeamMemberUncheckedCreateWithoutAdminInput[]
     connectOrCreate?: TeamMemberCreateOrConnectWithoutAdminInput | TeamMemberCreateOrConnectWithoutAdminInput[]
@@ -33247,6 +34984,20 @@ export namespace Prisma {
     update?: CustomerProductHistoryUpdateWithWhereUniqueWithoutAdminInput | CustomerProductHistoryUpdateWithWhereUniqueWithoutAdminInput[]
     updateMany?: CustomerProductHistoryUpdateManyWithWhereWithoutAdminInput | CustomerProductHistoryUpdateManyWithWhereWithoutAdminInput[]
     deleteMany?: CustomerProductHistoryScalarWhereInput | CustomerProductHistoryScalarWhereInput[]
+  }
+
+  export type CustomerCategoryUncheckedUpdateManyWithoutAdminNestedInput = {
+    create?: XOR<CustomerCategoryCreateWithoutAdminInput, CustomerCategoryUncheckedCreateWithoutAdminInput> | CustomerCategoryCreateWithoutAdminInput[] | CustomerCategoryUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: CustomerCategoryCreateOrConnectWithoutAdminInput | CustomerCategoryCreateOrConnectWithoutAdminInput[]
+    upsert?: CustomerCategoryUpsertWithWhereUniqueWithoutAdminInput | CustomerCategoryUpsertWithWhereUniqueWithoutAdminInput[]
+    createMany?: CustomerCategoryCreateManyAdminInputEnvelope
+    set?: CustomerCategoryWhereUniqueInput | CustomerCategoryWhereUniqueInput[]
+    disconnect?: CustomerCategoryWhereUniqueInput | CustomerCategoryWhereUniqueInput[]
+    delete?: CustomerCategoryWhereUniqueInput | CustomerCategoryWhereUniqueInput[]
+    connect?: CustomerCategoryWhereUniqueInput | CustomerCategoryWhereUniqueInput[]
+    update?: CustomerCategoryUpdateWithWhereUniqueWithoutAdminInput | CustomerCategoryUpdateWithWhereUniqueWithoutAdminInput[]
+    updateMany?: CustomerCategoryUpdateManyWithWhereWithoutAdminInput | CustomerCategoryUpdateManyWithWhereWithoutAdminInput[]
+    deleteMany?: CustomerCategoryScalarWhereInput | CustomerCategoryScalarWhereInput[]
   }
 
   export type AdminCreateNestedOneWithoutTeamMembersInput = {
@@ -34076,6 +35827,12 @@ export namespace Prisma {
     connect?: PartnerWhereUniqueInput
   }
 
+  export type CustomerCategoryCreateNestedOneWithoutCustomersInput = {
+    create?: XOR<CustomerCategoryCreateWithoutCustomersInput, CustomerCategoryUncheckedCreateWithoutCustomersInput>
+    connectOrCreate?: CustomerCategoryCreateOrConnectWithoutCustomersInput
+    connect?: CustomerCategoryWhereUniqueInput
+  }
+
   export type CustomerProductHistoryCreateNestedManyWithoutCustomerInput = {
     create?: XOR<CustomerProductHistoryCreateWithoutCustomerInput, CustomerProductHistoryUncheckedCreateWithoutCustomerInput> | CustomerProductHistoryCreateWithoutCustomerInput[] | CustomerProductHistoryUncheckedCreateWithoutCustomerInput[]
     connectOrCreate?: CustomerProductHistoryCreateOrConnectWithoutCustomerInput | CustomerProductHistoryCreateOrConnectWithoutCustomerInput[]
@@ -34083,11 +35840,31 @@ export namespace Prisma {
     connect?: CustomerProductHistoryWhereUniqueInput | CustomerProductHistoryWhereUniqueInput[]
   }
 
+  export type CustomerCreateNestedOneWithoutSisterCompaniesInput = {
+    create?: XOR<CustomerCreateWithoutSisterCompaniesInput, CustomerUncheckedCreateWithoutSisterCompaniesInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutSisterCompaniesInput
+    connect?: CustomerWhereUniqueInput
+  }
+
+  export type CustomerCreateNestedManyWithoutSisterOfInput = {
+    create?: XOR<CustomerCreateWithoutSisterOfInput, CustomerUncheckedCreateWithoutSisterOfInput> | CustomerCreateWithoutSisterOfInput[] | CustomerUncheckedCreateWithoutSisterOfInput[]
+    connectOrCreate?: CustomerCreateOrConnectWithoutSisterOfInput | CustomerCreateOrConnectWithoutSisterOfInput[]
+    createMany?: CustomerCreateManySisterOfInputEnvelope
+    connect?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
+  }
+
   export type CustomerProductHistoryUncheckedCreateNestedManyWithoutCustomerInput = {
     create?: XOR<CustomerProductHistoryCreateWithoutCustomerInput, CustomerProductHistoryUncheckedCreateWithoutCustomerInput> | CustomerProductHistoryCreateWithoutCustomerInput[] | CustomerProductHistoryUncheckedCreateWithoutCustomerInput[]
     connectOrCreate?: CustomerProductHistoryCreateOrConnectWithoutCustomerInput | CustomerProductHistoryCreateOrConnectWithoutCustomerInput[]
     createMany?: CustomerProductHistoryCreateManyCustomerInputEnvelope
     connect?: CustomerProductHistoryWhereUniqueInput | CustomerProductHistoryWhereUniqueInput[]
+  }
+
+  export type CustomerUncheckedCreateNestedManyWithoutSisterOfInput = {
+    create?: XOR<CustomerCreateWithoutSisterOfInput, CustomerUncheckedCreateWithoutSisterOfInput> | CustomerCreateWithoutSisterOfInput[] | CustomerUncheckedCreateWithoutSisterOfInput[]
+    connectOrCreate?: CustomerCreateOrConnectWithoutSisterOfInput | CustomerCreateOrConnectWithoutSisterOfInput[]
+    createMany?: CustomerCreateManySisterOfInputEnvelope
+    connect?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
   }
 
   export type AdminUpdateOneWithoutCustomersNestedInput = {
@@ -34110,6 +35887,16 @@ export namespace Prisma {
     update?: XOR<XOR<PartnerUpdateToOneWithWhereWithoutCustomersInput, PartnerUpdateWithoutCustomersInput>, PartnerUncheckedUpdateWithoutCustomersInput>
   }
 
+  export type CustomerCategoryUpdateOneWithoutCustomersNestedInput = {
+    create?: XOR<CustomerCategoryCreateWithoutCustomersInput, CustomerCategoryUncheckedCreateWithoutCustomersInput>
+    connectOrCreate?: CustomerCategoryCreateOrConnectWithoutCustomersInput
+    upsert?: CustomerCategoryUpsertWithoutCustomersInput
+    disconnect?: CustomerCategoryWhereInput | boolean
+    delete?: CustomerCategoryWhereInput | boolean
+    connect?: CustomerCategoryWhereUniqueInput
+    update?: XOR<XOR<CustomerCategoryUpdateToOneWithWhereWithoutCustomersInput, CustomerCategoryUpdateWithoutCustomersInput>, CustomerCategoryUncheckedUpdateWithoutCustomersInput>
+  }
+
   export type CustomerProductHistoryUpdateManyWithoutCustomerNestedInput = {
     create?: XOR<CustomerProductHistoryCreateWithoutCustomerInput, CustomerProductHistoryUncheckedCreateWithoutCustomerInput> | CustomerProductHistoryCreateWithoutCustomerInput[] | CustomerProductHistoryUncheckedCreateWithoutCustomerInput[]
     connectOrCreate?: CustomerProductHistoryCreateOrConnectWithoutCustomerInput | CustomerProductHistoryCreateOrConnectWithoutCustomerInput[]
@@ -34124,6 +35911,30 @@ export namespace Prisma {
     deleteMany?: CustomerProductHistoryScalarWhereInput | CustomerProductHistoryScalarWhereInput[]
   }
 
+  export type CustomerUpdateOneWithoutSisterCompaniesNestedInput = {
+    create?: XOR<CustomerCreateWithoutSisterCompaniesInput, CustomerUncheckedCreateWithoutSisterCompaniesInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutSisterCompaniesInput
+    upsert?: CustomerUpsertWithoutSisterCompaniesInput
+    disconnect?: CustomerWhereInput | boolean
+    delete?: CustomerWhereInput | boolean
+    connect?: CustomerWhereUniqueInput
+    update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutSisterCompaniesInput, CustomerUpdateWithoutSisterCompaniesInput>, CustomerUncheckedUpdateWithoutSisterCompaniesInput>
+  }
+
+  export type CustomerUpdateManyWithoutSisterOfNestedInput = {
+    create?: XOR<CustomerCreateWithoutSisterOfInput, CustomerUncheckedCreateWithoutSisterOfInput> | CustomerCreateWithoutSisterOfInput[] | CustomerUncheckedCreateWithoutSisterOfInput[]
+    connectOrCreate?: CustomerCreateOrConnectWithoutSisterOfInput | CustomerCreateOrConnectWithoutSisterOfInput[]
+    upsert?: CustomerUpsertWithWhereUniqueWithoutSisterOfInput | CustomerUpsertWithWhereUniqueWithoutSisterOfInput[]
+    createMany?: CustomerCreateManySisterOfInputEnvelope
+    set?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
+    disconnect?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
+    delete?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
+    connect?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
+    update?: CustomerUpdateWithWhereUniqueWithoutSisterOfInput | CustomerUpdateWithWhereUniqueWithoutSisterOfInput[]
+    updateMany?: CustomerUpdateManyWithWhereWithoutSisterOfInput | CustomerUpdateManyWithWhereWithoutSisterOfInput[]
+    deleteMany?: CustomerScalarWhereInput | CustomerScalarWhereInput[]
+  }
+
   export type CustomerProductHistoryUncheckedUpdateManyWithoutCustomerNestedInput = {
     create?: XOR<CustomerProductHistoryCreateWithoutCustomerInput, CustomerProductHistoryUncheckedCreateWithoutCustomerInput> | CustomerProductHistoryCreateWithoutCustomerInput[] | CustomerProductHistoryUncheckedCreateWithoutCustomerInput[]
     connectOrCreate?: CustomerProductHistoryCreateOrConnectWithoutCustomerInput | CustomerProductHistoryCreateOrConnectWithoutCustomerInput[]
@@ -34136,6 +35947,20 @@ export namespace Prisma {
     update?: CustomerProductHistoryUpdateWithWhereUniqueWithoutCustomerInput | CustomerProductHistoryUpdateWithWhereUniqueWithoutCustomerInput[]
     updateMany?: CustomerProductHistoryUpdateManyWithWhereWithoutCustomerInput | CustomerProductHistoryUpdateManyWithWhereWithoutCustomerInput[]
     deleteMany?: CustomerProductHistoryScalarWhereInput | CustomerProductHistoryScalarWhereInput[]
+  }
+
+  export type CustomerUncheckedUpdateManyWithoutSisterOfNestedInput = {
+    create?: XOR<CustomerCreateWithoutSisterOfInput, CustomerUncheckedCreateWithoutSisterOfInput> | CustomerCreateWithoutSisterOfInput[] | CustomerUncheckedCreateWithoutSisterOfInput[]
+    connectOrCreate?: CustomerCreateOrConnectWithoutSisterOfInput | CustomerCreateOrConnectWithoutSisterOfInput[]
+    upsert?: CustomerUpsertWithWhereUniqueWithoutSisterOfInput | CustomerUpsertWithWhereUniqueWithoutSisterOfInput[]
+    createMany?: CustomerCreateManySisterOfInputEnvelope
+    set?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
+    disconnect?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
+    delete?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
+    connect?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
+    update?: CustomerUpdateWithWhereUniqueWithoutSisterOfInput | CustomerUpdateWithWhereUniqueWithoutSisterOfInput[]
+    updateMany?: CustomerUpdateManyWithWhereWithoutSisterOfInput | CustomerUpdateManyWithWhereWithoutSisterOfInput[]
+    deleteMany?: CustomerScalarWhereInput | CustomerScalarWhereInput[]
   }
 
   export type CustomerCreateNestedOneWithoutHistoryInput = {
@@ -34224,6 +36049,71 @@ export namespace Prisma {
     update?: ProductRenewalHistoryUpdateWithWhereUniqueWithoutCustomerProductHistoryInput | ProductRenewalHistoryUpdateWithWhereUniqueWithoutCustomerProductHistoryInput[]
     updateMany?: ProductRenewalHistoryUpdateManyWithWhereWithoutCustomerProductHistoryInput | ProductRenewalHistoryUpdateManyWithWhereWithoutCustomerProductHistoryInput[]
     deleteMany?: ProductRenewalHistoryScalarWhereInput | ProductRenewalHistoryScalarWhereInput[]
+  }
+
+  export type CustomerCategoryCreatespecializationInput = {
+    set: string[]
+  }
+
+  export type AdminCreateNestedOneWithoutCustomerCategoryInput = {
+    create?: XOR<AdminCreateWithoutCustomerCategoryInput, AdminUncheckedCreateWithoutCustomerCategoryInput>
+    connectOrCreate?: AdminCreateOrConnectWithoutCustomerCategoryInput
+    connect?: AdminWhereUniqueInput
+  }
+
+  export type CustomerCreateNestedManyWithoutCategoryInput = {
+    create?: XOR<CustomerCreateWithoutCategoryInput, CustomerUncheckedCreateWithoutCategoryInput> | CustomerCreateWithoutCategoryInput[] | CustomerUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: CustomerCreateOrConnectWithoutCategoryInput | CustomerCreateOrConnectWithoutCategoryInput[]
+    createMany?: CustomerCreateManyCategoryInputEnvelope
+    connect?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
+  }
+
+  export type CustomerUncheckedCreateNestedManyWithoutCategoryInput = {
+    create?: XOR<CustomerCreateWithoutCategoryInput, CustomerUncheckedCreateWithoutCategoryInput> | CustomerCreateWithoutCategoryInput[] | CustomerUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: CustomerCreateOrConnectWithoutCategoryInput | CustomerCreateOrConnectWithoutCategoryInput[]
+    createMany?: CustomerCreateManyCategoryInputEnvelope
+    connect?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
+  }
+
+  export type CustomerCategoryUpdatespecializationInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type AdminUpdateOneRequiredWithoutCustomerCategoryNestedInput = {
+    create?: XOR<AdminCreateWithoutCustomerCategoryInput, AdminUncheckedCreateWithoutCustomerCategoryInput>
+    connectOrCreate?: AdminCreateOrConnectWithoutCustomerCategoryInput
+    upsert?: AdminUpsertWithoutCustomerCategoryInput
+    connect?: AdminWhereUniqueInput
+    update?: XOR<XOR<AdminUpdateToOneWithWhereWithoutCustomerCategoryInput, AdminUpdateWithoutCustomerCategoryInput>, AdminUncheckedUpdateWithoutCustomerCategoryInput>
+  }
+
+  export type CustomerUpdateManyWithoutCategoryNestedInput = {
+    create?: XOR<CustomerCreateWithoutCategoryInput, CustomerUncheckedCreateWithoutCategoryInput> | CustomerCreateWithoutCategoryInput[] | CustomerUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: CustomerCreateOrConnectWithoutCategoryInput | CustomerCreateOrConnectWithoutCategoryInput[]
+    upsert?: CustomerUpsertWithWhereUniqueWithoutCategoryInput | CustomerUpsertWithWhereUniqueWithoutCategoryInput[]
+    createMany?: CustomerCreateManyCategoryInputEnvelope
+    set?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
+    disconnect?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
+    delete?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
+    connect?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
+    update?: CustomerUpdateWithWhereUniqueWithoutCategoryInput | CustomerUpdateWithWhereUniqueWithoutCategoryInput[]
+    updateMany?: CustomerUpdateManyWithWhereWithoutCategoryInput | CustomerUpdateManyWithWhereWithoutCategoryInput[]
+    deleteMany?: CustomerScalarWhereInput | CustomerScalarWhereInput[]
+  }
+
+  export type CustomerUncheckedUpdateManyWithoutCategoryNestedInput = {
+    create?: XOR<CustomerCreateWithoutCategoryInput, CustomerUncheckedCreateWithoutCategoryInput> | CustomerCreateWithoutCategoryInput[] | CustomerUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: CustomerCreateOrConnectWithoutCategoryInput | CustomerCreateOrConnectWithoutCategoryInput[]
+    upsert?: CustomerUpsertWithWhereUniqueWithoutCategoryInput | CustomerUpsertWithWhereUniqueWithoutCategoryInput[]
+    createMany?: CustomerCreateManyCategoryInputEnvelope
+    set?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
+    disconnect?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
+    delete?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
+    connect?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
+    update?: CustomerUpdateWithWhereUniqueWithoutCategoryInput | CustomerUpdateWithWhereUniqueWithoutCategoryInput[]
+    updateMany?: CustomerUpdateManyWithWhereWithoutCategoryInput | CustomerUpdateManyWithWhereWithoutCategoryInput[]
+    deleteMany?: CustomerScalarWhereInput | CustomerScalarWhereInput[]
   }
 
   export type AdminCustomFieldCreateoptionsInput = {
@@ -34805,20 +36695,25 @@ export namespace Prisma {
     companyName: string
     contactPerson: string
     mobileNumber: string
-    email: string
-    serialNo: string
+    email?: string | null
+    serialNo?: string | null
     prime?: boolean
     blacklisted?: boolean
+    connector?: boolean
     remark?: string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
+    specialization?: string | null
     joiningDate: Date | string
     hasReference?: boolean
     status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     partner?: PartnerCreateNestedOneWithoutCustomersInput
+    category?: CustomerCategoryCreateNestedOneWithoutCustomersInput
     history?: CustomerProductHistoryCreateNestedManyWithoutCustomerInput
+    sisterOf?: CustomerCreateNestedOneWithoutSisterCompaniesInput
+    sisterCompanies?: CustomerCreateNestedManyWithoutSisterOfInput
   }
 
   export type CustomerUncheckedCreateWithoutAdminInput = {
@@ -34826,13 +36721,17 @@ export namespace Prisma {
     companyName: string
     contactPerson: string
     mobileNumber: string
-    email: string
-    serialNo: string
+    email?: string | null
+    serialNo?: string | null
     prime?: boolean
     blacklisted?: boolean
+    connector?: boolean
     remark?: string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
+    sisterOfId?: string | null
+    categoryId?: string | null
+    specialization?: string | null
     joiningDate: Date | string
     hasReference?: boolean
     partnerId?: string | null
@@ -34840,6 +36739,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     history?: CustomerProductHistoryUncheckedCreateNestedManyWithoutCustomerInput
+    sisterCompanies?: CustomerUncheckedCreateNestedManyWithoutSisterOfInput
   }
 
   export type CustomerCreateOrConnectWithoutAdminInput = {
@@ -35050,6 +36950,36 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CustomerCategoryCreateWithoutAdminInput = {
+    id?: string
+    categoryName: string
+    specialization?: CustomerCategoryCreatespecializationInput | string[]
+    status?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customers?: CustomerCreateNestedManyWithoutCategoryInput
+  }
+
+  export type CustomerCategoryUncheckedCreateWithoutAdminInput = {
+    id?: string
+    categoryName: string
+    specialization?: CustomerCategoryCreatespecializationInput | string[]
+    status?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customers?: CustomerUncheckedCreateNestedManyWithoutCategoryInput
+  }
+
+  export type CustomerCategoryCreateOrConnectWithoutAdminInput = {
+    where: CustomerCategoryWhereUniqueInput
+    create: XOR<CustomerCategoryCreateWithoutAdminInput, CustomerCategoryUncheckedCreateWithoutAdminInput>
+  }
+
+  export type CustomerCategoryCreateManyAdminInputEnvelope = {
+    data: CustomerCategoryCreateManyAdminInput | CustomerCategoryCreateManyAdminInput[]
+    skipDuplicates?: boolean
+  }
+
   export type TeamMemberUpsertWithWhereUniqueWithoutAdminInput = {
     where: TeamMemberWhereUniqueInput
     update: XOR<TeamMemberUpdateWithoutAdminInput, TeamMemberUncheckedUpdateWithoutAdminInput>
@@ -35146,13 +37076,17 @@ export namespace Prisma {
     companyName?: StringFilter<"Customer"> | string
     contactPerson?: StringFilter<"Customer"> | string
     mobileNumber?: StringFilter<"Customer"> | string
-    email?: StringFilter<"Customer"> | string
-    serialNo?: StringFilter<"Customer"> | string
+    email?: StringNullableFilter<"Customer"> | string | null
+    serialNo?: StringNullableFilter<"Customer"> | string | null
     prime?: BoolFilter<"Customer"> | boolean
     blacklisted?: BoolFilter<"Customer"> | boolean
+    connector?: BoolFilter<"Customer"> | boolean
     remark?: StringNullableFilter<"Customer"> | string | null
     adminCustomFields?: JsonNullableFilter<"Customer">
     address?: JsonNullableFilter<"Customer">
+    sisterOfId?: UuidNullableFilter<"Customer"> | string | null
+    categoryId?: UuidNullableFilter<"Customer"> | string | null
+    specialization?: StringNullableFilter<"Customer"> | string | null
     joiningDate?: DateTimeFilter<"Customer"> | Date | string
     hasReference?: BoolFilter<"Customer"> | boolean
     partnerId?: UuidNullableFilter<"Customer"> | string | null
@@ -35310,6 +37244,35 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"CustomerProductHistory"> | Date | string
   }
 
+  export type CustomerCategoryUpsertWithWhereUniqueWithoutAdminInput = {
+    where: CustomerCategoryWhereUniqueInput
+    update: XOR<CustomerCategoryUpdateWithoutAdminInput, CustomerCategoryUncheckedUpdateWithoutAdminInput>
+    create: XOR<CustomerCategoryCreateWithoutAdminInput, CustomerCategoryUncheckedCreateWithoutAdminInput>
+  }
+
+  export type CustomerCategoryUpdateWithWhereUniqueWithoutAdminInput = {
+    where: CustomerCategoryWhereUniqueInput
+    data: XOR<CustomerCategoryUpdateWithoutAdminInput, CustomerCategoryUncheckedUpdateWithoutAdminInput>
+  }
+
+  export type CustomerCategoryUpdateManyWithWhereWithoutAdminInput = {
+    where: CustomerCategoryScalarWhereInput
+    data: XOR<CustomerCategoryUpdateManyMutationInput, CustomerCategoryUncheckedUpdateManyWithoutAdminInput>
+  }
+
+  export type CustomerCategoryScalarWhereInput = {
+    AND?: CustomerCategoryScalarWhereInput | CustomerCategoryScalarWhereInput[]
+    OR?: CustomerCategoryScalarWhereInput[]
+    NOT?: CustomerCategoryScalarWhereInput | CustomerCategoryScalarWhereInput[]
+    id?: UuidFilter<"CustomerCategory"> | string
+    adminId?: UuidFilter<"CustomerCategory"> | string
+    categoryName?: StringFilter<"CustomerCategory"> | string
+    specialization?: StringNullableListFilter<"CustomerCategory">
+    status?: BoolFilter<"CustomerCategory"> | boolean
+    createdAt?: DateTimeFilter<"CustomerCategory"> | Date | string
+    updatedAt?: DateTimeFilter<"CustomerCategory"> | Date | string
+  }
+
   export type AdminCreateWithoutTeamMembersInput = {
     id?: string
     role?: $Enums.Role
@@ -35330,6 +37293,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionCreateNestedManyWithoutAdminInput
     loginCreds?: LoginCredentialCreateNestedManyWithoutAdminInput
     productHistories?: CustomerProductHistoryCreateNestedManyWithoutAdminInput
+    CustomerCategory?: CustomerCategoryCreateNestedManyWithoutAdminInput
   }
 
   export type AdminUncheckedCreateWithoutTeamMembersInput = {
@@ -35352,6 +37316,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutAdminInput
     loginCreds?: LoginCredentialUncheckedCreateNestedManyWithoutAdminInput
     productHistories?: CustomerProductHistoryUncheckedCreateNestedManyWithoutAdminInput
+    CustomerCategory?: CustomerCategoryUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AdminCreateOrConnectWithoutTeamMembersInput = {
@@ -35390,6 +37355,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUpdateManyWithoutAdminNestedInput
     loginCreds?: LoginCredentialUpdateManyWithoutAdminNestedInput
     productHistories?: CustomerProductHistoryUpdateManyWithoutAdminNestedInput
+    CustomerCategory?: CustomerCategoryUpdateManyWithoutAdminNestedInput
   }
 
   export type AdminUncheckedUpdateWithoutTeamMembersInput = {
@@ -35412,6 +37378,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutAdminNestedInput
     loginCreds?: LoginCredentialUncheckedUpdateManyWithoutAdminNestedInput
     productHistories?: CustomerProductHistoryUncheckedUpdateManyWithoutAdminNestedInput
+    CustomerCategory?: CustomerCategoryUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type AdminCreateWithoutPartnersInput = {
@@ -35434,6 +37401,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionCreateNestedManyWithoutAdminInput
     loginCreds?: LoginCredentialCreateNestedManyWithoutAdminInput
     productHistories?: CustomerProductHistoryCreateNestedManyWithoutAdminInput
+    CustomerCategory?: CustomerCategoryCreateNestedManyWithoutAdminInput
   }
 
   export type AdminUncheckedCreateWithoutPartnersInput = {
@@ -35456,6 +37424,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutAdminInput
     loginCreds?: LoginCredentialUncheckedCreateNestedManyWithoutAdminInput
     productHistories?: CustomerProductHistoryUncheckedCreateNestedManyWithoutAdminInput
+    CustomerCategory?: CustomerCategoryUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AdminCreateOrConnectWithoutPartnersInput = {
@@ -35468,20 +37437,25 @@ export namespace Prisma {
     companyName: string
     contactPerson: string
     mobileNumber: string
-    email: string
-    serialNo: string
+    email?: string | null
+    serialNo?: string | null
     prime?: boolean
     blacklisted?: boolean
+    connector?: boolean
     remark?: string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
+    specialization?: string | null
     joiningDate: Date | string
     hasReference?: boolean
     status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     admin?: AdminCreateNestedOneWithoutCustomersInput
+    category?: CustomerCategoryCreateNestedOneWithoutCustomersInput
     history?: CustomerProductHistoryCreateNestedManyWithoutCustomerInput
+    sisterOf?: CustomerCreateNestedOneWithoutSisterCompaniesInput
+    sisterCompanies?: CustomerCreateNestedManyWithoutSisterOfInput
   }
 
   export type CustomerUncheckedCreateWithoutPartnerInput = {
@@ -35490,19 +37464,24 @@ export namespace Prisma {
     companyName: string
     contactPerson: string
     mobileNumber: string
-    email: string
-    serialNo: string
+    email?: string | null
+    serialNo?: string | null
     prime?: boolean
     blacklisted?: boolean
+    connector?: boolean
     remark?: string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
+    sisterOfId?: string | null
+    categoryId?: string | null
+    specialization?: string | null
     joiningDate: Date | string
     hasReference?: boolean
     status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     history?: CustomerProductHistoryUncheckedCreateNestedManyWithoutCustomerInput
+    sisterCompanies?: CustomerUncheckedCreateNestedManyWithoutSisterOfInput
   }
 
   export type CustomerCreateOrConnectWithoutPartnerInput = {
@@ -35546,6 +37525,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUpdateManyWithoutAdminNestedInput
     loginCreds?: LoginCredentialUpdateManyWithoutAdminNestedInput
     productHistories?: CustomerProductHistoryUpdateManyWithoutAdminNestedInput
+    CustomerCategory?: CustomerCategoryUpdateManyWithoutAdminNestedInput
   }
 
   export type AdminUncheckedUpdateWithoutPartnersInput = {
@@ -35568,6 +37548,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutAdminNestedInput
     loginCreds?: LoginCredentialUncheckedUpdateManyWithoutAdminNestedInput
     productHistories?: CustomerProductHistoryUncheckedUpdateManyWithoutAdminNestedInput
+    CustomerCategory?: CustomerCategoryUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type CustomerUpsertWithWhereUniqueWithoutPartnerInput = {
@@ -35606,6 +37587,7 @@ export namespace Prisma {
     products?: ProductCreateNestedManyWithoutAdminInput
     subscriptions?: SubscriptionCreateNestedManyWithoutAdminInput
     productHistories?: CustomerProductHistoryCreateNestedManyWithoutAdminInput
+    CustomerCategory?: CustomerCategoryCreateNestedManyWithoutAdminInput
   }
 
   export type AdminUncheckedCreateWithoutLoginCredsInput = {
@@ -35628,6 +37610,7 @@ export namespace Prisma {
     products?: ProductUncheckedCreateNestedManyWithoutAdminInput
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutAdminInput
     productHistories?: CustomerProductHistoryUncheckedCreateNestedManyWithoutAdminInput
+    CustomerCategory?: CustomerCategoryUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AdminCreateOrConnectWithoutLoginCredsInput = {
@@ -35748,15 +37731,15 @@ export namespace Prisma {
 
   export type FeedbackCreateWithoutUserInput = {
     id?: string
-    rating: string
-    feedback: string
+    rating?: string | null
+    feedback?: string | null
     createdAt?: Date | string
   }
 
   export type FeedbackUncheckedCreateWithoutUserInput = {
     id?: string
-    rating: string
-    feedback: string
+    rating?: string | null
+    feedback?: string | null
     createdAt?: Date | string
   }
 
@@ -35801,6 +37784,7 @@ export namespace Prisma {
     products?: ProductUpdateManyWithoutAdminNestedInput
     subscriptions?: SubscriptionUpdateManyWithoutAdminNestedInput
     productHistories?: CustomerProductHistoryUpdateManyWithoutAdminNestedInput
+    CustomerCategory?: CustomerCategoryUpdateManyWithoutAdminNestedInput
   }
 
   export type AdminUncheckedUpdateWithoutLoginCredsInput = {
@@ -35823,6 +37807,7 @@ export namespace Prisma {
     products?: ProductUncheckedUpdateManyWithoutAdminNestedInput
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutAdminNestedInput
     productHistories?: CustomerProductHistoryUncheckedUpdateManyWithoutAdminNestedInput
+    CustomerCategory?: CustomerCategoryUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type SuperAdminUpsertWithoutLoginCredsInput = {
@@ -35957,8 +37942,8 @@ export namespace Prisma {
     NOT?: FeedbackScalarWhereInput | FeedbackScalarWhereInput[]
     id?: UuidFilter<"Feedback"> | string
     userId?: UuidFilter<"Feedback"> | string
-    rating?: StringFilter<"Feedback"> | string
-    feedback?: StringFilter<"Feedback"> | string
+    rating?: StringNullableFilter<"Feedback"> | string | null
+    feedback?: StringNullableFilter<"Feedback"> | string | null
     createdAt?: DateTimeFilter<"Feedback"> | Date | string
   }
 
@@ -36565,6 +38550,7 @@ export namespace Prisma {
     products?: ProductCreateNestedManyWithoutAdminInput
     loginCreds?: LoginCredentialCreateNestedManyWithoutAdminInput
     productHistories?: CustomerProductHistoryCreateNestedManyWithoutAdminInput
+    CustomerCategory?: CustomerCategoryCreateNestedManyWithoutAdminInput
   }
 
   export type AdminUncheckedCreateWithoutSubscriptionsInput = {
@@ -36587,6 +38573,7 @@ export namespace Prisma {
     products?: ProductUncheckedCreateNestedManyWithoutAdminInput
     loginCreds?: LoginCredentialUncheckedCreateNestedManyWithoutAdminInput
     productHistories?: CustomerProductHistoryUncheckedCreateNestedManyWithoutAdminInput
+    CustomerCategory?: CustomerCategoryUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AdminCreateOrConnectWithoutSubscriptionsInput = {
@@ -36718,6 +38705,7 @@ export namespace Prisma {
     products?: ProductUpdateManyWithoutAdminNestedInput
     loginCreds?: LoginCredentialUpdateManyWithoutAdminNestedInput
     productHistories?: CustomerProductHistoryUpdateManyWithoutAdminNestedInput
+    CustomerCategory?: CustomerCategoryUpdateManyWithoutAdminNestedInput
   }
 
   export type AdminUncheckedUpdateWithoutSubscriptionsInput = {
@@ -36740,6 +38728,7 @@ export namespace Prisma {
     products?: ProductUncheckedUpdateManyWithoutAdminNestedInput
     loginCreds?: LoginCredentialUncheckedUpdateManyWithoutAdminNestedInput
     productHistories?: CustomerProductHistoryUncheckedUpdateManyWithoutAdminNestedInput
+    CustomerCategory?: CustomerCategoryUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type PlanUpsertWithoutSubscriptionsInput = {
@@ -37004,6 +38993,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionCreateNestedManyWithoutAdminInput
     loginCreds?: LoginCredentialCreateNestedManyWithoutAdminInput
     productHistories?: CustomerProductHistoryCreateNestedManyWithoutAdminInput
+    CustomerCategory?: CustomerCategoryCreateNestedManyWithoutAdminInput
   }
 
   export type AdminUncheckedCreateWithoutProductsInput = {
@@ -37026,6 +39016,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutAdminInput
     loginCreds?: LoginCredentialUncheckedCreateNestedManyWithoutAdminInput
     productHistories?: CustomerProductHistoryUncheckedCreateNestedManyWithoutAdminInput
+    CustomerCategory?: CustomerCategoryUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AdminCreateOrConnectWithoutProductsInput = {
@@ -37136,6 +39127,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUpdateManyWithoutAdminNestedInput
     loginCreds?: LoginCredentialUpdateManyWithoutAdminNestedInput
     productHistories?: CustomerProductHistoryUpdateManyWithoutAdminNestedInput
+    CustomerCategory?: CustomerCategoryUpdateManyWithoutAdminNestedInput
   }
 
   export type AdminUncheckedUpdateWithoutProductsInput = {
@@ -37158,6 +39150,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutAdminNestedInput
     loginCreds?: LoginCredentialUncheckedUpdateManyWithoutAdminNestedInput
     productHistories?: CustomerProductHistoryUncheckedUpdateManyWithoutAdminNestedInput
+    CustomerCategory?: CustomerCategoryUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type CustomerProductHistoryUpsertWithWhereUniqueWithoutProductInput = {
@@ -37386,6 +39379,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionCreateNestedManyWithoutAdminInput
     loginCreds?: LoginCredentialCreateNestedManyWithoutAdminInput
     productHistories?: CustomerProductHistoryCreateNestedManyWithoutAdminInput
+    CustomerCategory?: CustomerCategoryCreateNestedManyWithoutAdminInput
   }
 
   export type AdminUncheckedCreateWithoutCustomersInput = {
@@ -37408,6 +39402,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutAdminInput
     loginCreds?: LoginCredentialUncheckedCreateNestedManyWithoutAdminInput
     productHistories?: CustomerProductHistoryUncheckedCreateNestedManyWithoutAdminInput
+    CustomerCategory?: CustomerCategoryUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AdminCreateOrConnectWithoutCustomersInput = {
@@ -37452,6 +39447,31 @@ export namespace Prisma {
     create: XOR<PartnerCreateWithoutCustomersInput, PartnerUncheckedCreateWithoutCustomersInput>
   }
 
+  export type CustomerCategoryCreateWithoutCustomersInput = {
+    id?: string
+    categoryName: string
+    specialization?: CustomerCategoryCreatespecializationInput | string[]
+    status?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    admin: AdminCreateNestedOneWithoutCustomerCategoryInput
+  }
+
+  export type CustomerCategoryUncheckedCreateWithoutCustomersInput = {
+    id?: string
+    adminId: string
+    categoryName: string
+    specialization?: CustomerCategoryCreatespecializationInput | string[]
+    status?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CustomerCategoryCreateOrConnectWithoutCustomersInput = {
+    where: CustomerCategoryWhereUniqueInput
+    create: XOR<CustomerCategoryCreateWithoutCustomersInput, CustomerCategoryUncheckedCreateWithoutCustomersInput>
+  }
+
   export type CustomerProductHistoryCreateWithoutCustomerInput = {
     id?: string
     purchaseDate: Date | string
@@ -37494,6 +39514,125 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CustomerCreateWithoutSisterCompaniesInput = {
+    id?: string
+    companyName: string
+    contactPerson: string
+    mobileNumber: string
+    email?: string | null
+    serialNo?: string | null
+    prime?: boolean
+    blacklisted?: boolean
+    connector?: boolean
+    remark?: string | null
+    adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
+    specialization?: string | null
+    joiningDate: Date | string
+    hasReference?: boolean
+    status?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    admin?: AdminCreateNestedOneWithoutCustomersInput
+    partner?: PartnerCreateNestedOneWithoutCustomersInput
+    category?: CustomerCategoryCreateNestedOneWithoutCustomersInput
+    history?: CustomerProductHistoryCreateNestedManyWithoutCustomerInput
+    sisterOf?: CustomerCreateNestedOneWithoutSisterCompaniesInput
+  }
+
+  export type CustomerUncheckedCreateWithoutSisterCompaniesInput = {
+    id?: string
+    adminId?: string | null
+    companyName: string
+    contactPerson: string
+    mobileNumber: string
+    email?: string | null
+    serialNo?: string | null
+    prime?: boolean
+    blacklisted?: boolean
+    connector?: boolean
+    remark?: string | null
+    adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
+    sisterOfId?: string | null
+    categoryId?: string | null
+    specialization?: string | null
+    joiningDate: Date | string
+    hasReference?: boolean
+    partnerId?: string | null
+    status?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    history?: CustomerProductHistoryUncheckedCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerCreateOrConnectWithoutSisterCompaniesInput = {
+    where: CustomerWhereUniqueInput
+    create: XOR<CustomerCreateWithoutSisterCompaniesInput, CustomerUncheckedCreateWithoutSisterCompaniesInput>
+  }
+
+  export type CustomerCreateWithoutSisterOfInput = {
+    id?: string
+    companyName: string
+    contactPerson: string
+    mobileNumber: string
+    email?: string | null
+    serialNo?: string | null
+    prime?: boolean
+    blacklisted?: boolean
+    connector?: boolean
+    remark?: string | null
+    adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
+    specialization?: string | null
+    joiningDate: Date | string
+    hasReference?: boolean
+    status?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    admin?: AdminCreateNestedOneWithoutCustomersInput
+    partner?: PartnerCreateNestedOneWithoutCustomersInput
+    category?: CustomerCategoryCreateNestedOneWithoutCustomersInput
+    history?: CustomerProductHistoryCreateNestedManyWithoutCustomerInput
+    sisterCompanies?: CustomerCreateNestedManyWithoutSisterOfInput
+  }
+
+  export type CustomerUncheckedCreateWithoutSisterOfInput = {
+    id?: string
+    adminId?: string | null
+    companyName: string
+    contactPerson: string
+    mobileNumber: string
+    email?: string | null
+    serialNo?: string | null
+    prime?: boolean
+    blacklisted?: boolean
+    connector?: boolean
+    remark?: string | null
+    adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
+    categoryId?: string | null
+    specialization?: string | null
+    joiningDate: Date | string
+    hasReference?: boolean
+    partnerId?: string | null
+    status?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    history?: CustomerProductHistoryUncheckedCreateNestedManyWithoutCustomerInput
+    sisterCompanies?: CustomerUncheckedCreateNestedManyWithoutSisterOfInput
+  }
+
+  export type CustomerCreateOrConnectWithoutSisterOfInput = {
+    where: CustomerWhereUniqueInput
+    create: XOR<CustomerCreateWithoutSisterOfInput, CustomerUncheckedCreateWithoutSisterOfInput>
+  }
+
+  export type CustomerCreateManySisterOfInputEnvelope = {
+    data: CustomerCreateManySisterOfInput | CustomerCreateManySisterOfInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AdminUpsertWithoutCustomersInput = {
     update: XOR<AdminUpdateWithoutCustomersInput, AdminUncheckedUpdateWithoutCustomersInput>
     create: XOR<AdminCreateWithoutCustomersInput, AdminUncheckedCreateWithoutCustomersInput>
@@ -37525,6 +39664,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUpdateManyWithoutAdminNestedInput
     loginCreds?: LoginCredentialUpdateManyWithoutAdminNestedInput
     productHistories?: CustomerProductHistoryUpdateManyWithoutAdminNestedInput
+    CustomerCategory?: CustomerCategoryUpdateManyWithoutAdminNestedInput
   }
 
   export type AdminUncheckedUpdateWithoutCustomersInput = {
@@ -37547,6 +39687,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutAdminNestedInput
     loginCreds?: LoginCredentialUncheckedUpdateManyWithoutAdminNestedInput
     productHistories?: CustomerProductHistoryUncheckedUpdateManyWithoutAdminNestedInput
+    CustomerCategory?: CustomerCategoryUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type PartnerUpsertWithoutCustomersInput = {
@@ -37592,6 +39733,37 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type CustomerCategoryUpsertWithoutCustomersInput = {
+    update: XOR<CustomerCategoryUpdateWithoutCustomersInput, CustomerCategoryUncheckedUpdateWithoutCustomersInput>
+    create: XOR<CustomerCategoryCreateWithoutCustomersInput, CustomerCategoryUncheckedCreateWithoutCustomersInput>
+    where?: CustomerCategoryWhereInput
+  }
+
+  export type CustomerCategoryUpdateToOneWithWhereWithoutCustomersInput = {
+    where?: CustomerCategoryWhereInput
+    data: XOR<CustomerCategoryUpdateWithoutCustomersInput, CustomerCategoryUncheckedUpdateWithoutCustomersInput>
+  }
+
+  export type CustomerCategoryUpdateWithoutCustomersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    categoryName?: StringFieldUpdateOperationsInput | string
+    specialization?: CustomerCategoryUpdatespecializationInput | string[]
+    status?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    admin?: AdminUpdateOneRequiredWithoutCustomerCategoryNestedInput
+  }
+
+  export type CustomerCategoryUncheckedUpdateWithoutCustomersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    adminId?: StringFieldUpdateOperationsInput | string
+    categoryName?: StringFieldUpdateOperationsInput | string
+    specialization?: CustomerCategoryUpdatespecializationInput | string[]
+    status?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type CustomerProductHistoryUpsertWithWhereUniqueWithoutCustomerInput = {
     where: CustomerProductHistoryWhereUniqueInput
     update: XOR<CustomerProductHistoryUpdateWithoutCustomerInput, CustomerProductHistoryUncheckedUpdateWithoutCustomerInput>
@@ -37608,18 +39780,99 @@ export namespace Prisma {
     data: XOR<CustomerProductHistoryUpdateManyMutationInput, CustomerProductHistoryUncheckedUpdateManyWithoutCustomerInput>
   }
 
+  export type CustomerUpsertWithoutSisterCompaniesInput = {
+    update: XOR<CustomerUpdateWithoutSisterCompaniesInput, CustomerUncheckedUpdateWithoutSisterCompaniesInput>
+    create: XOR<CustomerCreateWithoutSisterCompaniesInput, CustomerUncheckedCreateWithoutSisterCompaniesInput>
+    where?: CustomerWhereInput
+  }
+
+  export type CustomerUpdateToOneWithWhereWithoutSisterCompaniesInput = {
+    where?: CustomerWhereInput
+    data: XOR<CustomerUpdateWithoutSisterCompaniesInput, CustomerUncheckedUpdateWithoutSisterCompaniesInput>
+  }
+
+  export type CustomerUpdateWithoutSisterCompaniesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyName?: StringFieldUpdateOperationsInput | string
+    contactPerson?: StringFieldUpdateOperationsInput | string
+    mobileNumber?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    prime?: BoolFieldUpdateOperationsInput | boolean
+    blacklisted?: BoolFieldUpdateOperationsInput | boolean
+    connector?: BoolFieldUpdateOperationsInput | boolean
+    remark?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
+    joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    hasReference?: BoolFieldUpdateOperationsInput | boolean
+    status?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    admin?: AdminUpdateOneWithoutCustomersNestedInput
+    partner?: PartnerUpdateOneWithoutCustomersNestedInput
+    category?: CustomerCategoryUpdateOneWithoutCustomersNestedInput
+    history?: CustomerProductHistoryUpdateManyWithoutCustomerNestedInput
+    sisterOf?: CustomerUpdateOneWithoutSisterCompaniesNestedInput
+  }
+
+  export type CustomerUncheckedUpdateWithoutSisterCompaniesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    adminId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyName?: StringFieldUpdateOperationsInput | string
+    contactPerson?: StringFieldUpdateOperationsInput | string
+    mobileNumber?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    prime?: BoolFieldUpdateOperationsInput | boolean
+    blacklisted?: BoolFieldUpdateOperationsInput | boolean
+    connector?: BoolFieldUpdateOperationsInput | boolean
+    remark?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
+    sisterOfId?: NullableStringFieldUpdateOperationsInput | string | null
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
+    joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    hasReference?: BoolFieldUpdateOperationsInput | boolean
+    partnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    history?: CustomerProductHistoryUncheckedUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type CustomerUpsertWithWhereUniqueWithoutSisterOfInput = {
+    where: CustomerWhereUniqueInput
+    update: XOR<CustomerUpdateWithoutSisterOfInput, CustomerUncheckedUpdateWithoutSisterOfInput>
+    create: XOR<CustomerCreateWithoutSisterOfInput, CustomerUncheckedCreateWithoutSisterOfInput>
+  }
+
+  export type CustomerUpdateWithWhereUniqueWithoutSisterOfInput = {
+    where: CustomerWhereUniqueInput
+    data: XOR<CustomerUpdateWithoutSisterOfInput, CustomerUncheckedUpdateWithoutSisterOfInput>
+  }
+
+  export type CustomerUpdateManyWithWhereWithoutSisterOfInput = {
+    where: CustomerScalarWhereInput
+    data: XOR<CustomerUpdateManyMutationInput, CustomerUncheckedUpdateManyWithoutSisterOfInput>
+  }
+
   export type CustomerCreateWithoutHistoryInput = {
     id?: string
     companyName: string
     contactPerson: string
     mobileNumber: string
-    email: string
-    serialNo: string
+    email?: string | null
+    serialNo?: string | null
     prime?: boolean
     blacklisted?: boolean
+    connector?: boolean
     remark?: string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
+    specialization?: string | null
     joiningDate: Date | string
     hasReference?: boolean
     status?: boolean
@@ -37627,6 +39880,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     admin?: AdminCreateNestedOneWithoutCustomersInput
     partner?: PartnerCreateNestedOneWithoutCustomersInput
+    category?: CustomerCategoryCreateNestedOneWithoutCustomersInput
+    sisterOf?: CustomerCreateNestedOneWithoutSisterCompaniesInput
+    sisterCompanies?: CustomerCreateNestedManyWithoutSisterOfInput
   }
 
   export type CustomerUncheckedCreateWithoutHistoryInput = {
@@ -37635,19 +39891,24 @@ export namespace Prisma {
     companyName: string
     contactPerson: string
     mobileNumber: string
-    email: string
-    serialNo: string
+    email?: string | null
+    serialNo?: string | null
     prime?: boolean
     blacklisted?: boolean
+    connector?: boolean
     remark?: string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
+    sisterOfId?: string | null
+    categoryId?: string | null
+    specialization?: string | null
     joiningDate: Date | string
     hasReference?: boolean
     partnerId?: string | null
     status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    sisterCompanies?: CustomerUncheckedCreateNestedManyWithoutSisterOfInput
   }
 
   export type CustomerCreateOrConnectWithoutHistoryInput = {
@@ -37675,6 +39936,7 @@ export namespace Prisma {
     products?: ProductCreateNestedManyWithoutAdminInput
     subscriptions?: SubscriptionCreateNestedManyWithoutAdminInput
     loginCreds?: LoginCredentialCreateNestedManyWithoutAdminInput
+    CustomerCategory?: CustomerCategoryCreateNestedManyWithoutAdminInput
   }
 
   export type AdminUncheckedCreateWithoutProductHistoriesInput = {
@@ -37697,6 +39959,7 @@ export namespace Prisma {
     products?: ProductUncheckedCreateNestedManyWithoutAdminInput
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutAdminInput
     loginCreds?: LoginCredentialUncheckedCreateNestedManyWithoutAdminInput
+    CustomerCategory?: CustomerCategoryUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AdminCreateOrConnectWithoutProductHistoriesInput = {
@@ -37787,13 +40050,15 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     contactPerson?: StringFieldUpdateOperationsInput | string
     mobileNumber?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    serialNo?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     prime?: BoolFieldUpdateOperationsInput | boolean
     blacklisted?: BoolFieldUpdateOperationsInput | boolean
+    connector?: BoolFieldUpdateOperationsInput | boolean
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
     status?: BoolFieldUpdateOperationsInput | boolean
@@ -37801,6 +40066,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     admin?: AdminUpdateOneWithoutCustomersNestedInput
     partner?: PartnerUpdateOneWithoutCustomersNestedInput
+    category?: CustomerCategoryUpdateOneWithoutCustomersNestedInput
+    sisterOf?: CustomerUpdateOneWithoutSisterCompaniesNestedInput
+    sisterCompanies?: CustomerUpdateManyWithoutSisterOfNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutHistoryInput = {
@@ -37809,19 +40077,24 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     contactPerson?: StringFieldUpdateOperationsInput | string
     mobileNumber?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    serialNo?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     prime?: BoolFieldUpdateOperationsInput | boolean
     blacklisted?: BoolFieldUpdateOperationsInput | boolean
+    connector?: BoolFieldUpdateOperationsInput | boolean
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
+    sisterOfId?: NullableStringFieldUpdateOperationsInput | string | null
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sisterCompanies?: CustomerUncheckedUpdateManyWithoutSisterOfNestedInput
   }
 
   export type AdminUpsertWithoutProductHistoriesInput = {
@@ -37855,6 +40128,7 @@ export namespace Prisma {
     products?: ProductUpdateManyWithoutAdminNestedInput
     subscriptions?: SubscriptionUpdateManyWithoutAdminNestedInput
     loginCreds?: LoginCredentialUpdateManyWithoutAdminNestedInput
+    CustomerCategory?: CustomerCategoryUpdateManyWithoutAdminNestedInput
   }
 
   export type AdminUncheckedUpdateWithoutProductHistoriesInput = {
@@ -37877,6 +40151,7 @@ export namespace Prisma {
     products?: ProductUncheckedUpdateManyWithoutAdminNestedInput
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutAdminNestedInput
     loginCreds?: LoginCredentialUncheckedUpdateManyWithoutAdminNestedInput
+    CustomerCategory?: CustomerCategoryUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type ProductUpsertWithoutCustomerProductHistoryInput = {
@@ -37938,6 +40213,192 @@ export namespace Prisma {
     data: XOR<ProductRenewalHistoryUpdateManyMutationInput, ProductRenewalHistoryUncheckedUpdateManyWithoutCustomerProductHistoryInput>
   }
 
+  export type AdminCreateWithoutCustomerCategoryInput = {
+    id?: string
+    role?: $Enums.Role
+    firstName: string
+    lastName: string
+    email: string
+    passwordHash: string
+    companyName: string
+    address?: NullableJsonNullValueInput | InputJsonValue
+    contactInfo?: NullableJsonNullValueInput | InputJsonValue
+    status?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    teamMembers?: TeamMemberCreateNestedManyWithoutAdminInput
+    partners?: PartnerCreateNestedManyWithoutAdminInput
+    customers?: CustomerCreateNestedManyWithoutAdminInput
+    customFields?: AdminCustomFieldCreateNestedManyWithoutAdminInput
+    products?: ProductCreateNestedManyWithoutAdminInput
+    subscriptions?: SubscriptionCreateNestedManyWithoutAdminInput
+    loginCreds?: LoginCredentialCreateNestedManyWithoutAdminInput
+    productHistories?: CustomerProductHistoryCreateNestedManyWithoutAdminInput
+  }
+
+  export type AdminUncheckedCreateWithoutCustomerCategoryInput = {
+    id?: string
+    role?: $Enums.Role
+    firstName: string
+    lastName: string
+    email: string
+    passwordHash: string
+    companyName: string
+    address?: NullableJsonNullValueInput | InputJsonValue
+    contactInfo?: NullableJsonNullValueInput | InputJsonValue
+    status?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    teamMembers?: TeamMemberUncheckedCreateNestedManyWithoutAdminInput
+    partners?: PartnerUncheckedCreateNestedManyWithoutAdminInput
+    customers?: CustomerUncheckedCreateNestedManyWithoutAdminInput
+    customFields?: AdminCustomFieldUncheckedCreateNestedManyWithoutAdminInput
+    products?: ProductUncheckedCreateNestedManyWithoutAdminInput
+    subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutAdminInput
+    loginCreds?: LoginCredentialUncheckedCreateNestedManyWithoutAdminInput
+    productHistories?: CustomerProductHistoryUncheckedCreateNestedManyWithoutAdminInput
+  }
+
+  export type AdminCreateOrConnectWithoutCustomerCategoryInput = {
+    where: AdminWhereUniqueInput
+    create: XOR<AdminCreateWithoutCustomerCategoryInput, AdminUncheckedCreateWithoutCustomerCategoryInput>
+  }
+
+  export type CustomerCreateWithoutCategoryInput = {
+    id?: string
+    companyName: string
+    contactPerson: string
+    mobileNumber: string
+    email?: string | null
+    serialNo?: string | null
+    prime?: boolean
+    blacklisted?: boolean
+    connector?: boolean
+    remark?: string | null
+    adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
+    specialization?: string | null
+    joiningDate: Date | string
+    hasReference?: boolean
+    status?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    admin?: AdminCreateNestedOneWithoutCustomersInput
+    partner?: PartnerCreateNestedOneWithoutCustomersInput
+    history?: CustomerProductHistoryCreateNestedManyWithoutCustomerInput
+    sisterOf?: CustomerCreateNestedOneWithoutSisterCompaniesInput
+    sisterCompanies?: CustomerCreateNestedManyWithoutSisterOfInput
+  }
+
+  export type CustomerUncheckedCreateWithoutCategoryInput = {
+    id?: string
+    adminId?: string | null
+    companyName: string
+    contactPerson: string
+    mobileNumber: string
+    email?: string | null
+    serialNo?: string | null
+    prime?: boolean
+    blacklisted?: boolean
+    connector?: boolean
+    remark?: string | null
+    adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
+    sisterOfId?: string | null
+    specialization?: string | null
+    joiningDate: Date | string
+    hasReference?: boolean
+    partnerId?: string | null
+    status?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    history?: CustomerProductHistoryUncheckedCreateNestedManyWithoutCustomerInput
+    sisterCompanies?: CustomerUncheckedCreateNestedManyWithoutSisterOfInput
+  }
+
+  export type CustomerCreateOrConnectWithoutCategoryInput = {
+    where: CustomerWhereUniqueInput
+    create: XOR<CustomerCreateWithoutCategoryInput, CustomerUncheckedCreateWithoutCategoryInput>
+  }
+
+  export type CustomerCreateManyCategoryInputEnvelope = {
+    data: CustomerCreateManyCategoryInput | CustomerCreateManyCategoryInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AdminUpsertWithoutCustomerCategoryInput = {
+    update: XOR<AdminUpdateWithoutCustomerCategoryInput, AdminUncheckedUpdateWithoutCustomerCategoryInput>
+    create: XOR<AdminCreateWithoutCustomerCategoryInput, AdminUncheckedCreateWithoutCustomerCategoryInput>
+    where?: AdminWhereInput
+  }
+
+  export type AdminUpdateToOneWithWhereWithoutCustomerCategoryInput = {
+    where?: AdminWhereInput
+    data: XOR<AdminUpdateWithoutCustomerCategoryInput, AdminUncheckedUpdateWithoutCustomerCategoryInput>
+  }
+
+  export type AdminUpdateWithoutCustomerCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    companyName?: StringFieldUpdateOperationsInput | string
+    address?: NullableJsonNullValueInput | InputJsonValue
+    contactInfo?: NullableJsonNullValueInput | InputJsonValue
+    status?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    teamMembers?: TeamMemberUpdateManyWithoutAdminNestedInput
+    partners?: PartnerUpdateManyWithoutAdminNestedInput
+    customers?: CustomerUpdateManyWithoutAdminNestedInput
+    customFields?: AdminCustomFieldUpdateManyWithoutAdminNestedInput
+    products?: ProductUpdateManyWithoutAdminNestedInput
+    subscriptions?: SubscriptionUpdateManyWithoutAdminNestedInput
+    loginCreds?: LoginCredentialUpdateManyWithoutAdminNestedInput
+    productHistories?: CustomerProductHistoryUpdateManyWithoutAdminNestedInput
+  }
+
+  export type AdminUncheckedUpdateWithoutCustomerCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    companyName?: StringFieldUpdateOperationsInput | string
+    address?: NullableJsonNullValueInput | InputJsonValue
+    contactInfo?: NullableJsonNullValueInput | InputJsonValue
+    status?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    teamMembers?: TeamMemberUncheckedUpdateManyWithoutAdminNestedInput
+    partners?: PartnerUncheckedUpdateManyWithoutAdminNestedInput
+    customers?: CustomerUncheckedUpdateManyWithoutAdminNestedInput
+    customFields?: AdminCustomFieldUncheckedUpdateManyWithoutAdminNestedInput
+    products?: ProductUncheckedUpdateManyWithoutAdminNestedInput
+    subscriptions?: SubscriptionUncheckedUpdateManyWithoutAdminNestedInput
+    loginCreds?: LoginCredentialUncheckedUpdateManyWithoutAdminNestedInput
+    productHistories?: CustomerProductHistoryUncheckedUpdateManyWithoutAdminNestedInput
+  }
+
+  export type CustomerUpsertWithWhereUniqueWithoutCategoryInput = {
+    where: CustomerWhereUniqueInput
+    update: XOR<CustomerUpdateWithoutCategoryInput, CustomerUncheckedUpdateWithoutCategoryInput>
+    create: XOR<CustomerCreateWithoutCategoryInput, CustomerUncheckedCreateWithoutCategoryInput>
+  }
+
+  export type CustomerUpdateWithWhereUniqueWithoutCategoryInput = {
+    where: CustomerWhereUniqueInput
+    data: XOR<CustomerUpdateWithoutCategoryInput, CustomerUncheckedUpdateWithoutCategoryInput>
+  }
+
+  export type CustomerUpdateManyWithWhereWithoutCategoryInput = {
+    where: CustomerScalarWhereInput
+    data: XOR<CustomerUpdateManyMutationInput, CustomerUncheckedUpdateManyWithoutCategoryInput>
+  }
+
   export type AdminCreateWithoutCustomFieldsInput = {
     id?: string
     role?: $Enums.Role
@@ -37958,6 +40419,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionCreateNestedManyWithoutAdminInput
     loginCreds?: LoginCredentialCreateNestedManyWithoutAdminInput
     productHistories?: CustomerProductHistoryCreateNestedManyWithoutAdminInput
+    CustomerCategory?: CustomerCategoryCreateNestedManyWithoutAdminInput
   }
 
   export type AdminUncheckedCreateWithoutCustomFieldsInput = {
@@ -37980,6 +40442,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutAdminInput
     loginCreds?: LoginCredentialUncheckedCreateNestedManyWithoutAdminInput
     productHistories?: CustomerProductHistoryUncheckedCreateNestedManyWithoutAdminInput
+    CustomerCategory?: CustomerCategoryUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AdminCreateOrConnectWithoutCustomFieldsInput = {
@@ -38018,6 +40481,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUpdateManyWithoutAdminNestedInput
     loginCreds?: LoginCredentialUpdateManyWithoutAdminNestedInput
     productHistories?: CustomerProductHistoryUpdateManyWithoutAdminNestedInput
+    CustomerCategory?: CustomerCategoryUpdateManyWithoutAdminNestedInput
   }
 
   export type AdminUncheckedUpdateWithoutCustomFieldsInput = {
@@ -38040,6 +40504,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutAdminNestedInput
     loginCreds?: LoginCredentialUncheckedUpdateManyWithoutAdminNestedInput
     productHistories?: CustomerProductHistoryUncheckedUpdateManyWithoutAdminNestedInput
+    CustomerCategory?: CustomerCategoryUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type LoginCredentialCreateWithoutLoginAuditsInput = {
@@ -38294,13 +40759,17 @@ export namespace Prisma {
     companyName: string
     contactPerson: string
     mobileNumber: string
-    email: string
-    serialNo: string
+    email?: string | null
+    serialNo?: string | null
     prime?: boolean
     blacklisted?: boolean
+    connector?: boolean
     remark?: string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
+    sisterOfId?: string | null
+    categoryId?: string | null
+    specialization?: string | null
     joiningDate: Date | string
     hasReference?: boolean
     partnerId?: string | null
@@ -38370,6 +40839,15 @@ export namespace Prisma {
     renewalDate?: Date | string | null
     status?: boolean
     detail?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CustomerCategoryCreateManyAdminInput = {
+    id?: string
+    categoryName: string
+    specialization?: CustomerCategoryCreatespecializationInput | string[]
+    status?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -38474,20 +40952,25 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     contactPerson?: StringFieldUpdateOperationsInput | string
     mobileNumber?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    serialNo?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     prime?: BoolFieldUpdateOperationsInput | boolean
     blacklisted?: BoolFieldUpdateOperationsInput | boolean
+    connector?: BoolFieldUpdateOperationsInput | boolean
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
     status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partner?: PartnerUpdateOneWithoutCustomersNestedInput
+    category?: CustomerCategoryUpdateOneWithoutCustomersNestedInput
     history?: CustomerProductHistoryUpdateManyWithoutCustomerNestedInput
+    sisterOf?: CustomerUpdateOneWithoutSisterCompaniesNestedInput
+    sisterCompanies?: CustomerUpdateManyWithoutSisterOfNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutAdminInput = {
@@ -38495,13 +40978,17 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     contactPerson?: StringFieldUpdateOperationsInput | string
     mobileNumber?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    serialNo?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     prime?: BoolFieldUpdateOperationsInput | boolean
     blacklisted?: BoolFieldUpdateOperationsInput | boolean
+    connector?: BoolFieldUpdateOperationsInput | boolean
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
+    sisterOfId?: NullableStringFieldUpdateOperationsInput | string | null
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -38509,6 +40996,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     history?: CustomerProductHistoryUncheckedUpdateManyWithoutCustomerNestedInput
+    sisterCompanies?: CustomerUncheckedUpdateManyWithoutSisterOfNestedInput
   }
 
   export type CustomerUncheckedUpdateManyWithoutAdminInput = {
@@ -38516,13 +41004,17 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     contactPerson?: StringFieldUpdateOperationsInput | string
     mobileNumber?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    serialNo?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     prime?: BoolFieldUpdateOperationsInput | boolean
     blacklisted?: BoolFieldUpdateOperationsInput | boolean
+    connector?: BoolFieldUpdateOperationsInput | boolean
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
+    sisterOfId?: NullableStringFieldUpdateOperationsInput | string | null
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -38744,19 +41236,52 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type CustomerCategoryUpdateWithoutAdminInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    categoryName?: StringFieldUpdateOperationsInput | string
+    specialization?: CustomerCategoryUpdatespecializationInput | string[]
+    status?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customers?: CustomerUpdateManyWithoutCategoryNestedInput
+  }
+
+  export type CustomerCategoryUncheckedUpdateWithoutAdminInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    categoryName?: StringFieldUpdateOperationsInput | string
+    specialization?: CustomerCategoryUpdatespecializationInput | string[]
+    status?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customers?: CustomerUncheckedUpdateManyWithoutCategoryNestedInput
+  }
+
+  export type CustomerCategoryUncheckedUpdateManyWithoutAdminInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    categoryName?: StringFieldUpdateOperationsInput | string
+    specialization?: CustomerCategoryUpdatespecializationInput | string[]
+    status?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type CustomerCreateManyPartnerInput = {
     id?: string
     adminId?: string | null
     companyName: string
     contactPerson: string
     mobileNumber: string
-    email: string
-    serialNo: string
+    email?: string | null
+    serialNo?: string | null
     prime?: boolean
     blacklisted?: boolean
+    connector?: boolean
     remark?: string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
+    sisterOfId?: string | null
+    categoryId?: string | null
+    specialization?: string | null
     joiningDate: Date | string
     hasReference?: boolean
     status?: boolean
@@ -38769,20 +41294,25 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     contactPerson?: StringFieldUpdateOperationsInput | string
     mobileNumber?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    serialNo?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     prime?: BoolFieldUpdateOperationsInput | boolean
     blacklisted?: BoolFieldUpdateOperationsInput | boolean
+    connector?: BoolFieldUpdateOperationsInput | boolean
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
     status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     admin?: AdminUpdateOneWithoutCustomersNestedInput
+    category?: CustomerCategoryUpdateOneWithoutCustomersNestedInput
     history?: CustomerProductHistoryUpdateManyWithoutCustomerNestedInput
+    sisterOf?: CustomerUpdateOneWithoutSisterCompaniesNestedInput
+    sisterCompanies?: CustomerUpdateManyWithoutSisterOfNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutPartnerInput = {
@@ -38791,19 +41321,24 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     contactPerson?: StringFieldUpdateOperationsInput | string
     mobileNumber?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    serialNo?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     prime?: BoolFieldUpdateOperationsInput | boolean
     blacklisted?: BoolFieldUpdateOperationsInput | boolean
+    connector?: BoolFieldUpdateOperationsInput | boolean
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
+    sisterOfId?: NullableStringFieldUpdateOperationsInput | string | null
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
     status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     history?: CustomerProductHistoryUncheckedUpdateManyWithoutCustomerNestedInput
+    sisterCompanies?: CustomerUncheckedUpdateManyWithoutSisterOfNestedInput
   }
 
   export type CustomerUncheckedUpdateManyWithoutPartnerInput = {
@@ -38812,13 +41347,17 @@ export namespace Prisma {
     companyName?: StringFieldUpdateOperationsInput | string
     contactPerson?: StringFieldUpdateOperationsInput | string
     mobileNumber?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    serialNo?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     prime?: BoolFieldUpdateOperationsInput | boolean
     blacklisted?: BoolFieldUpdateOperationsInput | boolean
+    connector?: BoolFieldUpdateOperationsInput | boolean
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
     address?: NullableJsonNullValueInput | InputJsonValue
+    sisterOfId?: NullableStringFieldUpdateOperationsInput | string | null
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hasReference?: BoolFieldUpdateOperationsInput | boolean
     status?: BoolFieldUpdateOperationsInput | boolean
@@ -38853,8 +41392,8 @@ export namespace Prisma {
 
   export type FeedbackCreateManyUserInput = {
     id?: string
-    rating: string
-    feedback: string
+    rating?: string | null
+    feedback?: string | null
     createdAt?: Date | string
   }
 
@@ -38935,22 +41474,22 @@ export namespace Prisma {
 
   export type FeedbackUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    rating?: StringFieldUpdateOperationsInput | string
-    feedback?: StringFieldUpdateOperationsInput | string
+    rating?: NullableStringFieldUpdateOperationsInput | string | null
+    feedback?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FeedbackUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    rating?: StringFieldUpdateOperationsInput | string
-    feedback?: StringFieldUpdateOperationsInput | string
+    rating?: NullableStringFieldUpdateOperationsInput | string | null
+    feedback?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FeedbackUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    rating?: StringFieldUpdateOperationsInput | string
-    feedback?: StringFieldUpdateOperationsInput | string
+    rating?: NullableStringFieldUpdateOperationsInput | string | null
+    feedback?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -39307,6 +41846,30 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type CustomerCreateManySisterOfInput = {
+    id?: string
+    adminId?: string | null
+    companyName: string
+    contactPerson: string
+    mobileNumber: string
+    email?: string | null
+    serialNo?: string | null
+    prime?: boolean
+    blacklisted?: boolean
+    connector?: boolean
+    remark?: string | null
+    adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
+    categoryId?: string | null
+    specialization?: string | null
+    joiningDate: Date | string
+    hasReference?: boolean
+    partnerId?: string | null
+    status?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type CustomerProductHistoryUpdateWithoutCustomerInput = {
     id?: StringFieldUpdateOperationsInput | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -39354,6 +41917,82 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type CustomerUpdateWithoutSisterOfInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyName?: StringFieldUpdateOperationsInput | string
+    contactPerson?: StringFieldUpdateOperationsInput | string
+    mobileNumber?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    prime?: BoolFieldUpdateOperationsInput | boolean
+    blacklisted?: BoolFieldUpdateOperationsInput | boolean
+    connector?: BoolFieldUpdateOperationsInput | boolean
+    remark?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
+    joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    hasReference?: BoolFieldUpdateOperationsInput | boolean
+    status?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    admin?: AdminUpdateOneWithoutCustomersNestedInput
+    partner?: PartnerUpdateOneWithoutCustomersNestedInput
+    category?: CustomerCategoryUpdateOneWithoutCustomersNestedInput
+    history?: CustomerProductHistoryUpdateManyWithoutCustomerNestedInput
+    sisterCompanies?: CustomerUpdateManyWithoutSisterOfNestedInput
+  }
+
+  export type CustomerUncheckedUpdateWithoutSisterOfInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    adminId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyName?: StringFieldUpdateOperationsInput | string
+    contactPerson?: StringFieldUpdateOperationsInput | string
+    mobileNumber?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    prime?: BoolFieldUpdateOperationsInput | boolean
+    blacklisted?: BoolFieldUpdateOperationsInput | boolean
+    connector?: BoolFieldUpdateOperationsInput | boolean
+    remark?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
+    joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    hasReference?: BoolFieldUpdateOperationsInput | boolean
+    partnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    history?: CustomerProductHistoryUncheckedUpdateManyWithoutCustomerNestedInput
+    sisterCompanies?: CustomerUncheckedUpdateManyWithoutSisterOfNestedInput
+  }
+
+  export type CustomerUncheckedUpdateManyWithoutSisterOfInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    adminId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyName?: StringFieldUpdateOperationsInput | string
+    contactPerson?: StringFieldUpdateOperationsInput | string
+    mobileNumber?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    prime?: BoolFieldUpdateOperationsInput | boolean
+    blacklisted?: BoolFieldUpdateOperationsInput | boolean
+    connector?: BoolFieldUpdateOperationsInput | boolean
+    remark?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
+    joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    hasReference?: BoolFieldUpdateOperationsInput | boolean
+    partnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ProductRenewalHistoryCreateManyCustomerProductHistoryInput = {
     id?: string
     productId: string
@@ -39390,6 +42029,106 @@ export namespace Prisma {
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     renewalDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CustomerCreateManyCategoryInput = {
+    id?: string
+    adminId?: string | null
+    companyName: string
+    contactPerson: string
+    mobileNumber: string
+    email?: string | null
+    serialNo?: string | null
+    prime?: boolean
+    blacklisted?: boolean
+    connector?: boolean
+    remark?: string | null
+    adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
+    sisterOfId?: string | null
+    specialization?: string | null
+    joiningDate: Date | string
+    hasReference?: boolean
+    partnerId?: string | null
+    status?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CustomerUpdateWithoutCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyName?: StringFieldUpdateOperationsInput | string
+    contactPerson?: StringFieldUpdateOperationsInput | string
+    mobileNumber?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    prime?: BoolFieldUpdateOperationsInput | boolean
+    blacklisted?: BoolFieldUpdateOperationsInput | boolean
+    connector?: BoolFieldUpdateOperationsInput | boolean
+    remark?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
+    joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    hasReference?: BoolFieldUpdateOperationsInput | boolean
+    status?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    admin?: AdminUpdateOneWithoutCustomersNestedInput
+    partner?: PartnerUpdateOneWithoutCustomersNestedInput
+    history?: CustomerProductHistoryUpdateManyWithoutCustomerNestedInput
+    sisterOf?: CustomerUpdateOneWithoutSisterCompaniesNestedInput
+    sisterCompanies?: CustomerUpdateManyWithoutSisterOfNestedInput
+  }
+
+  export type CustomerUncheckedUpdateWithoutCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    adminId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyName?: StringFieldUpdateOperationsInput | string
+    contactPerson?: StringFieldUpdateOperationsInput | string
+    mobileNumber?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    prime?: BoolFieldUpdateOperationsInput | boolean
+    blacklisted?: BoolFieldUpdateOperationsInput | boolean
+    connector?: BoolFieldUpdateOperationsInput | boolean
+    remark?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
+    sisterOfId?: NullableStringFieldUpdateOperationsInput | string | null
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
+    joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    hasReference?: BoolFieldUpdateOperationsInput | boolean
+    partnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    history?: CustomerProductHistoryUncheckedUpdateManyWithoutCustomerNestedInput
+    sisterCompanies?: CustomerUncheckedUpdateManyWithoutSisterOfNestedInput
+  }
+
+  export type CustomerUncheckedUpdateManyWithoutCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    adminId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyName?: StringFieldUpdateOperationsInput | string
+    contactPerson?: StringFieldUpdateOperationsInput | string
+    mobileNumber?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    prime?: BoolFieldUpdateOperationsInput | boolean
+    blacklisted?: BoolFieldUpdateOperationsInput | boolean
+    connector?: BoolFieldUpdateOperationsInput | boolean
+    remark?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCustomFields?: NullableJsonNullValueInput | InputJsonValue
+    address?: NullableJsonNullValueInput | InputJsonValue
+    sisterOfId?: NullableStringFieldUpdateOperationsInput | string | null
+    specialization?: NullableStringFieldUpdateOperationsInput | string | null
+    joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    hasReference?: BoolFieldUpdateOperationsInput | boolean
+    partnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

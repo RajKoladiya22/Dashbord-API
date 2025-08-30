@@ -143,6 +143,7 @@ export const updateCustomerSchema = z.object({
     .optional(),
   motherCompanyId: z.string().uuid().nullable().optional(),
   categoryId: z.string().uuid().nullable().optional(),
+  specialization: z.string().nullable().optional(),
 });
 export type UpdateCustomerBody = z.infer<typeof updateCustomerSchema>;
 
@@ -235,5 +236,16 @@ export type PurchaseSubscriptionSchema_ = z.infer<typeof purchaseSubscriptionSch
 
 export const createAndUpdateCustomerCategorySchema = z.object({
   categoryName: z.string({ required_error: "Category Name is Required" }).trim().min(1),
-  specialization: z.string({ required_error: "Specialization is Required" }).trim().min(1),
+  // specialization: z.string({ required_error: "Specialization is Required" }).trim().min(1),
+  // specialization: z.array(z.string()).optional(),
+});
+
+export const specializationSchema = z.object({
+  specialization: z.string({ required_error: "Specialization is Required" }).min(1),
+});
+
+export const updateSpecializationSchema = z.object({
+  newCategoryId: z.string().uuid().nullable().optional(),
+  oldSpecialization: z.string({ required_error: "Specialization is Required" }).min(1),
+  newSpecialization: z.string({ required_error: "Specialization is Required" }).min(1),
 });
